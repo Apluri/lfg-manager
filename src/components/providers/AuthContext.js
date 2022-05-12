@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { auth } from "../../firebase";
-import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
 
 const AuthContext = React.createContext();
 
@@ -20,10 +20,16 @@ export function AuthProvider({ children }) {
     const provider = new GoogleAuthProvider();
     return signInWithPopup(auth, provider).catch((e) => console.log(e));
   }
+  function logOut() {
+    signOut(auth).then(() =>
+      console.log("logout succ").catch((e) => console.log(e))
+    );
+  }
 
   const value = {
     currentUser,
     signIn,
+    logOut,
   };
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
