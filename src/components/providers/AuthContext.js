@@ -21,9 +21,7 @@ export function AuthProvider({ children }) {
     return signInWithPopup(auth, provider).catch((e) => console.log(e));
   }
   function logOut() {
-    signOut(auth).then(() =>
-      console.log("logout succ").catch((e) => console.log(e))
-    );
+    signOut(auth);
   }
 
   const value = {
