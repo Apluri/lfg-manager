@@ -4,13 +4,16 @@ import { AuthProvider } from "../components/providers/AuthContext";
 import { Route, Routes } from "react-router-dom";
 import Home from "./screens/Home";
 import NavBar from "./global/NavBar";
+import { DatabaseProvider } from "./providers/DatabaseContext";
 function App() {
   return (
     <AuthProvider>
-      <NavBar />
-      <Routes>
-        <Route path="/home" element={<Home />} />
-      </Routes>
+      <DatabaseProvider>
+        <NavBar />
+        <Routes>
+          <Route path="/" element={<Home />} />
+        </Routes>
+      </DatabaseProvider>
     </AuthProvider>
   );
 }
