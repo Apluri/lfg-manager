@@ -33,6 +33,24 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
     duration: theme.transitions.duration.shortest,
   }),
 }));
+
+type Engravings = {
+  engravings: Character["engravings"];
+};
+function EngravingList({ engravings }: Engravings) {
+  return (
+    <Box>
+      {engravings.map((engraving, index) => (
+        <Typography
+          key={index}
+          variant="body2"
+          color="text.secondary"
+        >{`${engraving.name} ${engraving.level}`}</Typography>
+      ))}
+    </Box>
+  );
+}
+
 type Props = {
   character: Character;
   containerStyles?: React.CSSProperties;
@@ -42,23 +60,7 @@ export function CharacterCard({ character, containerStyles }: Props) {
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
-  function getGemByType(type: Gem["type"]): Gem[] {
-    return character.gems.filter((gem) => gem.type === type);
-  }
-  function getShortEngravings(): string {
-    return character.engravings
-      .map((engraving) => engraving.level)
-      .join()
-      .replaceAll(",", "");
-  }
-  function averageGemLevel(): string {
-    if (character.gems.length === 0) return "-";
-    const sum = character.gems
-      .map((gem) => gem.level)
-      .reduce((previous, current) => previous + current);
-    const avg = sum / character.gems.length;
-    return avg.toFixed(1);
-  }
+
   return (
     <Card sx={containerStyles}>
       <CardHeader
@@ -73,18 +75,28 @@ export function CharacterCard({ character, containerStyles }: Props) {
       />
 
       <CardContent>
-        <Typography variant="body2" color="text.secondary">
-          Engravings {getShortEngravings()}
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          Gems average level {averageGemLevel()}
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          Cardset: {character.cardSet}
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          Gearset: {character.gearSet}
-        </Typography>
+        <Box sx={styles.row}>
+          <EngravingList engravings={character.engravings} />
+          <Box>
+            <Typography sx={{ textAlign: "end" }}>
+              Currently applied to
+            </Typography>
+            <Typography
+              sx={{ textAlign: "end" }}
+              variant="body2"
+              color="text.secondary"
+            >
+              Argos P3 su 16.5 start time: 18.00
+            </Typography>
+            <Typography
+              sx={{ textAlign: "end" }}
+              variant="body2"
+              color="text.secondary"
+            >
+              Valtan proge la 15.5 start time: 20.15
+            </Typography>
+          </Box>
+        </Box>
       </CardContent>
       <CardActions disableSpacing>
         <ExpandMore expand={expanded} onClick={handleExpandClick}>
@@ -93,55 +105,20 @@ export function CharacterCard({ character, containerStyles }: Props) {
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
-          <Typography variant="h6">Engravings</Typography>
-          {character.engravings.map((engraving, index) => (
-            <Typography
-              key={index}
-              variant="body2"
-              color="text.secondary"
-            >{`${engraving.name} ${engraving.level}`}</Typography>
-          ))}
-
-          <Typography variant="h6" sx={{ paddingTop: 2 }}>
-            Gems
+          <Typography variant="h6">
+            Tarivaanko lisätietoo joka ei mahdu? ne tänne:D
           </Typography>
-          <Box sx={styles.gems}>
-            <Box>
-              <Typography paragraph>Cdr</Typography>
-              {getGemByType("cdr").map((gem, index) => (
-                <Typography
-                  key={index}
-                  variant="body2"
-                  color="text.secondary"
-                >{`Level ${gem.level} ${gem.skillName} `}</Typography>
-              ))}
-            </Box>
-            <Box>
-              <Typography paragraph>Atk</Typography>
-              {getGemByType("atk").map((gem, index) => (
-                <Typography
-                  key={index}
-                  variant="body2"
-                  color="text.secondary"
-                >{`Level ${gem.level} ${gem.skillName} `}</Typography>
-              ))}
-            </Box>
-          </Box>
         </CardContent>
       </Collapse>
     </Card>
   );
 }
 const styles: { [key: string]: React.CSSProperties } = {
-  container: {
-    display: "flex",
-    flexDirection: "column",
-    padding: "1em",
-  },
   row: {
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "space-between",
   },
   column: {
     display: "flex",

@@ -26,11 +26,6 @@ export function CreateCharacterModal({
   const [charName, setCharName] = useState<string>("");
   const [selectedClass, setSelectedClass] = useState<string>("");
   const [itemLevel, setItemLevel] = useState<number>(0);
-  const [gearSet, setGearSet] = useState<string>("");
-  const [cardSet, setCardSet] = useState<string>("");
-  useEffect(() => {
-    console.log(gearSet);
-  }, [charName]);
 
   function createNewCharacter() {
     //todo errorchekings
@@ -38,10 +33,7 @@ export function CreateCharacterModal({
       charName,
       character: selectedClass,
       itemLevel,
-      gearSet,
       engravings: [],
-      gems: [],
-      cardSet: "lostwindu",
     };
     return newChar;
   }
@@ -85,18 +77,6 @@ export function CreateCharacterModal({
             type={"number"}
             required={true}
             onChange={(e) => setItemLevel(Number(e.target.value))}
-          />
-          <TextField
-            fullWidth
-            label="Gearset"
-            variant="standard"
-            onChange={(e) => setGearSet(e.target.value)}
-          />
-          <TextField
-            fullWidth
-            label="Cardset"
-            variant="standard"
-            onChange={(e) => setCardSet(e.target.value)}
           />
         </Box>
         <Box sx={styles.actionButtons}>

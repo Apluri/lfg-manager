@@ -3,9 +3,6 @@ export type Character = {
   character: string;
   itemLevel: number;
   engravings: Engraving[];
-  gems: Gem[];
-  gearSet: string;
-  cardSet: string;
 };
 
 export type Engraving = {
@@ -27,7 +24,7 @@ export enum ClassNames {
   SOULFIST = "Soulfist",
   WARDANCER = "Wardancer",
   STRIKER = "Striker",
-  GLAIVIER = "Glavier",
+  GLAIVIER = "Glaivier",
   SCRAPPER = "Scrapper",
   ARTILLERIST = "Artillerist",
   GUNSLINGER = "Gunslinger",

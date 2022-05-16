@@ -17,23 +17,17 @@ export function Profile({ style }: Props) {
       charName: "Ayalup",
       character: "Shadowhunter",
       itemLevel: 1414,
-      gearSet: "Preordained 5 set",
       engravings: [],
-      gems: [],
-      cardSet: "Lostowindo",
     },
     {
       charName: "Aplyuri",
       character: "Deathblade",
       itemLevel: 1414,
-      engravings: [{ name: "Adrenaline", level: 3 }],
-      gearSet: "Harsh oath 5 set",
-      gems: [
-        { level: 5, type: "atk", skillName: "moonlight sonic" },
-        { level: 5, type: "atk", skillName: "moonlight sonic" },
-        { level: 5, type: "cdr", skillName: "moonlight sonic" },
+      engravings: [
+        { name: "Adrenaline", level: 3 },
+        { name: "Surge", level: 3 },
+        { name: "Crisis evasion", level: 3 },
       ],
-      cardSet: "Lostowindo",
     },
   ]);
 
