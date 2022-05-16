@@ -17,17 +17,11 @@ export function Profile({ style }: Props) {
       charName: "Ayalup",
       character: "Shadowhunter",
       itemLevel: 1414,
-      engravings: [],
     },
     {
       charName: "Aplyuri",
       character: "Deathblade",
       itemLevel: 1414,
-      engravings: [
-        { name: "Adrenaline", level: 3 },
-        { name: "Surge", level: 3 },
-        { name: "Crisis evasion", level: 3 },
-      ],
     },
   ]);
 
@@ -43,6 +37,11 @@ export function Profile({ style }: Props) {
     setCharacters([...characters, newChar]);
     closeModal();
   }
+  function handleDelete(charToDelete: Character): void {
+    setCharacters(
+      characters.filter((char) => char.charName !== charToDelete.charName)
+    );
+  }
   return (
     <Box sx={{ ...styles.container, ...style }}>
       <Box sx={styles.userInfoContainer}>
@@ -57,7 +56,11 @@ export function Profile({ style }: Props) {
       />
       <Stack spacing={2} sx={{ width: "100%" }}>
         {characters.map((character, index) => (
-          <CharacterCard key={index} character={character} />
+          <CharacterCard
+            key={index}
+            character={character}
+            handleDelete={handleDelete}
+          />
         ))}
       </Stack>
     </Box>

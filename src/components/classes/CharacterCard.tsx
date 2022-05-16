@@ -10,9 +10,11 @@ import {
   IconButton,
   Collapse,
   IconButtonProps,
+  Menu,
+  MenuItem,
 } from "@mui/material";
 import { Box } from "@mui/system";
-import React from "react";
+import React, { useState } from "react";
 import { Character, Gem } from "../../utils/CharacterUtils";
 import berserkerIcon from "../../assets/images/classIcons/berserker.png";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
@@ -34,31 +36,27 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
   }),
 }));
 
-type Engravings = {
-  engravings: Character["engravings"];
-};
-function EngravingList({ engravings }: Engravings) {
-  return (
-    <Box>
-      {engravings.map((engraving, index) => (
-        <Typography
-          key={index}
-          variant="body2"
-          color="text.secondary"
-        >{`${engraving.name} ${engraving.level}`}</Typography>
-      ))}
-    </Box>
-  );
-}
-
 type Props = {
   character: Character;
   containerStyles?: React.CSSProperties;
+  handleDelete: (charToDelete: Character) => void;
 };
-export function CharacterCard({ character, containerStyles }: Props) {
-  const [expanded, setExpanded] = React.useState(false);
+export function CharacterCard({
+  character,
+  containerStyles,
+  handleDelete,
+}: Props) {
+  const [expanded, setExpanded] = useState(false);
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
   const handleExpandClick = () => {
     setExpanded(!expanded);
+  };
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
   };
 
   return (
@@ -66,38 +64,36 @@ export function CharacterCard({ character, containerStyles }: Props) {
       <CardHeader
         avatar={<Avatar src={berserkerIcon} />}
         action={
-          <IconButton aria-label="settings">
+          <IconButton onClick={handleClick} aria-label="settings">
             <MoreVertIcon />
           </IconButton>
         }
         title={character.character}
         subheader={`${character.charName}  ${character.itemLevel}`}
       />
+      <Menu open={open} onClose={handleClose} anchorEl={anchorEl}>
+        <MenuItem onClick={() => console.log("edit" + character.charName)}>
+          Edit
+        </MenuItem>
+        <MenuItem onClick={() => handleDelete(character)}>Delete</MenuItem>
+      </Menu>
 
-      <CardContent>
+      {/*
+  <CardContent>
         <Box sx={styles.row}>
-          <EngravingList engravings={character.engravings} />
           <Box>
-            <Typography sx={{ textAlign: "end" }}>
-              Currently applied to
-            </Typography>
-            <Typography
-              sx={{ textAlign: "end" }}
-              variant="body2"
-              color="text.secondary"
-            >
+            <Typography>Currently applied to</Typography>
+            <Typography variant="body2" color="text.secondary">
               Argos P3 su 16.5 start time: 18.00
             </Typography>
-            <Typography
-              sx={{ textAlign: "end" }}
-              variant="body2"
-              color="text.secondary"
-            >
+            <Typography variant="body2" color="text.secondary">
               Valtan proge la 15.5 start time: 20.15
             </Typography>
           </Box>
         </Box>
       </CardContent>
+  */}
+
       <CardActions disableSpacing>
         <ExpandMore expand={expanded} onClick={handleExpandClick}>
           <ExpandMoreIcon />

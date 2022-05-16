@@ -2,7 +2,6 @@ export type Character = {
   charName: string;
   character: string;
   itemLevel: number;
-  engravings: Engraving[];
 };
 
 export type Engraving = {

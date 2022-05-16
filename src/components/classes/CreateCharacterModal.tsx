@@ -28,12 +28,10 @@ export function CreateCharacterModal({
   const [itemLevel, setItemLevel] = useState<number>(0);
 
   function createNewCharacter() {
-    //todo errorchekings
     const newChar: Character = {
       charName,
       character: selectedClass,
       itemLevel,
-      engravings: [],
     };
     return newChar;
   }
