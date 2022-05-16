@@ -46,20 +46,21 @@ export function CharacterCard({ character, containerStyles }: Props) {
     return character.gems.filter((gem) => gem.type === type);
   }
   function getShortEngravings(): string {
-    let engravings = "";
-    character.engravings.forEach(
-      (engraving) => (engravings += engraving.level)
-    );
-    return engravings;
+    return character.engravings
+      .map((engraving) => engraving.level)
+      .join()
+      .replaceAll(",", "");
   }
   function averageGemLevel(): string {
-    let sumOfGemLevels = 0;
-    character.gems.forEach((gem) => (sumOfGemLevels += gem.level));
-
-    return (sumOfGemLevels / character.gems.length).toFixed(1);
+    if (character.gems.length === 0) return "-";
+    const sum = character.gems
+      .map((gem) => gem.level)
+      .reduce((previous, current) => previous + current);
+    const avg = sum / character.gems.length;
+    return avg.toFixed(1);
   }
   return (
-    <Card>
+    <Card sx={containerStyles}>
       <CardHeader
         avatar={<Avatar src={berserkerIcon} />}
         action={
@@ -82,24 +83,20 @@ export function CharacterCard({ character, containerStyles }: Props) {
           Cardset: lostwind 12 awa
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          Gearset: Preordained 5set
+          Gearset: {character.gearSet}
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
-        <ExpandMore
-          expand={expanded}
-          onClick={handleExpandClick}
-          aria-expanded={expanded}
-          aria-label="show more"
-        >
+        <ExpandMore expand={expanded} onClick={handleExpandClick}>
           <ExpandMoreIcon />
         </ExpandMore>
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
           <Typography variant="h6">Engravings</Typography>
-          {character.engravings.map((engraving) => (
+          {character.engravings.map((engraving, index) => (
             <Typography
+              key={index}
               variant="body2"
               color="text.secondary"
             >{`${engraving.name} ${engraving.level}`}</Typography>
@@ -111,8 +108,9 @@ export function CharacterCard({ character, containerStyles }: Props) {
           <Box sx={styles.gems}>
             <Box>
               <Typography paragraph>Cdr</Typography>
-              {getGemByType("cdr").map((gem) => (
+              {getGemByType("cdr").map((gem, index) => (
                 <Typography
+                  key={index}
                   variant="body2"
                   color="text.secondary"
                 >{`Level ${gem.level} ${gem.skillName} `}</Typography>
@@ -120,8 +118,9 @@ export function CharacterCard({ character, containerStyles }: Props) {
             </Box>
             <Box>
               <Typography paragraph>Atk</Typography>
-              {getGemByType("atk").map((gem) => (
+              {getGemByType("atk").map((gem, index) => (
                 <Typography
+                  key={index}
                   variant="body2"
                   color="text.secondary"
                 >{`Level ${gem.level} ${gem.skillName} `}</Typography>
