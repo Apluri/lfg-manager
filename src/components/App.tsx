@@ -5,16 +5,25 @@ import { Route, Routes } from "react-router-dom";
 import Home from "./screens/Home";
 import NavBar from "./global/NavBar";
 import { DatabaseProvider } from "./providers/DatabaseContext";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+
+const darkTheme = createTheme({
+  palette: {
+    mode: "dark",
+  },
+});
 function App() {
   return (
-    <AuthProvider>
-      <DatabaseProvider>
-        <NavBar />
-        <Routes>
-          <Route path="/" element={<Home />} />
-        </Routes>
-      </DatabaseProvider>
-    </AuthProvider>
+    <ThemeProvider theme={darkTheme}>
+      <AuthProvider>
+        <DatabaseProvider>
+          <NavBar />
+          <Routes>
+            <Route path="/" element={<Home />} />
+          </Routes>
+        </DatabaseProvider>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
 

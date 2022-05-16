@@ -9,10 +9,10 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { Avatar } from "@mui/material";
 import { useAuth } from "../providers/AuthContext";
 import { ProfileInfo } from "../users/ProfileInfo";
-const cuteLogo = require("./cute-logo.jpg");
+import cuteLogo from "../../assets/images/cute-logo.jpg";
 
 export default function NavBar() {
-  const { signIn, currentUser } = useAuth();
+  const auth = useAuth();
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static" color="secondary">
@@ -44,10 +44,10 @@ export default function NavBar() {
           </Box>
 
           <Box sx={{ flex: 1, display: "flex", justifyContent: "flex-end" }}>
-            {currentUser ? (
+            {auth?.currentUser ? (
               <ProfileInfo />
             ) : (
-              <Button color="inherit" onClick={() => signIn()}>
+              <Button color="inherit" onClick={() => auth?.signIn()}>
                 Login
               </Button>
             )}

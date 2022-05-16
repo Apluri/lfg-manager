@@ -1,17 +1,22 @@
+import { Box } from "@mui/system";
 import React from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../providers/AuthContext";
 import { useDatabase } from "../providers/DatabaseContext";
+import { Profile } from "../users/Profile";
 
 function Home() {
-  const { currentUser } = useAuth();
   const db = useDatabase();
   return (
-    <div className="App">
-      <p>etusivu</p>
-      <button onClick={() => db?.getTestData()}>jaha</button>
-      <button onClick={() => db?.writeTestData()}>write</button>
-    </div>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "row",
+      }}
+    >
+      <Profile style={{ flex: 1 }} />
+      <Profile style={{ flex: 1 }} />
+    </Box>
   );
 }
 

@@ -3,3 +3,12 @@
 }
 
 
+.testi p {
+  font-size: 20;
+  background-color: "red";
+  
+}
+
+p {
+  color: "red";
+}
