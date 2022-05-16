@@ -5,6 +5,7 @@ export type Character = {
   engravings: Engraving[];
   gems: Gem[];
   gearSet: string;
+  cardSet: string;
 };
 
 export type Engraving = {
@@ -26,6 +27,7 @@ export enum ClassNames {
   SOULFIST = "Soulfist",
   WARDANCER = "Wardancer",
   STRIKER = "Striker",
+  GLAIVIER = "Glavier",
   SCRAPPER = "Scrapper",
   ARTILLERIST = "Artillerist",
   GUNSLINGER = "Gunslinger",
@@ -35,6 +37,8 @@ export enum ClassNames {
   BARD = "Bard",
   SHADOWHUNTER = "Shadowhunter",
   DEATHBLADE = "Deathblade",
+  REAPER = "Reaper",
+  SCOUTER = "Scouter",
 }
 
 export function getClassNameList() {
@@ -45,6 +49,7 @@ export function getClassNameList() {
     ClassNames.GUNLANCER,
     ClassNames.SOULFIST,
     ClassNames.WARDANCER,
+    ClassNames.GLAIVIER,
     ClassNames.STRIKER,
     ClassNames.SCRAPPER,
     ClassNames.ARTILLERIST,
@@ -55,5 +60,7 @@ export function getClassNameList() {
     ClassNames.BARD,
     ClassNames.SHADOWHUNTER,
     ClassNames.DEATHBLADE,
+    ClassNames.REAPER,
+    ClassNames.SCOUTER,
   ];
 }

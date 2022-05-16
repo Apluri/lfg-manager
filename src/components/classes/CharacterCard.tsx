@@ -80,7 +80,7 @@ export function CharacterCard({ character, containerStyles }: Props) {
           Gems average level {averageGemLevel()}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          Cardset: lostwind 12 awa
+          Cardset: {character.cardSet}
         </Typography>
         <Typography variant="body2" color="text.secondary">
           Gearset: {character.gearSet}

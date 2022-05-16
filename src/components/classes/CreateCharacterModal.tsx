@@ -25,8 +25,11 @@ export function CreateCharacterModal({
 }: Props) {
   const [charName, setCharName] = useState<string>("");
   const [selectedClass, setSelectedClass] = useState<string>("");
+  const [itemLevel, setItemLevel] = useState<number>(0);
+  const [gearSet, setGearSet] = useState<string>("");
+  const [cardSet, setCardSet] = useState<string>("");
   useEffect(() => {
-    console.log(charName);
+    console.log(gearSet);
   }, [charName]);
 
   function createNewCharacter() {
@@ -34,10 +37,11 @@ export function CreateCharacterModal({
     const newChar: Character = {
       charName,
       character: selectedClass,
-      itemLevel: 1504,
-      gearSet: "Preordained 5 set",
+      itemLevel,
+      gearSet,
       engravings: [],
       gems: [],
+      cardSet: "lostwindu",
     };
     return newChar;
   }
@@ -58,7 +62,7 @@ export function CreateCharacterModal({
             required={true}
             onChange={(e) => setCharName(e.target.value)}
           />
-          <FormControl fullWidth sx={{ marginTop: "1em" }}>
+          <FormControl fullWidth sx={{ marginTop: "1em" }} required={true}>
             <InputLabel id="demo-simple-select-label">Class</InputLabel>
             <Select
               labelId="demo-simple-select-label"
@@ -74,6 +78,26 @@ export function CreateCharacterModal({
               ))}
             </Select>
           </FormControl>
+          <TextField
+            fullWidth
+            label="Item level"
+            variant="standard"
+            type={"number"}
+            required={true}
+            onChange={(e) => setItemLevel(Number(e.target.value))}
+          />
+          <TextField
+            fullWidth
+            label="Gearset"
+            variant="standard"
+            onChange={(e) => setGearSet(e.target.value)}
+          />
+          <TextField
+            fullWidth
+            label="Cardset"
+            variant="standard"
+            onChange={(e) => setCardSet(e.target.value)}
+          />
         </Box>
         <Box sx={styles.actionButtons}>
           <Button>Cancel</Button>

@@ -1,3 +1,4 @@
+import { Paper } from "@mui/material";
 import { Box } from "@mui/system";
 import React from "react";
 import { Link } from "react-router-dom";
@@ -14,7 +15,7 @@ function Home() {
         flexDirection: "row",
       }}
     >
-      <Profile style={{ flex: 1 }} />
+      <Paper style={{ flex: 1, margin: "1em" }}> Tähän tulis vissii lfg</Paper>
       <Profile style={{ flex: 1 }} />
     </Box>
   );

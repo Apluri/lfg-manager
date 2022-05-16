@@ -20,6 +20,7 @@ export function Profile({ style }: Props) {
       gearSet: "Preordained 5 set",
       engravings: [],
       gems: [],
+      cardSet: "Lostowindo",
     },
     {
       charName: "Aplyuri",
@@ -32,6 +33,7 @@ export function Profile({ style }: Props) {
         { level: 5, type: "atk", skillName: "moonlight sonic" },
         { level: 5, type: "cdr", skillName: "moonlight sonic" },
       ],
+      cardSet: "Lostowindo",
     },
   ]);
 
