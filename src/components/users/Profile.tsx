@@ -10,8 +10,32 @@ type Props = {
 
 export function Profile({ style }: Props) {
   const characters: Character[] = [
-    { charName: "Shadowhunter", itemLevel: 1414 },
-    { charName: "Deathblade", itemLevel: 1400 },
+    {
+      charName: "Ayalup",
+      character: "Shadowhunter",
+      itemLevel: 1414,
+      engravings: [
+        { name: "Adrenaline", level: 3 },
+        { name: "Surge", level: 3 },
+        { name: "Ambus master", level: 3 },
+      ],
+      gems: [
+        { level: 5, type: "atk", skillName: "moonlight sonic" },
+        { level: 1, type: "atk", skillName: "moonlight sonic" },
+        { level: 5, type: "cdr", skillName: "moonlight sonic" },
+      ],
+    },
+    {
+      charName: "Aplyuri",
+      character: "Deathblade",
+      itemLevel: 1414,
+      engravings: [{ name: "Adrenaline", level: 3 }],
+      gems: [
+        { level: 5, type: "atk", skillName: "moonlight sonic" },
+        { level: 5, type: "atk", skillName: "moonlight sonic" },
+        { level: 5, type: "cdr", skillName: "moonlight sonic" },
+      ],
+    },
   ];
   return (
     <Box sx={{ ...styles.container, ...style }}>
