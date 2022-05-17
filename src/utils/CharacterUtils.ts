@@ -1,6 +1,27 @@
+import artillerist from "../assets/images/classIcons/artillerist.png";
+import bard from "../assets/images/classIcons/bard.png";
+import berserker from "../assets/images/classIcons/berserker.png";
+import deadeye from "../assets/images/classIcons/deadeye.png";
+import deathblade from "../assets/images/classIcons/deathblade.png";
+import destroyer from "../assets/images/classIcons/destroyer.png";
+import glavier from "../assets/images/classIcons/glaivier.png";
+import gunlancer from "../assets/images/classIcons/gunlancer.png";
+import gunslinger from "../assets/images/classIcons/gunslinger.png";
+import paladin from "../assets/images/classIcons/paladin.png";
+import reaper from "../assets/images/classIcons/reaper.png";
+import scouter from "../assets/images/classIcons/scouter.png";
+import scrapper from "../assets/images/classIcons/scrapper.png";
+import shadowhunter from "../assets/images/classIcons/shadowhunter.png";
+import sharpshooter from "../assets/images/classIcons/sharpshooter.png";
+import sorceress from "../assets/images/classIcons/sorceress.png";
+import soulfist from "../assets/images/classIcons/soulfist.png";
+import striker from "../assets/images/classIcons/striker.png";
+import wardancer from "../assets/images/classIcons/wardancer.png";
+import cutelogo from "../assets/images/cute-logo.jpg";
+
 export type Character = {
   charName: string;
-  character: string;
+  character: ClassNames;
   itemLevel: number;
 };
 
@@ -35,6 +56,7 @@ export enum ClassNames {
   DEATHBLADE = "Deathblade",
   REAPER = "Reaper",
   SCOUTER = "Scouter",
+  DEFAULT = "NoClassSelected",
 }
 
 export function getClassNameList() {
@@ -58,5 +80,29 @@ export function getClassNameList() {
     ClassNames.DEATHBLADE,
     ClassNames.REAPER,
     ClassNames.SCOUTER,
+    ClassNames.DEFAULT,
   ];
 }
+
+export const classIcons: Record<ClassNames, string> = {
+  [ClassNames.ARTILLERIST]: artillerist,
+  [ClassNames.BARD]: bard,
+  [ClassNames.BERSERKER]: berserker,
+  [ClassNames.DEADEYE]: deadeye,
+  [ClassNames.DEATHBLADE]: deathblade,
+  [ClassNames.DESTROYER]: destroyer,
+  [ClassNames.GLAIVIER]: glavier,
+  [ClassNames.GUNLANCER]: gunlancer,
+  [ClassNames.GUNSLINGER]: gunslinger,
+  [ClassNames.PALADIN]: paladin,
+  [ClassNames.REAPER]: reaper,
+  [ClassNames.SCOUTER]: scouter,
+  [ClassNames.SCRAPPER]: scrapper,
+  [ClassNames.SHADOWHUNTER]: shadowhunter,
+  [ClassNames.SHARPSHOOTER]: sharpshooter,
+  [ClassNames.SORCERESS]: sorceress,
+  [ClassNames.SOULFIST]: soulfist,
+  [ClassNames.STRIKER]: striker,
+  [ClassNames.WARDANCER]: wardancer,
+  [ClassNames.DEFAULT]: cutelogo,
+};

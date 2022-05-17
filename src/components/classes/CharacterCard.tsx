@@ -15,7 +15,12 @@ import {
 } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useState } from "react";
-import { Character, Gem } from "../../utils/CharacterUtils";
+import {
+  Character,
+  classIcons,
+  ClassNames,
+  Gem,
+} from "../../utils/CharacterUtils";
 import berserkerIcon from "../../assets/images/classIcons/berserker.png";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -62,7 +67,7 @@ export function CharacterCard({
   return (
     <Card sx={containerStyles}>
       <CardHeader
-        avatar={<Avatar src={berserkerIcon} />}
+        avatar={<Avatar src={classIcons[character.character]} />}
         action={
           <IconButton onClick={handleClick} aria-label="settings">
             <MoreVertIcon />

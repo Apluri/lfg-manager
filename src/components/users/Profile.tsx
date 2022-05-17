@@ -1,7 +1,7 @@
 import { Avatar, Button, Stack, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useState } from "react";
-import { Character } from "../../utils/CharacterUtils";
+import { Character, ClassNames } from "../../utils/CharacterUtils";
 import { CharacterCard } from "../classes/CharacterCard";
 import { CreateCharacterModal } from "../classes/CreateCharacterModal";
 
@@ -15,12 +15,12 @@ export function Profile({ style }: Props) {
   const [characters, setCharacters] = useState<Character[]>([
     {
       charName: "Ayalup",
-      character: "Shadowhunter",
+      character: ClassNames.ARTILLERIST,
       itemLevel: 1414,
     },
     {
       charName: "Aplyuri",
-      character: "Deathblade",
+      character: ClassNames.DEATHBLADE,
       itemLevel: 1414,
     },
   ]);
@@ -31,11 +31,14 @@ export function Profile({ style }: Props) {
   function openModal(): void {
     setAddCharacterVisible(true);
   }
-  function handleAddCharacter(newChar: Character) {
-    console.log("character creation time");
-    console.log(newChar);
-    setCharacters([...characters, newChar]);
-    closeModal();
+  function handleAddCharacter(newChar: Character): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      setCharacters([...characters, newChar]);
+      closeModal();
+      // add thingies to db and check if succesful?
+      if (true) resolve();
+      reject();
+    });
   }
   function handleDelete(charToDelete: Character): void {
     setCharacters(

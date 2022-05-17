@@ -8,15 +8,21 @@ import {
   Select,
   MenuItem,
   Button,
+  Avatar,
 } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useEffect, useState } from "react";
-import { getClassNameList, Character } from "../../utils/CharacterUtils";
+import {
+  getClassNameList,
+  Character,
+  ClassNames,
+  classIcons,
+} from "../../utils/CharacterUtils";
 
 type Props = {
   visible: boolean;
   handleClose: () => void;
-  handleAddCharacter: (newCharacter: Character) => void;
+  handleAddCharacter: (newCharacter: Character) => Promise<void>;
 };
 export function CreateCharacterModal({
   visible,
@@ -24,9 +30,24 @@ export function CreateCharacterModal({
   handleAddCharacter,
 }: Props) {
   const [charName, setCharName] = useState<string>("");
-  const [selectedClass, setSelectedClass] = useState<string>("");
+  const [selectedClass, setSelectedClass] = useState<ClassNames>(
+    ClassNames.DEFAULT
+  );
   const [itemLevel, setItemLevel] = useState<number>(0);
+  const [error, setError] = useState(false);
 
+  function validateInputs() {
+    let valid = true;
+    if (
+      charName.length === 0 ||
+      selectedClass === ClassNames.DEFAULT ||
+      itemLevel === 0
+    ) {
+      setError(true);
+      valid = false;
+    }
+    return valid;
+  }
   function createNewCharacter() {
     const newChar: Character = {
       charName,
@@ -34,6 +55,12 @@ export function CreateCharacterModal({
       itemLevel,
     };
     return newChar;
+  }
+  function clearState() {
+    setCharName("");
+    setSelectedClass(ClassNames.DEFAULT);
+    setItemLevel(0);
+    setError(false);
   }
   return (
     <Modal
@@ -45,21 +72,43 @@ export function CreateCharacterModal({
     >
       <Paper sx={styles.container}>
         <Box>
-          <TextField
-            fullWidth
-            label="Character name"
-            variant="standard"
-            required={true}
-            onChange={(e) => setCharName(e.target.value)}
-          />
-          <FormControl fullWidth sx={{ marginTop: "1em" }} required={true}>
+          <Box sx={styles.row}>
+            <TextField
+              fullWidth
+              error={error && charName.length === 0}
+              label="Character name"
+              value={charName}
+              variant="standard"
+              required={true}
+              onChange={(e) => setCharName(e.target.value)}
+              sx={{ ...styles.itemsMargin, marginRight: "5px" }}
+            />
+            <TextField
+              error={error && itemLevel === 0}
+              label="Item level"
+              variant="standard"
+              type={"number"}
+              required={true}
+              onChange={(e) => setItemLevel(Number(e.target.value))}
+              sx={{ ...styles.itemsMargin, marginLeft: "5px" }}
+            />
+          </Box>
+
+          <FormControl fullWidth sx={styles.itemsMargin} required={true}>
             <InputLabel id="demo-simple-select-label">Class</InputLabel>
             <Select
+              error={error && selectedClass === ClassNames.DEFAULT}
               labelId="demo-simple-select-label"
               id="demo-simple-select"
               value={selectedClass}
               label="Class"
-              onChange={(e) => setSelectedClass(e.target.value)}
+              startAdornment={
+                <Avatar
+                  src={classIcons[selectedClass]}
+                  sx={{ marginRight: "10px" }}
+                />
+              }
+              onChange={(e) => setSelectedClass(e.target.value as ClassNames)}
             >
               {getClassNameList().map((gameClass) => (
                 <MenuItem key={gameClass} value={gameClass}>
@@ -68,18 +117,26 @@ export function CreateCharacterModal({
               ))}
             </Select>
           </FormControl>
-          <TextField
-            fullWidth
-            label="Item level"
-            variant="standard"
-            type={"number"}
-            required={true}
-            onChange={(e) => setItemLevel(Number(e.target.value))}
-          />
         </Box>
         <Box sx={styles.actionButtons}>
-          <Button>Cancel</Button>
-          <Button onClick={() => handleAddCharacter(createNewCharacter())}>
+          <Button
+            onClick={() => {
+              clearState();
+              handleClose();
+            }}
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={() =>
+              validateInputs() &&
+              handleAddCharacter(createNewCharacter())
+                .then(() => clearState())
+                .catch(() => {
+                  console.log("error while adding char");
+                })
+            }
+          >
             Add
           </Button>
         </Box>
@@ -90,20 +147,26 @@ export function CreateCharacterModal({
 const styles: { [key: string]: React.CSSProperties } = {
   modal: {
     display: "flex",
-    alignContent: "center",
     justifyContent: "center",
+    alignItems: "center",
     padding: "5em",
   },
   container: {
     display: "flex",
     flexDirection: "column",
     padding: "1em",
-    minWidth: "40%",
     justifyContent: "space-between",
+  },
+  itemsMargin: {
+    marginBottom: "3em",
   },
   actionButtons: {
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-around",
+  },
+  row: {
+    display: "flex",
+    flexDirection: "row",
   },
 };
