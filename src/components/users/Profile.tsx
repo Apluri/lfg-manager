@@ -4,12 +4,15 @@ import React, { useState } from "react";
 import { Character, ClassNames } from "../../utils/CharacterUtils";
 import { CharacterCard } from "../classes/CharacterCard";
 import { CreateCharacterModal } from "../classes/CreateCharacterModal";
+import { EditUserName } from "./EditUserName";
+import { ProfileInfo } from "./ProfileInfo";
 
 type Props = {
   style?: React.CSSProperties;
 };
 
 export function Profile({ style }: Props) {
+  const [editUserName, setEditUserName] = useState<boolean>(false);
   const [addCharacterVisible, setAddCharacterVisible] =
     useState<boolean>(false);
   const [characters, setCharacters] = useState<Character[]>([
@@ -48,8 +51,14 @@ export function Profile({ style }: Props) {
   return (
     <Box sx={{ ...styles.container, ...style }}>
       <Box sx={styles.userInfoContainer}>
-        <Typography>Username</Typography>
-        <Avatar />
+        {editUserName ? (
+          <EditUserName />
+        ) : (
+          <>
+            <ProfileInfo />
+            <Button onClick={() => setEditUserName(true)}>edit</Button>
+          </>
+        )}
       </Box>
       <Button onClick={openModal}>Add character</Button>
       <CreateCharacterModal

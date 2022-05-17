@@ -1,13 +1,13 @@
 import React from "react";
-import { Box, Button } from "@mui/material";
+import { Avatar, Box, Button, Typography } from "@mui/material";
 import { useAuth } from "../providers/AuthContext";
 
 export function ProfileInfo() {
   const auth = useAuth();
+  const username = "Username";
   return (
-    <Box sx={{ display: "flex", flexDirection: "row" }}>
-      <p>{auth?.currentUser && auth?.currentUser.email}</p>
-      <Button onClick={() => auth?.logOut()}> Log out</Button>
+    <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+      <Typography>{auth?.currentUser && username}</Typography>
     </Box>
   );
 }

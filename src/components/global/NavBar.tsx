@@ -45,7 +45,10 @@ export default function NavBar() {
 
           <Box sx={{ flex: 1, display: "flex", justifyContent: "flex-end" }}>
             {auth?.currentUser ? (
-              <ProfileInfo />
+              <>
+                <ProfileInfo />
+                <Button>Log Out</Button>
+              </>
             ) : (
               <Button color="inherit" onClick={() => auth?.signIn()}>
                 Login
