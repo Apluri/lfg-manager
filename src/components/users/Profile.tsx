@@ -50,23 +50,26 @@ export function Profile({ style }: Props) {
       characters.filter((char) => char.charName !== charToDelete.charName)
     );
   }
+  function handleEditUserName(newUserName: string): void {
+    const user = db?.user;
+    if (user !== null && user !== undefined) {
+      const newUserData: CustomUser["data"] = {
+        ...user.data,
+        userName: newUserName,
+      };
+      const newUser: CustomUser = { ...user, data: newUserData };
+
+      db?.editUser(newUser);
+      setEditUserName(false);
+    }
+  }
   return (
     <Box sx={{ ...styles.container, ...style }}>
       <Box sx={styles.userInfoContainer}>
         <EditUserName
           visible={editUserName}
           oldName={db?.user?.data?.userName}
-          onClose={(newUserName) => {
-            const user = db?.user;
-            if (user !== null && user !== undefined) {
-              const editedUser: CustomUser = {
-                ...user,
-                data: { ...user.data, userName: newUserName },
-              };
-              db?.editUser(editedUser);
-              setEditUserName(false);
-            }
-          }}
+          onClose={(newUserName) => handleEditUserName(newUserName)}
           onCancel={() => {
             setEditUserName(false);
           }}

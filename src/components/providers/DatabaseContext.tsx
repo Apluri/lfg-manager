@@ -24,6 +24,7 @@ export type UserData = {
 function editUser(user: CustomUser): Promise<void> {
   return set(ref(database, "users/" + user.id), user.data);
 }
+
 const DbContext = React.createContext<DatabaseContextInterface | null>(null);
 
 export function useDatabase(): DatabaseContextInterface | null {
