@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { Character, ClassNames } from "../../utils/CharacterUtils";
 import { CharacterCard } from "../classes/CharacterCard";
 import { CreateCharacterModal } from "../classes/CreateCharacterModal";
+import { useDatabase } from "../providers/DatabaseContext";
 import { EditUserName } from "./EditUserName";
 import { ProfileInfo } from "./ProfileInfo";
 
@@ -12,6 +13,7 @@ type Props = {
 };
 
 export function Profile({ style }: Props) {
+  const db = useDatabase();
   const [editUserName, setEditUserName] = useState<boolean>(false);
   const [addCharacterVisible, setAddCharacterVisible] =
     useState<boolean>(false);
@@ -52,7 +54,11 @@ export function Profile({ style }: Props) {
     <Box sx={{ ...styles.container, ...style }}>
       <Box sx={styles.userInfoContainer}>
         {editUserName ? (
-          <EditUserName />
+          <EditUserName
+            visible={editUserName}
+            onClose={(newUserName) => {}}
+            onCancel={() => {}}
+          />
         ) : (
           <>
             <ProfileInfo />

@@ -47,7 +47,7 @@ export default function NavBar() {
             {auth?.currentUser ? (
               <>
                 <ProfileInfo />
-                <Button>Log Out</Button>
+                <Button onClick={() => auth?.logOut()}>Log Out</Button>
               </>
             ) : (
               <Button color="inherit" onClick={() => auth?.signIn()}>

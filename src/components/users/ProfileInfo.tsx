@@ -1,13 +1,13 @@
 import React from "react";
 import { Avatar, Box, Button, Typography } from "@mui/material";
-import { useAuth } from "../providers/AuthContext";
+import { useDatabase } from "../providers/DatabaseContext";
 
 export function ProfileInfo() {
-  const auth = useAuth();
-  const username = "Username";
+  const db = useDatabase();
+  const username = db?.user?.data?.userName;
   return (
     <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-      <Typography>{auth?.currentUser && username}</Typography>
+      <Typography>{username && username}</Typography>
     </Box>
   );
 }
