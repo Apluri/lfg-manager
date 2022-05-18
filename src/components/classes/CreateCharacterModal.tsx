@@ -18,6 +18,7 @@ import {
   ClassNames,
   classIcons,
 } from "../../utils/CharacterUtils";
+import { v4 as uuidv4 } from "uuid";
 
 type Props = {
   visible: boolean;
@@ -50,10 +51,12 @@ export function CreateCharacterModal({
   }
   function createNewCharacter() {
     const newChar: Character = {
+      id: uuidv4(),
       charName,
       character: selectedClass,
       itemLevel,
     };
+    console.log(newChar);
     return newChar;
   }
   function clearState() {

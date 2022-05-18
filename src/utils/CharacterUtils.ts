@@ -20,6 +20,7 @@ import wardancer from "../assets/images/classIcons/wardancer.png";
 import cutelogo from "../assets/images/cute-logo.jpg";
 
 export type Character = {
+  id: string;
   charName: string;
   character: ClassNames;
   itemLevel: number;

@@ -7,6 +7,7 @@ import { CreateCharacterModal } from "../classes/CreateCharacterModal";
 import { CustomUser, useDatabase } from "../providers/DatabaseContext";
 import { EditUserName } from "./EditUserName";
 import { ProfileInfo } from "./ProfileInfo";
+import { v4 as uuidv4 } from "uuid";
 
 type Props = {
   style?: React.CSSProperties;
@@ -19,11 +20,13 @@ export function Profile({ style }: Props) {
     useState<boolean>(false);
   const [characters, setCharacters] = useState<Character[]>([
     {
+      id: uuidv4(),
       charName: "Ayalup",
       character: ClassNames.ARTILLERIST,
       itemLevel: 1414,
     },
     {
+      id: uuidv4(),
       charName: "Aplyuri",
       character: ClassNames.DEATHBLADE,
       itemLevel: 1414,
