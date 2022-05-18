@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Character, ClassNames } from "../../utils/CharacterUtils";
 import { CharacterCard } from "../classes/CharacterCard";
 import { CreateCharacterModal } from "../classes/CreateCharacterModal";
-import { useDatabase } from "../providers/DatabaseContext";
+import { CustomUser, useDatabase } from "../providers/DatabaseContext";
 import { EditUserName } from "./EditUserName";
 import { ProfileInfo } from "./ProfileInfo";
 
@@ -53,18 +53,27 @@ export function Profile({ style }: Props) {
   return (
     <Box sx={{ ...styles.container, ...style }}>
       <Box sx={styles.userInfoContainer}>
-        {editUserName ? (
-          <EditUserName
-            visible={editUserName}
-            onClose={(newUserName) => {}}
-            onCancel={() => {}}
-          />
-        ) : (
-          <>
-            <ProfileInfo />
-            <Button onClick={() => setEditUserName(true)}>edit</Button>
-          </>
-        )}
+        <EditUserName
+          visible={editUserName}
+          oldName={db?.user?.data?.userName}
+          onClose={(newUserName) => {
+            const user = db?.user;
+            if (user !== null && user !== undefined) {
+              const editedUser: CustomUser = {
+                ...user,
+                data: { ...user.data, userName: newUserName },
+              };
+              db?.editUser(editedUser);
+              setEditUserName(false);
+            }
+          }}
+          onCancel={() => {
+            setEditUserName(false);
+          }}
+        />
+
+        <ProfileInfo />
+        <Button onClick={() => setEditUserName(true)}>edit</Button>
       </Box>
       <Button onClick={openModal}>Add character</Button>
       <CreateCharacterModal

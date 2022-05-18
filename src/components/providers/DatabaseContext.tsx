@@ -9,6 +9,7 @@ import { EditUserName } from "../users/EditUserName";
 
 interface DatabaseContextInterface {
   user: CustomUser | null;
+  editUser: (user: CustomUser) => Promise<void>;
 }
 
 export type CustomUser = {
@@ -79,6 +80,7 @@ export function DatabaseProvider({ children }: Props) {
   }, [auth?.currentUser]);
   const value: DatabaseContextInterface = {
     user,
+    editUser,
   };
   return (
     <DbContext.Provider value={value}>

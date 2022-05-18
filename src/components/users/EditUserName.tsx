@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box } from "@mui/system";
 import { Button, Modal, Paper, TextField } from "@mui/material";
 
@@ -6,21 +6,37 @@ type Props = {
   visible: boolean;
   onClose: (newUserName: string) => void;
   onCancel: () => void;
+  oldName?: string;
 };
-export function EditUserName({ visible, onClose, onCancel }: Props) {
-  const [userName, setUserName] = useState<string>("");
+export function EditUserName({ visible, onClose, onCancel, oldName }: Props) {
+  const [userName, setUserName] = useState<string>(oldName || "");
   const [error, setError] = useState<boolean>(false);
 
+  useEffect(() => {
+    if (!visible) clearState();
+    if (visible && oldName) setUserName(oldName);
+  }, [visible]);
   function handleClose() {
-    setError(false);
     if (userName.length === 0) {
       setError(true);
       return;
     }
     onClose(userName);
   }
+  function handleCancel() {
+    if (oldName) {
+      onCancel();
+      return;
+    }
+    setError(true);
+    return;
+  }
+  function clearState() {
+    setError(false);
+    setUserName("");
+  }
   return (
-    <Modal open={visible} onClose={handleClose} sx={styles.modal}>
+    <Modal open={visible} onClose={handleCancel} sx={styles.modal}>
       <Paper sx={styles.container}>
         <TextField
           variant="standard"
@@ -32,8 +48,8 @@ export function EditUserName({ visible, onClose, onCancel }: Props) {
           onChange={(e) => setUserName(e.target.value)}
         />
         <Box sx={styles.actionButtons}>
-          <Button onClick={() => onCancel()}>Cancel</Button>
-          <Button onClick={() => handleClose()}>Ok</Button>
+          <Button onClick={handleCancel}>Cancel</Button>
+          <Button onClick={handleClose}>Ok</Button>
         </Box>
       </Paper>
     </Modal>
