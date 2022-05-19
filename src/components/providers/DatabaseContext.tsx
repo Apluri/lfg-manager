@@ -7,27 +7,33 @@ import { Character, ClassNames } from "../../utils/CharacterUtils";
 import { Modal, Paper } from "@mui/material";
 import { EditUserName } from "../users/EditUserName";
 
+enum Paths {
+  CHARACTERS = "characters/",
+  USERNAME = "userName/",
+  USERS = "users/",
+}
 interface DatabaseContextInterface {
   user: UserData | null;
   editUser: (user: UserData, userId: string) => Promise<void>;
   addCharacter: (newChar: Character) => Promise<void>;
+  deleteCharacter: (charToDelete: Character) => void;
+  editUserName: (newUserName: string) => void;
 }
 
 export type UserData = {
   userName: string;
-  characters: Character[];
+  characters?: Character[];
 };
 
 function editUser(user: UserData, userId: string): Promise<void> {
-  return set(ref(database, "users/" + userId), user);
+  return set(ref(database, Paths.USERS + userId), user);
 }
 function editUserCustomDataAndPath(
   data: any,
   userId: string,
-  path?: string
+  path: string
 ): Promise<void> {
-  console.log(path || "pahtia ei löytyny");
-  return set(ref(database, "users/" + userId + "/" + path || ""), data);
+  return set(ref(database, Paths.USERS + userId + "/" + path), data);
 }
 
 const DbContext = React.createContext<DatabaseContextInterface | null>(null);
@@ -98,7 +104,7 @@ export function DatabaseProvider({ children }: Props) {
         editUserCustomDataAndPath(
           newCharactersList,
           auth.currentUser.uid,
-          "characters/"
+          Paths.CHARACTERS
         )
           .then(() => resolve())
           .catch((e) => reject(e));
@@ -107,11 +113,37 @@ export function DatabaseProvider({ children }: Props) {
       }
     });
   }
+  function deleteCharacter(charToDelete: Character) {
+    const newCharactersList = user?.characters?.filter(
+      (char) => char.id !== charToDelete.id
+    );
+    if (
+      auth?.currentUser?.uid !== undefined &&
+      newCharactersList !== undefined
+    ) {
+      editUserCustomDataAndPath(
+        newCharactersList,
+        auth.currentUser.uid,
+        Paths.CHARACTERS
+      );
+    }
+  }
+  function editUserName(newUserName: string) {
+    if (auth?.currentUser?.uid) {
+      editUserCustomDataAndPath(
+        newUserName,
+        auth.currentUser.uid,
+        Paths.USERNAME
+      );
+    }
+  }
 
   const value: DatabaseContextInterface = {
     user,
     editUser,
     addCharacter,
+    deleteCharacter,
+    editUserName,
   };
   return (
     <DbContext.Provider value={value}>

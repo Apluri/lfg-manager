@@ -19,7 +19,6 @@ export function Profile({ style }: Props) {
   const [editUserName, setEditUserName] = useState<boolean>(false);
   const [addCharacterVisible, setAddCharacterVisible] =
     useState<boolean>(false);
-  const [characters, setCharacters] = useState<Character[]>([]);
 
   function closeModal(): void {
     setAddCharacterVisible(false);
@@ -32,25 +31,11 @@ export function Profile({ style }: Props) {
     db?.addCharacter(newChar);
   }
   function handleDelete(charToDelete: Character): void {
-    setCharacters(
-      characters.filter((char) => char.charName !== charToDelete.charName)
-    );
+    db?.deleteCharacter(charToDelete);
   }
   function handleEditUserName(newUserName: string): void {
-    const user = db?.user;
-    if (
-      user !== null &&
-      user !== undefined &&
-      auth?.currentUser?.uid !== undefined
-    ) {
-      const newUser: UserData = {
-        ...user,
-        userName: newUserName,
-      };
-
-      db?.editUser(newUser, auth.currentUser.uid);
-      setEditUserName(false);
-    }
+    db?.editUserName(newUserName);
+    setEditUserName(false);
   }
   return (
     <Box sx={{ ...styles.container, ...style }}>
