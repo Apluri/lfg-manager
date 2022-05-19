@@ -4,10 +4,10 @@ import React, { useState } from "react";
 import { Character, ClassNames } from "../../utils/CharacterUtils";
 import { CharacterCard } from "../classes/CharacterCard";
 import { CreateCharacterModal } from "../classes/CreateCharacterModal";
-import { CustomUser, useDatabase } from "../providers/DatabaseContext";
+import { useAuth } from "../providers/AuthContext";
+import { UserData, useDatabase } from "../providers/DatabaseContext";
 import { EditUserName } from "./EditUserName";
 import { ProfileInfo } from "./ProfileInfo";
-import { v4 as uuidv4 } from "uuid";
 
 type Props = {
   style?: React.CSSProperties;
@@ -15,34 +15,24 @@ type Props = {
 
 export function Profile({ style }: Props) {
   const db = useDatabase();
+  const auth = useAuth();
   const [editUserName, setEditUserName] = useState<boolean>(false);
   const [addCharacterVisible, setAddCharacterVisible] =
     useState<boolean>(false);
-  const [characters, setCharacters] = useState<Character[]>([
-    {
-      id: uuidv4(),
-      charName: "Ayalup",
-      character: ClassNames.ARTILLERIST,
-      itemLevel: 1414,
-    },
-    {
-      id: uuidv4(),
-      charName: "Aplyuri",
-      character: ClassNames.DEATHBLADE,
-      itemLevel: 1414,
-    },
-  ]);
+  const [characters, setCharacters] = useState<Character[]>([]);
 
   function closeModal(): void {
     setAddCharacterVisible(false);
   }
   function openModal(): void {
     setAddCharacterVisible(true);
+    console.log(db?.user?.characters);
   }
   function handleAddCharacter(newChar: Character): Promise<void> {
     return new Promise<void>((resolve, reject) => {
-      setCharacters([...characters, newChar]);
+      //setCharacters([...characters, newChar]);
       closeModal();
+      db?.addCharacter(newChar);
       // add thingies to db and check if succesful?
       if (true) resolve();
       reject();
@@ -55,14 +45,17 @@ export function Profile({ style }: Props) {
   }
   function handleEditUserName(newUserName: string): void {
     const user = db?.user;
-    if (user !== null && user !== undefined) {
-      const newUserData: CustomUser["data"] = {
-        ...user.data,
+    if (
+      user !== null &&
+      user !== undefined &&
+      auth?.currentUser?.uid !== undefined
+    ) {
+      const newUser: UserData = {
+        ...user,
         userName: newUserName,
       };
-      const newUser: CustomUser = { ...user, data: newUserData };
 
-      db?.editUser(newUser);
+      db?.editUser(newUser, auth.currentUser.uid);
       setEditUserName(false);
     }
   }
@@ -71,7 +64,7 @@ export function Profile({ style }: Props) {
       <Box sx={styles.userInfoContainer}>
         <EditUserName
           visible={editUserName}
-          oldName={db?.user?.data?.userName}
+          oldName={db?.user?.userName}
           onClose={(newUserName) => handleEditUserName(newUserName)}
           onCancel={() => {
             setEditUserName(false);
@@ -88,7 +81,7 @@ export function Profile({ style }: Props) {
         handleAddCharacter={handleAddCharacter}
       />
       <Stack spacing={2} sx={{ width: "100%" }}>
-        {characters.map((character, index) => (
+        {db?.user?.characters?.map((character, index) => (
           <CharacterCard
             key={index}
             character={character}

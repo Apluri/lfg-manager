@@ -56,7 +56,6 @@ export function CreateCharacterModal({
       character: selectedClass,
       itemLevel,
     };
-    console.log(newChar);
     return newChar;
   }
   function clearState() {

@@ -4,7 +4,7 @@ import { useDatabase } from "../providers/DatabaseContext";
 
 export function ProfileInfo() {
   const db = useDatabase();
-  const username = db?.user?.data?.userName;
+  const username = db?.user?.userName;
   return (
     <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
       <Typography>{username && username}</Typography>

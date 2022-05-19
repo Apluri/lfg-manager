@@ -8,21 +8,26 @@ import { Modal, Paper } from "@mui/material";
 import { EditUserName } from "../users/EditUserName";
 
 interface DatabaseContextInterface {
-  user: CustomUser | null;
-  editUser: (user: CustomUser) => Promise<void>;
+  user: UserData | null;
+  editUser: (user: UserData, userId: string) => Promise<void>;
+  addCharacter: (newChar: Character) => Promise<void>;
 }
 
-export type CustomUser = {
-  id: string;
-  data: UserData;
-};
 export type UserData = {
   userName: string;
   characters: Character[];
 };
 
-function editUser(user: CustomUser): Promise<void> {
-  return set(ref(database, "users/" + user.id), user.data);
+function editUser(user: UserData, userId: string): Promise<void> {
+  return set(ref(database, "users/" + userId), user);
+}
+function editUserCustomDataAndPath(
+  data: any,
+  userId: string,
+  path?: string
+): Promise<void> {
+  console.log(path || "pahtia ei löytyny");
+  return set(ref(database, "users/" + userId + "/" + path || ""), data);
 }
 
 const DbContext = React.createContext<DatabaseContextInterface | null>(null);
@@ -36,12 +41,12 @@ type Props = {
 };
 export function DatabaseProvider({ children }: Props) {
   const auth = useAuth();
-  const [user, setUser] = useState<CustomUser | null>(null);
+  const [user, setUser] = useState<UserData | null>(null);
   const [userNameModalVisible, setUserNameModalVisible] =
     useState<boolean>(false);
 
-  function getUserData(user: User | null): void {
-    const t = ref(database, "users/" + user?.uid);
+  function getUserData(uid: string): void {
+    const t = ref(database, "users/" + uid);
     onValue(t, (snapshot) => {
       const data = snapshot.val();
       if (!data) {
@@ -50,12 +55,7 @@ export function DatabaseProvider({ children }: Props) {
         setUserNameModalVisible(true);
         return;
       }
-      if (user?.uid) {
-        setUser({ id: user?.uid, data });
-      } else {
-        console.log("No user id found");
-        return;
-      }
+      setUser({ userName: data.userName, characters: data.characters });
     });
   }
 
@@ -63,25 +63,53 @@ export function DatabaseProvider({ children }: Props) {
     console.log(newUserName);
     setUserNameModalVisible(false);
     if (auth?.currentUser != null) {
-      const tempUser: CustomUser = {
-        id: auth.currentUser.uid,
-        data: {
-          userName: newUserName,
-          characters: [],
-        },
+      const tempUser: UserData = {
+        userName: newUserName,
+        characters: [
+          /*
+          {
+            id: "testiid",
+            charName: "cdu",
+            character: ClassNames.SHADOWHUNTER,
+            itemLevel: 100,
+          },
+          */
+        ],
       };
-      editUser(tempUser);
+      editUser(tempUser, auth.currentUser.uid);
     }
   }
   useEffect(() => {
-    if (auth?.currentUser != null) getUserData(auth.currentUser);
+    if (auth?.currentUser != null) getUserData(auth.currentUser.uid);
     else {
       setUser(null);
     }
   }, [auth?.currentUser]);
+
+  function addCharacter(newChar: Character): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      let newCharactersList: Character[] = [];
+      if (user?.characters !== undefined) {
+        newCharactersList = [...user.characters, newChar];
+      } else {
+        newCharactersList = [newChar];
+      }
+      if (auth?.currentUser?.uid !== undefined) {
+        return editUserCustomDataAndPath(
+          newCharactersList,
+          auth.currentUser.uid,
+          "characters/"
+        );
+      }
+
+      reject("could not create character, auth uid not defined");
+    });
+  }
+
   const value: DatabaseContextInterface = {
     user,
     editUser,
+    addCharacter,
   };
   return (
     <DbContext.Provider value={value}>
