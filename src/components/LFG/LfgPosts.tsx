@@ -3,6 +3,7 @@ import { IconButton, Paper, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useState } from "react";
 import { Character, ClassNames } from "../../utils/CharacterUtils";
+import { RaidList } from "./RaidList";
 
 export type LfgPost = {
   title: string;
@@ -20,7 +21,7 @@ export function LfgPosts() {
         {
           id: "aa",
           character: ClassNames.SHARPSHOOTER,
-          charName: "Tertsi",
+          charName: "Tertsi1",
           itemLevel: 1400,
         },
         {
@@ -44,25 +45,19 @@ export function LfgPosts() {
         {
           id: "aa",
           character: ClassNames.SHARPSHOOTER,
-          charName: "Tertsi",
+          charName: "Tertsi5",
           itemLevel: 1400,
         },
         {
           id: "aa",
           character: ClassNames.SHARPSHOOTER,
-          charName: "Tertsi2",
+          charName: "Tertsi6",
           itemLevel: 1400,
         },
         {
           id: "aa",
           character: ClassNames.SHARPSHOOTER,
-          charName: "Terts3",
-          itemLevel: 1400,
-        },
-        {
-          id: "aa",
-          character: ClassNames.SHARPSHOOTER,
-          charName: "Terts4",
+          charName: "Terts7",
           itemLevel: 1400,
         },
       ],
@@ -106,15 +101,7 @@ export function LfgPosts() {
                 <MoreVertIcon />
               </IconButton>
             </Box>
-            <Box sx={styles.partyContainer}>
-              {post.players.map((player) => {
-                return (
-                  <Paper elevation={8} sx={styles.playerCard}>
-                    <Typography>{`${player.charName} ${player.character} ${player.itemLevel}`}</Typography>
-                  </Paper>
-                );
-              })}
-            </Box>
+            <RaidList players={post.players} raidSize={8} />
           </Paper>
         );
       })}
