@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../providers/AuthContext";
 import { useDatabase } from "../providers/DatabaseContext";
 import { Profile } from "../users/Profile";
+import { LfgScreen } from "./LfgScreen";
 
 function Home() {
   const db = useDatabase();
@@ -15,7 +16,7 @@ function Home() {
         flexDirection: "row",
       }}
     >
-      <Paper style={{ flex: 1, margin: "1em" }}> Tähän tulis vissii lfg</Paper>
+      <LfgScreen style={{ flex: 1 }} />
       <Profile style={{ flex: 1 }} />
     </Box>
   );
