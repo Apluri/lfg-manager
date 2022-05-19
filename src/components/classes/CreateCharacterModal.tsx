@@ -130,9 +130,12 @@ export function CreateCharacterModal({
             Cancel
           </Button>
           <Button
-            onClick={() =>
-              validateInputs() && handleAddCharacter(createNewCharacter())
-            }
+            onClick={() => {
+              if (validateInputs()) {
+                handleAddCharacter(createNewCharacter());
+                clearState();
+              }
+            }}
           >
             Add
           </Button>
