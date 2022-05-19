@@ -64,7 +64,6 @@ export function CharacterCard({
     setAnchorEl(null);
   };
 
-  console.log(character);
   return (
     <Card sx={containerStyles}>
       <CardHeader

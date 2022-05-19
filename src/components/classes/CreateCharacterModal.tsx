@@ -23,7 +23,7 @@ import { v4 as uuidv4 } from "uuid";
 type Props = {
   visible: boolean;
   handleClose: () => void;
-  handleAddCharacter: (newCharacter: Character) => Promise<void>;
+  handleAddCharacter: (newCharacter: Character) => void;
 };
 export function CreateCharacterModal({
   visible,
@@ -131,12 +131,7 @@ export function CreateCharacterModal({
           </Button>
           <Button
             onClick={() =>
-              validateInputs() &&
-              handleAddCharacter(createNewCharacter())
-                .then(() => clearState())
-                .catch(() => {
-                  console.log("error while adding char");
-                })
+              validateInputs() && handleAddCharacter(createNewCharacter())
             }
           >
             Add

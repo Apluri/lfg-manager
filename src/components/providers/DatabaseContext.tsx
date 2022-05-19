@@ -95,14 +95,16 @@ export function DatabaseProvider({ children }: Props) {
         newCharactersList = [newChar];
       }
       if (auth?.currentUser?.uid !== undefined) {
-        return editUserCustomDataAndPath(
+        editUserCustomDataAndPath(
           newCharactersList,
           auth.currentUser.uid,
           "characters/"
-        );
+        )
+          .then(() => resolve())
+          .catch((e) => reject(e));
+      } else {
+        reject("could not create character, auth uid not defined");
       }
-
-      reject("could not create character, auth uid not defined");
     });
   }
 

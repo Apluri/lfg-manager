@@ -26,17 +26,10 @@ export function Profile({ style }: Props) {
   }
   function openModal(): void {
     setAddCharacterVisible(true);
-    console.log(db?.user?.characters);
   }
-  function handleAddCharacter(newChar: Character): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-      //setCharacters([...characters, newChar]);
-      closeModal();
-      db?.addCharacter(newChar);
-      // add thingies to db and check if succesful?
-      if (true) resolve();
-      reject();
-    });
+  function handleAddCharacter(newChar: Character): void {
+    closeModal();
+    db?.addCharacter(newChar);
   }
   function handleDelete(charToDelete: Character): void {
     setCharacters(
