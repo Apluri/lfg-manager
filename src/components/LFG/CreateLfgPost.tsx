@@ -5,7 +5,6 @@ import React, { useState } from "react";
 import { ClassNames } from "../../utils/CharacterUtils";
 import { useAuth } from "../providers/AuthContext";
 import { LfgPost } from "./LfgPosts";
-
 type Props = {
   handleAddNewPost: (post: LfgPost) => void;
   visible: boolean;
@@ -38,6 +37,7 @@ export function CreateLfgPost({
       title,
       startTime: startTime?.toJSON() ?? new Date().toJSON(),
       ownerId: auth.currentUser.uid,
+      lfgId: "testid",
       applicants: [],
     };
     return post;

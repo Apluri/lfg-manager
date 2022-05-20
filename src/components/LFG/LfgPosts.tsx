@@ -6,6 +6,7 @@ import { Character, ClassNames } from "../../utils/CharacterUtils";
 import { useAuth } from "../providers/AuthContext";
 import { useDatabase, UserData } from "../providers/DatabaseContext";
 import { CreateLfgPost } from "./CreateLfgPost";
+import { JoinLfg } from "./JoinLfg";
 import { RaidList } from "./RaidList";
 
 export type Applicant = {
@@ -16,6 +17,7 @@ export type LfgPost = {
   title: string;
   startTime: string;
   ownerId: string;
+  lfgId: string;
   applicants?: Applicant[];
 };
 export function LfgPosts() {
@@ -23,49 +25,7 @@ export function LfgPosts() {
   const db = useDatabase();
   const [createLfgPostVisible, setCreateLfgPostVisible] =
     useState<boolean>(false);
-  const [lfgPosts, setLfgPosts] = useState<LfgPost[]>([
-    {
-      title: "Cute argos p3",
-      startTime: new Date().toJSON(),
-      ownerId: "TlKCLu9n2TYktiGbrEfrhvYRVfK2",
-      applicants: [
-        {
-          uid: "id",
-          character: {
-            id: "aa",
-            character: ClassNames.SHARPSHOOTER,
-            charName: "Tertsi1",
-            itemLevel: 1400,
-          },
-        },
-      ],
-    },
-    {
-      title: "Cute Valtan",
-      startTime: new Date().toJSON(),
-      ownerId: "TlKCLu9n2TYktiGbrEfrhvYRVfK2",
-      applicants: [
-        {
-          uid: "id",
-          character: {
-            id: "aa",
-            character: ClassNames.SHARPSHOOTER,
-            charName: "Tertsi1",
-            itemLevel: 1400,
-          },
-        },
-        {
-          uid: "id",
-          character: {
-            id: "aa",
-            character: ClassNames.DEATHBLADE,
-            charName: "Tertsi1",
-            itemLevel: 1400,
-          },
-        },
-      ],
-    },
-  ]);
+  const [joinLfgVisible, setJoinLfgVisible] = useState<boolean>(false);
 
   function getPostOwnerName(post: LfgPost): string {
     if (db?.allUsers !== null) {
@@ -82,6 +42,16 @@ export function LfgPosts() {
     db?.addLfgPost(post);
   }
 
+  function handleJoinParty() {
+    if (db?.user?.characters !== undefined) {
+      setJoinLfgVisible(true);
+    } else {
+      displayNoCharacterError();
+    }
+  }
+  function displayNoCharacterError() {
+    alert("You dont have characters");
+  }
   return (
     <Box
       sx={{
@@ -117,6 +87,16 @@ export function LfgPosts() {
               </IconButton>
             </Box>
             <RaidList applicants={post.applicants} raidSize={8} />
+            <Button onClick={handleJoinParty}>Join party</Button>
+
+            {db.user?.characters !== undefined && (
+              <JoinLfg
+                visible={joinLfgVisible}
+                onJoin={(char) => {}}
+                handleClose={() => setJoinLfgVisible(false)}
+                characters={db.user?.characters}
+              />
+            )}
           </Paper>
         );
       })}

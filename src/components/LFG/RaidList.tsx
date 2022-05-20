@@ -2,6 +2,8 @@ import { Paper, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useState } from "react";
 import { Character } from "../../utils/CharacterUtils";
+import { ApplicantCard } from "./ApplicantCard";
+import { EmptySlot } from "./EmptySlot";
 import { Applicant } from "./LfgPosts";
 
 const PARTY_SIZE = 4;
@@ -13,17 +15,12 @@ export function RaidList({ raidSize, applicants }: Props) {
   function displaySlots(startIndex: number, endIndex: number) {
     let raidSlots: JSX.Element[] = [];
     for (let i = startIndex; i < raidSize && i < endIndex; i++) {
-      let slotText = "Empty";
-      if (applicants && applicants[i]) {
-        const p = applicants[i];
-
-        slotText = `${p.character.charName} ${p.character.character} ${p.character.itemLevel}`;
-      }
-
       raidSlots.push(
-        <Paper key={i} elevation={6} sx={styles.playerCard}>
-          <Typography>{slotText}</Typography>
-        </Paper>
+        applicants && applicants[i] ? (
+          <ApplicantCard key={i} applicant={applicants[i]} />
+        ) : (
+          <EmptySlot key={i} />
+        )
       );
     }
     return <>{raidSlots}</>;
