@@ -7,14 +7,14 @@ import { Applicant } from "./LfgPosts";
 const PARTY_SIZE = 4;
 type Props = {
   raidSize: number;
-  applicants: Applicant[];
+  applicants?: Applicant[];
 };
 export function RaidList({ raidSize, applicants }: Props) {
   function displaySlots(startIndex: number, endIndex: number) {
     let raidSlots: JSX.Element[] = [];
     for (let i = startIndex; i < raidSize && i < endIndex; i++) {
       let slotText = "Empty";
-      if (applicants[i] !== undefined) {
+      if (applicants && applicants[i]) {
         const p = applicants[i];
 
         slotText = `${p.character.charName} ${p.character.character} ${p.character.itemLevel}`;

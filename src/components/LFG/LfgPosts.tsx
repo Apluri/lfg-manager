@@ -14,9 +14,9 @@ export type Applicant = {
 };
 export type LfgPost = {
   title: string;
-  startTime: Date;
+  startTime: string;
   ownerId: string;
-  applicants: Applicant[];
+  applicants?: Applicant[];
 };
 export function LfgPosts() {
   const auth = useAuth();
@@ -26,7 +26,7 @@ export function LfgPosts() {
   const [lfgPosts, setLfgPosts] = useState<LfgPost[]>([
     {
       title: "Cute argos p3",
-      startTime: new Date(),
+      startTime: new Date().toJSON(),
       ownerId: "TlKCLu9n2TYktiGbrEfrhvYRVfK2",
       applicants: [
         {
@@ -42,7 +42,7 @@ export function LfgPosts() {
     },
     {
       title: "Cute Valtan",
-      startTime: new Date(),
+      startTime: new Date().toJSON(),
       ownerId: "TlKCLu9n2TYktiGbrEfrhvYRVfK2",
       applicants: [
         {
@@ -79,7 +79,7 @@ export function LfgPosts() {
   }
 
   function handleAddNewPost(post: LfgPost) {
-    console.log(post);
+    db?.addLfgPost(post);
   }
 
   return (
@@ -99,15 +99,16 @@ export function LfgPosts() {
         handleClose={() => setCreateLfgPostVisible(false)}
         handleAddNewPost={handleAddNewPost}
       />
-      {lfgPosts.map((post, index) => {
+      {db?.lfgPosts?.map((post, index) => {
         return (
           <Paper key={index} sx={styles.postContainer}>
             <Box sx={styles.topRow}>
               <Box>
                 <Typography>{post.title}</Typography>
                 <Typography variant="caption">
-                  {"Date " + post.startTime.toLocaleDateString("fi")}
-                  {" Start time " + post.startTime.toLocaleTimeString("fi")}
+                  {"Date " + new Date(post.startTime).toLocaleDateString("fi")}
+                  {" Start time " +
+                    new Date(post.startTime).toLocaleTimeString("fi")}
                 </Typography>
               </Box>
               <Typography>Post owner: {getPostOwnerName(post)}</Typography>

@@ -2,6 +2,8 @@ import { Button, Modal, Paper, TextField } from "@mui/material";
 import { Box } from "@mui/system";
 import { DateTimePicker } from "@mui/x-date-pickers";
 import React, { useState } from "react";
+import { ClassNames } from "../../utils/CharacterUtils";
+import { useAuth } from "../providers/AuthContext";
 import { LfgPost } from "./LfgPosts";
 
 type Props = {
@@ -18,6 +20,8 @@ export function CreateLfgPost({
   const [startTime, setStartTime] = useState<Date | null>(new Date());
   const [error, setError] = useState(false);
 
+  const auth = useAuth();
+
   function validateInputs() {
     let valid = true;
 
@@ -28,11 +32,12 @@ export function CreateLfgPost({
 
     return valid;
   }
-  function createNewPost(): LfgPost {
+  function createNewPost(): LfgPost | null {
+    if (auth?.currentUser?.uid === undefined) return null;
     const post: LfgPost = {
       title,
-      startTime: startTime ?? new Date(),
-      ownerId: "TlKCLu9n2TYktiGbrEfrhvYRVfK2",
+      startTime: startTime?.toJSON() ?? new Date().toJSON(),
+      ownerId: auth.currentUser.uid,
       applicants: [],
     };
     return post;
@@ -83,7 +88,8 @@ export function CreateLfgPost({
           <Button
             onClick={() => {
               if (validateInputs()) {
-                handleAddNewPost(createNewPost());
+                const newPost = createNewPost();
+                if (newPost) handleAddNewPost(newPost);
                 clearState();
                 handleClose();
               }

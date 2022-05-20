@@ -6,19 +6,23 @@ import { User } from "firebase/auth";
 import { Character, ClassNames } from "../../utils/CharacterUtils";
 import { Modal, Paper } from "@mui/material";
 import { EditUserName } from "../users/EditUserName";
+import { LfgPost } from "../LFG/LfgPosts";
 
 enum Paths {
   CHARACTERS = "characters/",
   USERNAME = "userName/",
   USERS = "users/",
+  LFG_POSTS = "lfg/",
 }
 interface DatabaseContextInterface {
   user: UserData | null;
   allUsers: any;
+  lfgPosts: LfgPost[] | null | undefined;
   editUser: (user: UserData, userId: string) => Promise<void>;
   addCharacter: (newChar: Character) => Promise<void>;
   deleteCharacter: (charToDelete: Character) => void;
   editUserName: (newUserName: string) => void;
+  addLfgPost: (post: LfgPost) => void;
 }
 
 export type UserData = {
@@ -37,6 +41,9 @@ function editUserCustomDataAndPath(
   return set(ref(database, Paths.USERS + userId + "/" + path), data);
 }
 
+function editPosts(posts: LfgPost[]): Promise<void> {
+  return set(ref(database, Paths.LFG_POSTS), posts);
+}
 const DbContext = React.createContext<DatabaseContextInterface | null>(null);
 
 export function useDatabase(): DatabaseContextInterface | null {
@@ -50,6 +57,7 @@ export function DatabaseProvider({ children }: Props) {
   const auth = useAuth();
   const [user, setUser] = useState<UserData | null>(null);
   const [allUsers, setAllUsers] = useState<any>(null);
+  const [lfgPosts, setLfgPosts] = useState<LfgPost[] | null | undefined>();
   const [userNameModalVisible, setUserNameModalVisible] =
     useState<boolean>(false);
 
@@ -79,7 +87,11 @@ export function DatabaseProvider({ children }: Props) {
   function getAllUsersData() {
     getData(Paths.USERS, (data) => setAllUsers(data));
   }
-  function getLfgPosts() {}
+  function getLfgPosts() {
+    getData(Paths.LFG_POSTS, (data) => {
+      if (data) setLfgPosts(data);
+    });
+  }
 
   function handleCreateUser(newUserName: string) {
     setUserNameModalVisible(false);
@@ -107,6 +119,7 @@ export function DatabaseProvider({ children }: Props) {
       setUser(null);
     }
     getAllUsersData();
+    getLfgPosts();
   }, [auth?.currentUser]);
 
   function addCharacter(newChar: Character): Promise<void> {
@@ -154,14 +167,25 @@ export function DatabaseProvider({ children }: Props) {
       );
     }
   }
+  function addLfgPost(post: LfgPost) {
+    if (lfgPosts) {
+      const newPosts: LfgPost[] = [post, ...lfgPosts];
+      editPosts(newPosts);
+    } else {
+      // this may delete all posts so check it later again
+      editPosts([post]);
+    }
+  }
 
   const value: DatabaseContextInterface = {
     user,
     allUsers,
+    lfgPosts,
     editUser,
     addCharacter,
     deleteCharacter,
     editUserName,
+    addLfgPost,
   };
   return (
     <DbContext.Provider value={value}>
