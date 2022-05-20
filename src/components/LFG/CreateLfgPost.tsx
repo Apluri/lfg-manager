@@ -42,7 +42,6 @@ export function CreateLfgPost({
       lfgId: uuidv4(),
       applicants: [],
     };
-    console.log(post);
     return post;
   }
   function clearState() {

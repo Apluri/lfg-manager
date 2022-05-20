@@ -80,19 +80,14 @@ export function DatabaseProvider({ children }: Props) {
     const dbRef = ref(database, path);
     onValue(dbRef, (snapshot) => {
       const data = snapshot.val();
-      if (data) {
-        callback(data);
-      }
+      callback(data);
     });
   }
   function getAllUsersData() {
     getData(Paths.USERS, (data) => setAllUsers(data));
   }
   function getLfgPosts() {
-    getData(Paths.LFG_POSTS, (data) => {
-      console.log("Data päivittyy" + data);
-      setLfgPosts(data);
-    });
+    getData(Paths.LFG_POSTS, (data) => setLfgPosts(data));
   }
 
   function handleCreateUser(newUserName: string) {
@@ -180,6 +175,7 @@ export function DatabaseProvider({ children }: Props) {
   }
   function deleteLfgPost(post: LfgPost) {
     if (lfgPosts) {
+      console.log(lfgPosts);
       const newPosts: LfgPost[] = lfgPosts.filter(
         (p) => p.lfgId !== post.lfgId
       );
