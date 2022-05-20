@@ -8,7 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Box } from "@mui/system";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Character, ClassNames } from "../../utils/CharacterUtils";
 import { useAuth } from "../providers/AuthContext";
 import { useDatabase, UserData } from "../providers/DatabaseContext";
@@ -35,6 +35,7 @@ export function LfgPosts() {
   const [joinLfgVisible, setJoinLfgVisible] = useState<boolean>(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const functionMenuVisible = Boolean(anchorEl);
+  const joinLfgRef = useRef<LfgPost | null>(null);
 
   const handleClickMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -57,13 +58,26 @@ export function LfgPosts() {
     db?.addLfgPost(post);
   }
 
-  function handleJoinParty() {
+  function openJoinPartyModal(post: LfgPost) {
+    joinLfgRef.current = post;
     if (db?.user?.characters !== undefined) {
       setJoinLfgVisible(true);
     } else {
       displayNoCharacterError();
     }
   }
+  function handleJoinLfg(char: Character) {
+    if (auth?.currentUser?.uid && db?.joinLfg && joinLfgRef.current) {
+      const applicant: Applicant = {
+        character: char,
+        uid: auth?.currentUser?.uid,
+      };
+      db?.joinLfg(joinLfgRef.current, applicant);
+      joinLfgRef.current = null;
+    }
+    setJoinLfgVisible(false);
+  }
+
   function displayNoCharacterError() {
     alert("You dont have characters");
   }
@@ -119,12 +133,12 @@ export function LfgPosts() {
               </Menu>
             </Box>
             <RaidList applicants={post.applicants} raidSize={8} />
-            <Button onClick={handleJoinParty}>Join party</Button>
+            <Button onClick={() => openJoinPartyModal(post)}>Join party</Button>
 
             {db.user?.characters !== undefined && (
               <JoinLfg
                 visible={joinLfgVisible}
-                onJoin={(char) => {}}
+                onJoin={(char) => handleJoinLfg(char)}
                 handleClose={() => setJoinLfgVisible(false)}
                 characters={db.user?.characters}
               />

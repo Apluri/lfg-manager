@@ -6,7 +6,7 @@ import { User } from "firebase/auth";
 import { Character, ClassNames } from "../../utils/CharacterUtils";
 import { Modal, Paper } from "@mui/material";
 import { EditUserName } from "../users/EditUserName";
-import { LfgPost } from "../LFG/LfgPosts";
+import { Applicant, LfgPost } from "../LFG/LfgPosts";
 
 enum Paths {
   CHARACTERS = "characters/",
@@ -24,6 +24,7 @@ interface DatabaseContextInterface {
   editUserName: (newUserName: string) => void;
   addLfgPost: (post: LfgPost) => void;
   deleteLfgPost: (post: LfgPost) => void;
+  joinLfg: (post: LfgPost, applicant: Applicant) => void;
 }
 
 export type UserData = {
@@ -95,16 +96,7 @@ export function DatabaseProvider({ children }: Props) {
     if (auth?.currentUser != null) {
       const tempUser: UserData = {
         userName: newUserName,
-        characters: [
-          /*
-          {
-            id: "testiid",
-            charName: "cdu",
-            character: ClassNames.SHADOWHUNTER,
-            itemLevel: 100,
-          },
-          */
-        ],
+        characters: [],
       };
       editUser(tempUser, auth.currentUser.uid);
     }
@@ -182,6 +174,24 @@ export function DatabaseProvider({ children }: Props) {
       editPosts(newPosts);
     }
   }
+  function joinLfg(post: LfgPost, applicant: Applicant) {
+    if (canJoinLfg()) {
+      const editedPosts = lfgPosts?.map((p) => {
+        if (p.lfgId === post.lfgId) {
+          let newApplicants: Applicant[] = [];
+          if (p.applicants) newApplicants = [...p.applicants, applicant];
+          else newApplicants = [applicant];
+          return { ...p, applicants: newApplicants };
+        } else {
+          return p;
+        }
+      });
+      if (editedPosts) editPosts(editedPosts);
+    }
+    function canJoinLfg(): boolean {
+      return true;
+    }
+  }
 
   const value: DatabaseContextInterface = {
     user,
@@ -193,6 +203,7 @@ export function DatabaseProvider({ children }: Props) {
     editUserName,
     addLfgPost,
     deleteLfgPost,
+    joinLfg,
   };
   return (
     <DbContext.Provider value={value}>

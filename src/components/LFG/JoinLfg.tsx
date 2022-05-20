@@ -17,6 +17,7 @@ import {
   ClassNames,
   getClassNameList,
 } from "../../utils/CharacterUtils";
+import { LfgPost } from "./LfgPosts";
 
 export type Props = {
   handleClose: () => void;
