@@ -23,6 +23,7 @@ interface DatabaseContextInterface {
   deleteCharacter: (charToDelete: Character) => void;
   editUserName: (newUserName: string) => void;
   addLfgPost: (post: LfgPost) => void;
+  deleteLfgPost: (post: LfgPost) => void;
 }
 
 export type UserData = {
@@ -89,7 +90,8 @@ export function DatabaseProvider({ children }: Props) {
   }
   function getLfgPosts() {
     getData(Paths.LFG_POSTS, (data) => {
-      if (data) setLfgPosts(data);
+      console.log("Data päivittyy" + data);
+      setLfgPosts(data);
     });
   }
 
@@ -176,6 +178,14 @@ export function DatabaseProvider({ children }: Props) {
       editPosts([post]);
     }
   }
+  function deleteLfgPost(post: LfgPost) {
+    if (lfgPosts) {
+      const newPosts: LfgPost[] = lfgPosts.filter(
+        (p) => p.lfgId !== post.lfgId
+      );
+      editPosts(newPosts);
+    }
+  }
 
   const value: DatabaseContextInterface = {
     user,
@@ -186,6 +196,7 @@ export function DatabaseProvider({ children }: Props) {
     deleteCharacter,
     editUserName,
     addLfgPost,
+    deleteLfgPost,
   };
   return (
     <DbContext.Provider value={value}>

@@ -1,5 +1,12 @@
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { Button, IconButton, Paper, Typography } from "@mui/material";
+import {
+  Button,
+  IconButton,
+  Menu,
+  MenuItem,
+  Paper,
+  Typography,
+} from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useState } from "react";
 import { Character, ClassNames } from "../../utils/CharacterUtils";
@@ -26,7 +33,15 @@ export function LfgPosts() {
   const [createLfgPostVisible, setCreateLfgPostVisible] =
     useState<boolean>(false);
   const [joinLfgVisible, setJoinLfgVisible] = useState<boolean>(false);
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const functionMenuVisible = Boolean(anchorEl);
 
+  const handleClickMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleCloseMenu = () => {
+    setAnchorEl(null);
+  };
   function getPostOwnerName(post: LfgPost): string {
     if (db?.allUsers !== null) {
       const owner: UserData = db?.allUsers[post.ownerId];
@@ -51,6 +66,11 @@ export function LfgPosts() {
   }
   function displayNoCharacterError() {
     alert("You dont have characters");
+  }
+
+  function handleDeleteLfg(post: LfgPost) {
+    db?.deleteLfgPost(post);
+    handleCloseMenu();
   }
   return (
     <Box
@@ -82,9 +102,21 @@ export function LfgPosts() {
                 </Typography>
               </Box>
               <Typography>Post owner: {getPostOwnerName(post)}</Typography>
-              <IconButton onClick={() => {}} aria-label="settings">
+              <IconButton onClick={handleClickMenu} aria-label="settings">
                 <MoreVertIcon />
               </IconButton>
+              <Menu
+                open={functionMenuVisible}
+                onClose={handleCloseMenu}
+                anchorEl={anchorEl}
+              >
+                <MenuItem onClick={() => console.log("edit lfg")}>
+                  Edit
+                </MenuItem>
+                <MenuItem onClick={() => handleDeleteLfg(post)}>
+                  Delete
+                </MenuItem>
+              </Menu>
             </Box>
             <RaidList applicants={post.applicants} raidSize={8} />
             <Button onClick={handleJoinParty}>Join party</Button>
