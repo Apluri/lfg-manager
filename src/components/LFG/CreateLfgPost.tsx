@@ -1,5 +1,6 @@
 import { Button, Modal, Paper, TextField } from "@mui/material";
 import { Box } from "@mui/system";
+import { DateTimePicker } from "@mui/x-date-pickers";
 import React, { useState } from "react";
 import { LfgPost } from "./LfgPosts";
 
@@ -14,7 +15,7 @@ export function CreateLfgPost({
   handleClose,
 }: Props) {
   const [title, setTitle] = useState<string>("");
-  const [startTime, setStartTime] = useState<Date>(new Date());
+  const [startTime, setStartTime] = useState<Date | null>(new Date());
   const [error, setError] = useState(false);
 
   function validateInputs() {
@@ -30,7 +31,7 @@ export function CreateLfgPost({
   function createNewPost(): LfgPost {
     const post: LfgPost = {
       title,
-      startTime,
+      startTime: startTime ?? new Date(),
       ownerId: "TlKCLu9n2TYktiGbrEfrhvYRVfK2",
       applicants: [],
     };
@@ -63,6 +64,12 @@ export function CreateLfgPost({
               sx={{ ...styles.itemsMargin, marginRight: "5px" }}
             />
           </Box>
+          <DateTimePicker
+            renderInput={(props) => <TextField {...props} />}
+            label="Date and start time"
+            value={startTime}
+            onChange={(newValue) => setStartTime(newValue)}
+          />
         </Box>
         <Box sx={styles.actionButtons}>
           <Button
@@ -78,6 +85,7 @@ export function CreateLfgPost({
               if (validateInputs()) {
                 handleAddNewPost(createNewPost());
                 clearState();
+                handleClose();
               }
             }}
           >

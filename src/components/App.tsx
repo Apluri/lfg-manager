@@ -6,6 +6,8 @@ import Home from "./screens/Home";
 import NavBar from "./global/NavBar";
 import { DatabaseProvider } from "./providers/DatabaseContext";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 
 const darkTheme = createTheme({
   palette: {
@@ -17,10 +19,12 @@ function App() {
     <ThemeProvider theme={darkTheme}>
       <AuthProvider>
         <DatabaseProvider>
-          <NavBar />
-          <Routes>
-            <Route path="/" element={<Home />} />
-          </Routes>
+          <LocalizationProvider dateAdapter={AdapterLuxon} locale="fi-FI">
+            <NavBar />
+            <Routes>
+              <Route path="/" element={<Home />} />
+            </Routes>
+          </LocalizationProvider>
         </DatabaseProvider>
       </AuthProvider>
     </ThemeProvider>
