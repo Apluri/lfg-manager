@@ -1,81 +1,87 @@
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { IconButton, Paper, Typography } from "@mui/material";
+import { Button, IconButton, Paper, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useState } from "react";
 import { Character, ClassNames } from "../../utils/CharacterUtils";
+import { useAuth } from "../providers/AuthContext";
+import { useDatabase, UserData } from "../providers/DatabaseContext";
+import { CreateLfgPost } from "./CreateLfgPost";
 import { RaidList } from "./RaidList";
 
+export type Applicant = {
+  uid: string;
+  character: Character;
+};
 export type LfgPost = {
   title: string;
   startTime: Date;
   ownerId: string;
-  players: Character[];
+  applicants: Applicant[];
 };
 export function LfgPosts() {
+  const auth = useAuth();
+  const db = useDatabase();
+  const [createLfgPostVisible, setCreateLfgPostVisible] =
+    useState<boolean>(false);
   const [lfgPosts, setLfgPosts] = useState<LfgPost[]>([
     {
       title: "Cute argos p3",
       startTime: new Date(),
-      ownerId: "testiid",
-      players: [
+      ownerId: "TlKCLu9n2TYktiGbrEfrhvYRVfK2",
+      applicants: [
         {
-          id: "aa",
-          character: ClassNames.SHARPSHOOTER,
-          charName: "Tertsi1",
-          itemLevel: 1400,
-        },
-        {
-          id: "aa",
-          character: ClassNames.SHARPSHOOTER,
-          charName: "Tertsi2",
-          itemLevel: 1400,
-        },
-        {
-          id: "aa",
-          character: ClassNames.SHARPSHOOTER,
-          charName: "Terts3",
-          itemLevel: 1400,
-        },
-        {
-          id: "aa",
-          character: ClassNames.SHARPSHOOTER,
-          charName: "Terts4",
-          itemLevel: 1400,
-        },
-        {
-          id: "aa",
-          character: ClassNames.SHARPSHOOTER,
-          charName: "Tertsi5",
-          itemLevel: 1400,
-        },
-        {
-          id: "aa",
-          character: ClassNames.SHARPSHOOTER,
-          charName: "Tertsi6",
-          itemLevel: 1400,
-        },
-        {
-          id: "aa",
-          character: ClassNames.SHARPSHOOTER,
-          charName: "Terts7",
-          itemLevel: 1400,
+          uid: "id",
+          character: {
+            id: "aa",
+            character: ClassNames.SHARPSHOOTER,
+            charName: "Tertsi1",
+            itemLevel: 1400,
+          },
         },
       ],
     },
     {
-      title: "toka",
+      title: "Cute Valtan",
       startTime: new Date(),
-      ownerId: "testid2",
-      players: [
+      ownerId: "TlKCLu9n2TYktiGbrEfrhvYRVfK2",
+      applicants: [
         {
-          id: "aa",
-          character: ClassNames.SHARPSHOOTER,
-          charName: "Tertsi2",
-          itemLevel: 1300,
+          uid: "id",
+          character: {
+            id: "aa",
+            character: ClassNames.SHARPSHOOTER,
+            charName: "Tertsi1",
+            itemLevel: 1400,
+          },
+        },
+        {
+          uid: "id",
+          character: {
+            id: "aa",
+            character: ClassNames.DEATHBLADE,
+            charName: "Tertsi1",
+            itemLevel: 1400,
+          },
         },
       ],
     },
   ]);
+
+  function getPostOwnerName(post: LfgPost): string {
+    if (db?.allUsers !== null) {
+      const owner: UserData = db?.allUsers[post.ownerId];
+      if (owner) {
+        return owner.userName;
+      }
+    }
+
+    return "No name found";
+  }
+
+  function handleAddNewPost(post: LfgPost) {
+    console.log(post);
+  }
+
   return (
     <Box
       sx={{
@@ -85,9 +91,17 @@ export function LfgPosts() {
         width: "100%",
       }}
     >
-      {lfgPosts.map((post) => {
+      <Button onClick={() => setCreateLfgPostVisible(true)}>
+        Add lfg post
+      </Button>
+      <CreateLfgPost
+        visible={createLfgPostVisible}
+        handleClose={() => setCreateLfgPostVisible(false)}
+        handleAddNewPost={handleAddNewPost}
+      />
+      {lfgPosts.map((post, index) => {
         return (
-          <Paper sx={styles.postContainer}>
+          <Paper key={index} sx={styles.postContainer}>
             <Box sx={styles.topRow}>
               <Box>
                 <Typography>{post.title}</Typography>
@@ -96,12 +110,12 @@ export function LfgPosts() {
                   {" Start time " + post.startTime.toLocaleTimeString("fi")}
                 </Typography>
               </Box>
-              <Typography>Post owner: {post.ownerId}</Typography>
+              <Typography>Post owner: {getPostOwnerName(post)}</Typography>
               <IconButton onClick={() => {}} aria-label="settings">
                 <MoreVertIcon />
               </IconButton>
             </Box>
-            <RaidList players={post.players} raidSize={8} />
+            <RaidList applicants={post.applicants} raidSize={8} />
           </Paper>
         );
       })}

@@ -14,6 +14,7 @@ enum Paths {
 }
 interface DatabaseContextInterface {
   user: UserData | null;
+  allUsers: any;
   editUser: (user: UserData, userId: string) => Promise<void>;
   addCharacter: (newChar: Character) => Promise<void>;
   deleteCharacter: (charToDelete: Character) => void;
@@ -48,11 +49,12 @@ type Props = {
 export function DatabaseProvider({ children }: Props) {
   const auth = useAuth();
   const [user, setUser] = useState<UserData | null>(null);
+  const [allUsers, setAllUsers] = useState<any>(null);
   const [userNameModalVisible, setUserNameModalVisible] =
     useState<boolean>(false);
 
   function getUserData(uid: string): void {
-    const t = ref(database, "users/" + uid);
+    const t = ref(database, Paths.USERS + uid);
     onValue(t, (snapshot) => {
       const data = snapshot.val();
       if (!data) {
@@ -64,9 +66,22 @@ export function DatabaseProvider({ children }: Props) {
       setUser({ userName: data.userName, characters: data.characters });
     });
   }
+  // once called, it will keep calling the callback on each data update
+  function getData(path: string, callback: (data: any) => void) {
+    const dbRef = ref(database, path);
+    onValue(dbRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        callback(data);
+      }
+    });
+  }
+  function getAllUsersData() {
+    getData(Paths.USERS, (data) => setAllUsers(data));
+  }
+  function getLfgPosts() {}
 
   function handleCreateUser(newUserName: string) {
-    console.log(newUserName);
     setUserNameModalVisible(false);
     if (auth?.currentUser != null) {
       const tempUser: UserData = {
@@ -86,10 +101,12 @@ export function DatabaseProvider({ children }: Props) {
     }
   }
   useEffect(() => {
-    if (auth?.currentUser != null) getUserData(auth.currentUser.uid);
-    else {
+    if (auth?.currentUser != null) {
+      getUserData(auth.currentUser.uid);
+    } else {
       setUser(null);
     }
+    getAllUsersData();
   }, [auth?.currentUser]);
 
   function addCharacter(newChar: Character): Promise<void> {
@@ -140,6 +157,7 @@ export function DatabaseProvider({ children }: Props) {
 
   const value: DatabaseContextInterface = {
     user,
+    allUsers,
     editUser,
     addCharacter,
     deleteCharacter,
