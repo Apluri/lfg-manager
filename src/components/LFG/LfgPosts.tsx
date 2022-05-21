@@ -38,12 +38,17 @@ export function LfgPosts() {
   const functionMenuVisible = Boolean(anchorEl);
   const joinLfgRef = useRef<LfgPost | null>(null);
   const errorPostRef = useRef<LfgPost | null>(null);
+  const editLfgRef = useRef<LfgPost | null>(null);
 
   const [errorMsg, setErrorMsg] = useState<string>("");
   const [errorVisible, setErrorVisible] = useState<boolean>(false);
 
-  const handleClickMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleClickMenu = (
+    event: React.MouseEvent<HTMLButtonElement>,
+    post: LfgPost
+  ) => {
     setAnchorEl(event.currentTarget);
+    editLfgRef.current = post;
   };
   const handleCloseMenu = () => {
     setAnchorEl(null);
@@ -95,8 +100,16 @@ export function LfgPosts() {
     alert("You dont have characters");
   }
 
-  function handleDeleteLfg(post: LfgPost) {
-    db?.deleteLfgPost(post);
+  function handleDeleteLfg() {
+    if (editLfgRef.current === null) return;
+    db?.deleteLfgPost(editLfgRef.current)
+      .then()
+      .catch((e) => {
+        console.log(e);
+        setErrorMsg(e);
+        errorPostRef.current = editLfgRef.current;
+        setErrorVisible(true);
+      });
     handleCloseMenu();
   }
   function handleLeaveRaid(applicant: Applicant, post: LfgPost) {
@@ -140,7 +153,10 @@ export function LfgPosts() {
                 </Typography>
               </Box>
               <Typography>Post owner: {getPostOwnerName(post)}</Typography>
-              <IconButton onClick={handleClickMenu} aria-label="settings">
+              <IconButton
+                onClick={(e) => handleClickMenu(e, post)}
+                aria-label="settings"
+              >
                 <MoreVertIcon />
               </IconButton>
               <Menu
@@ -151,9 +167,7 @@ export function LfgPosts() {
                 <MenuItem onClick={() => console.log("edit lfg")}>
                   Edit
                 </MenuItem>
-                <MenuItem onClick={() => handleDeleteLfg(post)}>
-                  Delete
-                </MenuItem>
+                <MenuItem onClick={handleDeleteLfg}>Delete</MenuItem>
               </Menu>
             </Box>
             <RaidList

@@ -64,7 +64,6 @@ export function CharacterCard({
       .then((response: any) => {
         // handle success
         setImgSrc(response.data.url);
-        console.log(response.data.url);
       })
       .catch((e: any) => {
         // handle error
