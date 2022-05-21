@@ -18,6 +18,11 @@ export function ApplicantCard({ applicant, handleLeaveRaid }: Props) {
     if (db?.user?.role === "admin") return true;
     return auth?.currentUser?.uid === applicant.uid ?? false;
   }
+  function getUserName() {
+    const users = db?.allUsers;
+    if (users[applicant.uid]) return users[applicant.uid].userName;
+    else return "No name found";
+  }
 
   return (
     <Paper
@@ -37,12 +42,30 @@ export function ApplicantCard({ applicant, handleLeaveRaid }: Props) {
           sx={{ marginRight: "10px" }}
         />
         <Box sx={styles.column}>
-          <Typography>{applicant.character.charName}</Typography>
+          <Box sx={styles.row}>
+            <Typography sx={{}}>{getUserName()}</Typography>
+            <Typography
+              sx={{
+                fontSize: 12,
+                color: "#bab7b6",
+                marginLeft: "5px",
+              }}
+            >
+              {applicant.character.charName}
+            </Typography>
+          </Box>
           <Box>
             <Typography variant="caption">
               {applicant.character.character}
             </Typography>
-            <Typography variant="caption">
+            <Typography
+              variant="caption"
+              sx={{
+                fontSize: 12,
+                color: "#bab7b6",
+                marginLeft: "5px",
+              }}
+            >
               {applicant.character.itemLevel}
             </Typography>
           </Box>
@@ -71,5 +94,10 @@ const styles: { [key: string]: React.CSSProperties } = {
   column: {
     display: "flex",
     flexDirection: "column",
+  },
+  row: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
   },
 };
