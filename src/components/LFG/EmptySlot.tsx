@@ -8,6 +8,7 @@ export function EmptySlot() {
       sx={{
         display: "flex",
         flex: 1,
+        minHeight: "3em",
         padding: "10px",
         marginTop: "1em",
         alignItems: "center",

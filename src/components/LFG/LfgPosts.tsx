@@ -16,6 +16,7 @@ import { CreateLfgPost } from "./CreateLfgPost";
 import { JoinLfg } from "./JoinLfg";
 import { RaidList } from "./RaidList";
 import { CustomAlert } from "../global/CustomAlert";
+import { DateTime } from "luxon";
 
 export type Applicant = {
   uid: string;
@@ -145,11 +146,15 @@ export function LfgPosts() {
           <Paper key={index} sx={styles.postContainer}>
             <Box sx={styles.topRow}>
               <Box>
-                <Typography>{post.title}</Typography>
-                <Typography variant="caption">
+                <Typography variant="h4">{post.title}</Typography>
+                <Typography>
                   {"Date " + new Date(post.startTime).toLocaleDateString("fi")}
+                </Typography>
+                <Typography>
                   {" Start time " +
-                    new Date(post.startTime).toLocaleTimeString("fi")}
+                    DateTime.fromISO(post.startTime).toLocaleString(
+                      DateTime.TIME_24_SIMPLE
+                    )}
                 </Typography>
               </Box>
               <Typography>Post owner: {getPostOwnerName(post)}</Typography>
