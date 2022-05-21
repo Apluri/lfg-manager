@@ -209,6 +209,11 @@ export function DatabaseProvider({ children }: Props) {
   function joinLfg(post: LfgPost, applicant: Applicant): Promise<void> {
     return new Promise((result, reject) => {
       if (!applicantIsInLfg(post, applicant)) {
+        // change 8 into raidSize variable later on
+        if (post.applicants && post?.applicants?.length >= 8) {
+          reject("Raid is full");
+          return;
+        }
         const editedPosts = lfgPosts?.map((p) => {
           if (p.lfgId === post.lfgId) {
             let newApplicants: Applicant[] = [];
