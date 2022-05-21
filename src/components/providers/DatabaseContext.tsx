@@ -14,6 +14,12 @@ enum Paths {
   USERS = "users/",
   LFG_POSTS = "lfg/",
 }
+
+enum Roles {
+  ADMIN = "admin",
+  MEMBER = "member",
+  QUEST = "quest",
+}
 interface DatabaseContextInterface {
   user: UserData | null;
   allUsers: any;
@@ -24,12 +30,14 @@ interface DatabaseContextInterface {
   editUserName: (newUserName: string) => void;
   addLfgPost: (post: LfgPost) => void;
   deleteLfgPost: (post: LfgPost) => void;
-  joinLfg: (post: LfgPost, applicant: Applicant) => void;
+  joinLfg: (post: LfgPost, applicant: Applicant) => Promise<void>;
+  leaveLfg: (post: LfgPost, applicant: Applicant) => void;
 }
 
 export type UserData = {
   userName: string;
   characters?: Character[];
+  role: Roles;
 };
 
 function editUser(user: UserData, userId: string): Promise<void> {
@@ -73,7 +81,11 @@ export function DatabaseProvider({ children }: Props) {
         setUserNameModalVisible(true);
         return;
       }
-      setUser({ userName: data.userName, characters: data.characters });
+      setUser({
+        userName: data.userName,
+        characters: data.characters,
+        role: data.role,
+      });
     });
   }
   // once called, it will keep calling the callback on each data update
@@ -91,12 +103,18 @@ export function DatabaseProvider({ children }: Props) {
     getData(Paths.LFG_POSTS, (data) => setLfgPosts(data));
   }
 
+  function applicantIsInLfg(post: LfgPost, applicant: Applicant) {
+    const isInLfg = post.applicants?.find((a) => a.uid === applicant.uid);
+    return isInLfg ? true : false;
+  }
+
   function handleCreateUser(newUserName: string) {
     setUserNameModalVisible(false);
     if (auth?.currentUser != null) {
       const tempUser: UserData = {
         userName: newUserName,
         characters: [],
+        role: Roles.QUEST,
       };
       editUser(tempUser, auth.currentUser.uid);
     }
@@ -174,23 +192,40 @@ export function DatabaseProvider({ children }: Props) {
       editPosts(newPosts);
     }
   }
-  function joinLfg(post: LfgPost, applicant: Applicant) {
-    if (canJoinLfg()) {
-      const editedPosts = lfgPosts?.map((p) => {
-        if (p.lfgId === post.lfgId) {
-          let newApplicants: Applicant[] = [];
-          if (p.applicants) newApplicants = [...p.applicants, applicant];
-          else newApplicants = [applicant];
-          return { ...p, applicants: newApplicants };
-        } else {
-          return p;
+  function joinLfg(post: LfgPost, applicant: Applicant): Promise<void> {
+    return new Promise((result, reject) => {
+      if (!applicantIsInLfg(post, applicant)) {
+        const editedPosts = lfgPosts?.map((p) => {
+          if (p.lfgId === post.lfgId) {
+            let newApplicants: Applicant[] = [];
+            if (p.applicants) newApplicants = [...p.applicants, applicant];
+            else newApplicants = [applicant];
+            return { ...p, applicants: newApplicants };
+          } else {
+            return p;
+          }
+        });
+
+        if (editedPosts) {
+          editPosts(editedPosts);
+          result();
         }
-      });
-      if (editedPosts) editPosts(editedPosts);
-    }
-    function canJoinLfg(): boolean {
-      return true;
-    }
+      }
+      reject("Could not join the party, already inside with some character");
+    });
+  }
+  function leaveLfg(post: LfgPost, applicant: Applicant) {
+    if (!applicantIsInLfg(post, applicant)) return;
+
+    const editedPosts = lfgPosts?.map((p) => {
+      if (p.lfgId === post.lfgId) {
+        return {
+          ...p,
+          applicants: p.applicants?.filter((a) => a.uid !== applicant.uid),
+        };
+      } else return p;
+    });
+    if (editedPosts) editPosts(editedPosts);
   }
 
   const value: DatabaseContextInterface = {
@@ -204,6 +239,7 @@ export function DatabaseProvider({ children }: Props) {
     addLfgPost,
     deleteLfgPost,
     joinLfg,
+    leaveLfg,
   };
   return (
     <DbContext.Provider value={value}>

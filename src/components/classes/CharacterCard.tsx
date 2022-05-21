@@ -14,7 +14,7 @@ import {
   MenuItem,
 } from "@mui/material";
 import { Box } from "@mui/system";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Character,
   classIcons,
@@ -25,6 +25,7 @@ import berserkerIcon from "../../assets/images/classIcons/berserker.png";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { styled } from "@mui/material/styles";
+const axios = require("axios").default;
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
@@ -54,6 +55,22 @@ export function CharacterCard({
   const [expanded, setExpanded] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+  const [imgSrc, setImgSrc] = useState<string | undefined>();
+  const ayayaa = "https://i.waifu.pics/HeeBaFc.gif";
+
+  useEffect(() => {
+    axios
+      .get("https://api.waifu.pics/sfw/wave")
+      .then((response: any) => {
+        // handle success
+        setImgSrc(response.data.url);
+        console.log(response.data.url);
+      })
+      .catch((e: any) => {
+        // handle error
+        console.log(e);
+      });
+  }, []);
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
@@ -106,9 +123,16 @@ export function CharacterCard({
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
-          <Typography variant="h6">
-            Tarivaanko lisätietoo joka ei mahdu? ne tänne:D
-          </Typography>
+          <img
+            src={imgSrc}
+            style={{
+              display: "block",
+              maxWidth: "400px",
+              maxHeight: "400px",
+              width: "auto",
+              height: "auto",
+            }}
+          ></img>
         </CardContent>
       </Collapse>
     </Card>

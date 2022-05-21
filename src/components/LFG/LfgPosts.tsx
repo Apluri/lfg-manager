@@ -15,6 +15,7 @@ import { useDatabase, UserData } from "../providers/DatabaseContext";
 import { CreateLfgPost } from "./CreateLfgPost";
 import { JoinLfg } from "./JoinLfg";
 import { RaidList } from "./RaidList";
+import { CustomAlert } from "../global/CustomAlert";
 
 export type Applicant = {
   uid: string;
@@ -36,6 +37,10 @@ export function LfgPosts() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const functionMenuVisible = Boolean(anchorEl);
   const joinLfgRef = useRef<LfgPost | null>(null);
+  const errorPostRef = useRef<LfgPost | null>(null);
+
+  const [errorMsg, setErrorMsg] = useState<string>("");
+  const [errorVisible, setErrorVisible] = useState<boolean>(false);
 
   const handleClickMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -68,11 +73,19 @@ export function LfgPosts() {
   }
   function handleJoinLfg(char: Character) {
     if (auth?.currentUser?.uid && db?.joinLfg && joinLfgRef.current) {
+      // save ref just in case
+      errorPostRef.current = joinLfgRef.current;
       const applicant: Applicant = {
         character: char,
         uid: auth?.currentUser?.uid,
       };
-      db?.joinLfg(joinLfgRef.current, applicant);
+      db?.joinLfg(joinLfgRef.current, applicant)
+        .then()
+        .catch((e) => {
+          setErrorMsg(e);
+
+          setErrorVisible(true);
+        });
       joinLfgRef.current = null;
     }
     setJoinLfgVisible(false);
@@ -85,6 +98,17 @@ export function LfgPosts() {
   function handleDeleteLfg(post: LfgPost) {
     db?.deleteLfgPost(post);
     handleCloseMenu();
+  }
+  function handleLeaveRaid(applicant: Applicant, post: LfgPost) {
+    db?.leaveLfg(post, applicant);
+  }
+  function handleCloseError() {
+    setErrorVisible(false);
+    setErrorMsg("");
+    errorPostRef.current = null;
+  }
+  function handleErrorVisible(post: LfgPost) {
+    return errorPostRef.current?.lfgId === post.lfgId && errorVisible;
   }
   return (
     <Box
@@ -132,8 +156,17 @@ export function LfgPosts() {
                 </MenuItem>
               </Menu>
             </Box>
-            <RaidList applicants={post.applicants} raidSize={8} />
+            <RaidList
+              applicants={post.applicants}
+              raidSize={8}
+              handleLeaveRaid={(applicant) => handleLeaveRaid(applicant, post)}
+            />
             <Button onClick={() => openJoinPartyModal(post)}>Join party</Button>
+            <CustomAlert
+              visible={handleErrorVisible(post)}
+              handleClose={handleCloseError}
+              message={errorMsg}
+            />
 
             {db.user?.characters !== undefined && (
               <JoinLfg

@@ -1,6 +1,6 @@
 import { Avatar, Button, Stack, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Character, ClassNames } from "../../utils/CharacterUtils";
 import { CharacterCard } from "../classes/CharacterCard";
 import { CreateCharacterModal } from "../classes/CreateCharacterModal";

@@ -10,14 +10,19 @@ const PARTY_SIZE = 4;
 type Props = {
   raidSize: number;
   applicants?: Applicant[];
+  handleLeaveRaid: (applicant: Applicant) => void;
 };
-export function RaidList({ raidSize, applicants }: Props) {
+export function RaidList({ raidSize, applicants, handleLeaveRaid }: Props) {
   function displaySlots(startIndex: number, endIndex: number) {
     let raidSlots: JSX.Element[] = [];
     for (let i = startIndex; i < raidSize && i < endIndex; i++) {
       raidSlots.push(
         applicants && applicants[i] ? (
-          <ApplicantCard key={i} applicant={applicants[i]} />
+          <ApplicantCard
+            key={i}
+            applicant={applicants[i]}
+            handleLeaveRaid={handleLeaveRaid}
+          />
         ) : (
           <EmptySlot key={i} />
         )

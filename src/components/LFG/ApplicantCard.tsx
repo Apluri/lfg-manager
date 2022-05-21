@@ -5,15 +5,20 @@ import { Avatar, IconButton, Paper, Typography } from "@mui/material";
 import PersonRemoveIcon from "@mui/icons-material/PersonRemove";
 import { classIcons } from "../../utils/CharacterUtils";
 import { useAuth } from "../providers/AuthContext";
+import { useDatabase } from "../providers/DatabaseContext";
 type Props = {
   applicant: Applicant;
+  handleLeaveRaid: (applicant: Applicant) => void;
 };
-export function ApplicantCard({ applicant }: Props) {
+export function ApplicantCard({ applicant, handleLeaveRaid }: Props) {
   const auth = useAuth();
+  const db = useDatabase();
 
   function isRemoveAllowed() {
+    if (db?.user?.role === "admin") return true;
     return auth?.currentUser?.uid === applicant.uid ?? false;
   }
+
   return (
     <Paper
       elevation={6}
@@ -45,7 +50,10 @@ export function ApplicantCard({ applicant }: Props) {
       </Box>
 
       <Box>
-        <IconButton disabled={!isRemoveAllowed()}>
+        <IconButton
+          disabled={!isRemoveAllowed()}
+          onClick={() => handleLeaveRaid(applicant)}
+        >
           <PersonRemoveIcon />
         </IconButton>
       </Box>

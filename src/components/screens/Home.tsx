@@ -1,6 +1,6 @@
 import { Paper } from "@mui/material";
 import { Box } from "@mui/system";
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../providers/AuthContext";
 import { useDatabase } from "../providers/DatabaseContext";
@@ -9,6 +9,8 @@ import { LfgScreen } from "./LfgScreen";
 
 function Home() {
   const db = useDatabase();
+  const ayayaa = "https://i.waifu.pics/HeeBaFc.gif";
+
   return (
     <Box
       sx={{
