@@ -1,0 +1,15 @@
+{
+  "rules": {
+      "users": {
+      "$uid": {
+        ".write": "$uid === auth.uid"
+      }
+    },
+    ".read": "auth != null",
+      ".write": "root.child('users').child(auth.uid).child('role').val() === 'admin'",
+    "lfg": {
+      ".write": "auth != null"
+    }
+
+  }
+}
