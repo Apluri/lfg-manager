@@ -11,7 +11,7 @@ import { Box } from "@mui/system";
 import React, { useRef, useState } from "react";
 import { Character, ClassNames } from "../../utils/CharacterUtils";
 import { useAuth } from "../providers/AuthContext";
-import { useDatabase, UserData } from "../providers/DatabaseContext";
+import { Roles, useDatabase, UserData } from "../providers/DatabaseContext";
 import { CreateLfgPost } from "./CreateLfgPost";
 import { JoinLfg } from "./JoinLfg";
 import { RaidList } from "./RaidList";
@@ -124,6 +124,12 @@ export function LfgPosts() {
   function handleErrorVisible(post: LfgPost) {
     return errorPostRef.current?.lfgId === post.lfgId && errorVisible;
   }
+
+  function isEditAllowed(post: LfgPost): boolean {
+    if (post.ownerId === auth?.currentUser?.uid) return true;
+    if (db?.user?.role === Roles.ADMIN) return true;
+    return false;
+  }
   return (
     <Box
       sx={{
@@ -159,6 +165,7 @@ export function LfgPosts() {
               </Box>
               <Typography>Post owner: {getPostOwnerName(post)}</Typography>
               <IconButton
+                disabled={!isEditAllowed(post)}
                 onClick={(e) => handleClickMenu(e, post)}
                 aria-label="settings"
               >

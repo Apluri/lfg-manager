@@ -15,7 +15,7 @@ enum Paths {
   LFG_POSTS = "lfg/",
 }
 
-enum Roles {
+export enum Roles {
   ADMIN = "admin",
   MEMBER = "member",
   QUEST = "quest",
