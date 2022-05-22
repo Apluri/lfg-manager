@@ -22,10 +22,11 @@ export enum Roles {
 }
 interface DatabaseContextInterface {
   user: UserData | null;
-  allUsers: any;
+  allUsers: Users | null | undefined;
   lfgPosts: LfgPost[] | null | undefined;
   editUser: (user: UserData, userId: string) => Promise<void>;
   addCharacter: (newChar: Character) => Promise<void>;
+  editCharacter: (editChar: Character) => Promise<void>;
   deleteCharacter: (charToDelete: Character) => void;
   editUserName: (newUserName: string) => void;
   addLfgPost: (post: LfgPost) => void;
@@ -34,6 +35,9 @@ interface DatabaseContextInterface {
   leaveLfg: (post: LfgPost, applicant: Applicant) => void;
 }
 
+export type Users = {
+  [key: string]: UserData;
+};
 export type UserData = {
   userName: string;
   characters?: Character[];
@@ -66,7 +70,7 @@ type Props = {
 export function DatabaseProvider({ children }: Props) {
   const auth = useAuth();
   const [user, setUser] = useState<UserData | null>(null);
-  const [allUsers, setAllUsers] = useState<any>(null);
+  const [allUsers, setAllUsers] = useState<Users | null | undefined>(null);
   const [lfgPosts, setLfgPosts] = useState<LfgPost[] | null | undefined>();
   const [userNameModalVisible, setUserNameModalVisible] =
     useState<boolean>(false);
@@ -148,6 +152,26 @@ export function DatabaseProvider({ children }: Props) {
       } else {
         reject("could not create character, auth uid not defined");
       }
+    });
+  }
+  function editCharacter(editChar: Character): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      if (auth?.currentUser?.uid === undefined) {
+        reject("Used need to be authenticated to edit characters");
+        return;
+      }
+      if (user?.characters === undefined) {
+        reject("Cant edit characters when user does not have them");
+        return;
+      }
+
+      const editedCharacters = user?.characters?.map((char) =>
+        char.id === editChar.id ? editChar : char
+      );
+      const editedUser: UserData = { ...user, characters: editedCharacters };
+
+      editUser(editedUser, auth?.currentUser?.uid);
+      resolve();
     });
   }
   function deleteCharacter(charToDelete: Character) {
@@ -259,6 +283,7 @@ export function DatabaseProvider({ children }: Props) {
     lfgPosts,
     editUser,
     addCharacter,
+    editCharacter,
     deleteCharacter,
     editUserName,
     addLfgPost,

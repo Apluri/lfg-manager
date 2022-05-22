@@ -55,8 +55,9 @@ export function LfgPosts() {
     setAnchorEl(null);
   };
   function getPostOwnerName(post: LfgPost): string {
-    if (db?.allUsers !== null) {
-      const owner: UserData = db?.allUsers[post.ownerId];
+    const users = db?.allUsers;
+    if (users && users[post.ownerId]) {
+      const owner: UserData = users[post.ownerId];
       if (owner) {
         return owner.userName;
       }

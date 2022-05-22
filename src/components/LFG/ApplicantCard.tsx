@@ -20,7 +20,7 @@ export function ApplicantCard({ applicant, handleLeaveRaid }: Props) {
   }
   function getUserName() {
     const users = db?.allUsers;
-    if (users[applicant.uid]) return users[applicant.uid].userName;
+    if (users && users[applicant.uid]) return users[applicant.uid].userName;
     else return "No name found";
   }
 

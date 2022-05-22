@@ -23,19 +23,31 @@ import { v4 as uuidv4 } from "uuid";
 type Props = {
   visible: boolean;
   handleClose: () => void;
-  handleAddCharacter: (newCharacter: Character) => void;
+  handleAddCharacter?: (newCharacter: Character) => void;
+  handleEditCharacter?: (editedCharacter: Character) => void;
+  editCharacter?: Character;
 };
 export function CreateCharacterModal({
   visible,
   handleClose,
   handleAddCharacter,
+  handleEditCharacter,
+  editCharacter,
 }: Props) {
   const [charName, setCharName] = useState<string>("");
   const [selectedClass, setSelectedClass] = useState<ClassNames>(
     ClassNames.DEFAULT
   );
-  const [itemLevel, setItemLevel] = useState<number>(0);
+  const [itemLevel, setItemLevel] = useState<number>(1);
   const [error, setError] = useState(false);
+
+  useEffect(() => {
+    if (editCharacter !== undefined) {
+      setCharName(editCharacter.charName);
+      setItemLevel(editCharacter.itemLevel);
+      setSelectedClass(editCharacter.character);
+    }
+  }, [editCharacter]);
 
   function validateInputs() {
     let valid = true;
@@ -50,8 +62,9 @@ export function CreateCharacterModal({
     return valid;
   }
   function createNewCharacter() {
+    console.log(itemLevel);
     const newChar: Character = {
-      id: uuidv4(),
+      id: editCharacter !== undefined ? editCharacter.id : uuidv4(),
       charName,
       character: selectedClass,
       itemLevel,
@@ -85,15 +98,28 @@ export function CreateCharacterModal({
               onChange={(e) => setCharName(e.target.value)}
               sx={{ ...styles.itemsMargin, marginRight: "5px" }}
             />
-            <TextField
-              error={error && itemLevel === 0}
-              label="Item level"
-              variant="standard"
-              type={"number"}
-              required={true}
-              onChange={(e) => setItemLevel(Number(e.target.value))}
-              sx={{ ...styles.itemsMargin, marginLeft: "5px" }}
-            />
+            {editCharacter ? (
+              <TextField
+                error={error && itemLevel === 0}
+                label="Item level"
+                variant="standard"
+                type={"number"}
+                value={itemLevel}
+                required={true}
+                onChange={(e) => setItemLevel(Number(e.target.value))}
+                sx={{ ...styles.itemsMargin, marginLeft: "5px" }}
+              />
+            ) : (
+              <TextField
+                error={error && itemLevel === 0}
+                label="Item level"
+                variant="standard"
+                type={"number"}
+                required={true}
+                onChange={(e) => setItemLevel(Number(e.target.value))}
+                sx={{ ...styles.itemsMargin, marginLeft: "5px" }}
+              />
+            )}
           </Box>
 
           <FormControl fullWidth sx={styles.itemsMargin} required={true}>
@@ -132,7 +158,12 @@ export function CreateCharacterModal({
           <Button
             onClick={() => {
               if (validateInputs()) {
-                handleAddCharacter(createNewCharacter());
+                if (handleAddCharacter !== undefined) {
+                  handleAddCharacter(createNewCharacter());
+                } else if (handleEditCharacter !== undefined) {
+                  handleEditCharacter(createNewCharacter());
+                }
+
                 clearState();
               }
             }}

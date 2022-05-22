@@ -25,6 +25,8 @@ import berserkerIcon from "../../assets/images/classIcons/berserker.png";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { styled } from "@mui/material/styles";
+import { CreateCharacterModal } from "./CreateCharacterModal";
+import { useDatabase } from "../providers/DatabaseContext";
 const axios = require("axios").default;
 
 interface ExpandMoreProps extends IconButtonProps {
@@ -52,11 +54,14 @@ export function CharacterCard({
   containerStyles,
   handleDelete,
 }: Props) {
+  const db = useDatabase();
   const [expanded, setExpanded] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const [imgSrc, setImgSrc] = useState<string | undefined>();
   const ayayaa = "https://i.waifu.pics/HeeBaFc.gif";
+
+  const [editCharVisible, setEditCharVisible] = useState<boolean>(false);
 
   useEffect(() => {
     axios
@@ -80,6 +85,12 @@ export function CharacterCard({
     setAnchorEl(null);
   };
 
+  function handleEditCharacter(editedChar: Character) {
+    db?.editCharacter(editedChar);
+    setEditCharVisible(false);
+    handleClose();
+  }
+
   return (
     <Card sx={containerStyles}>
       <CardHeader
@@ -93,12 +104,16 @@ export function CharacterCard({
         subheader={`${character.charName}  ${character.itemLevel}`}
       />
       <Menu open={open} onClose={handleClose} anchorEl={anchorEl}>
-        <MenuItem onClick={() => console.log("edit" + character.charName)}>
-          Edit
-        </MenuItem>
+        <MenuItem onClick={() => setEditCharVisible(true)}>Edit</MenuItem>
         <MenuItem onClick={() => handleDelete(character)}>Delete</MenuItem>
       </Menu>
 
+      <CreateCharacterModal
+        visible={editCharVisible}
+        handleClose={() => setEditCharVisible(false)}
+        editCharacter={character}
+        handleEditCharacter={(editedChar) => handleEditCharacter(editedChar)}
+      />
       {/*
   <CardContent>
         <Box sx={styles.row}>
