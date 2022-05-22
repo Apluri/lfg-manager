@@ -47,7 +47,7 @@ export function CreateCharacterModal({
       setItemLevel(editCharacter.itemLevel);
       setSelectedClass(editCharacter.character);
     }
-  }, [editCharacter]);
+  }, [editCharacter, clearState]);
 
   function validateInputs() {
     let valid = true;
@@ -98,28 +98,17 @@ export function CreateCharacterModal({
               onChange={(e) => setCharName(e.target.value)}
               sx={{ ...styles.itemsMargin, marginRight: "5px" }}
             />
-            {editCharacter ? (
-              <TextField
-                error={error && itemLevel === 0}
-                label="Item level"
-                variant="standard"
-                type={"number"}
-                value={itemLevel}
-                required={true}
-                onChange={(e) => setItemLevel(Number(e.target.value))}
-                sx={{ ...styles.itemsMargin, marginLeft: "5px" }}
-              />
-            ) : (
-              <TextField
-                error={error && itemLevel === 0}
-                label="Item level"
-                variant="standard"
-                type={"number"}
-                required={true}
-                onChange={(e) => setItemLevel(Number(e.target.value))}
-                sx={{ ...styles.itemsMargin, marginLeft: "5px" }}
-              />
-            )}
+
+            <TextField
+              error={error && itemLevel === 0}
+              label="Item level"
+              variant="standard"
+              type={"number"}
+              value={itemLevel === 0 ? "" : itemLevel}
+              required={true}
+              onChange={(e) => setItemLevel(Number(e.target.value))}
+              sx={{ ...styles.itemsMargin, marginLeft: "5px" }}
+            />
           </Box>
 
           <FormControl fullWidth sx={styles.itemsMargin} required={true}>

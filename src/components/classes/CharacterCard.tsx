@@ -110,7 +110,10 @@ export function CharacterCard({
 
       <CreateCharacterModal
         visible={editCharVisible}
-        handleClose={() => setEditCharVisible(false)}
+        handleClose={() => {
+          setEditCharVisible(false);
+          handleClose();
+        }}
         editCharacter={character}
         handleEditCharacter={(editedChar) => handleEditCharacter(editedChar)}
       />
