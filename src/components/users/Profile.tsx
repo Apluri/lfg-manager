@@ -63,23 +63,16 @@ export function Profile({ style }: Props) {
         handleClose={closeModal}
         handleAddCharacter={handleAddCharacter}
       />
-      <Box
-        sx={{
-          width: "100%",
-          overflowY: "scroll",
-          height: window.innerHeight * 0.87,
-        }}
-      >
-        <Stack spacing={2} sx={{ width: "100%", marginBottom: "20px" }}>
-          {db?.user?.characters?.map((character, index) => (
-            <CharacterCard
-              key={index}
-              character={character}
-              handleDelete={handleDelete}
-            />
-          ))}
-        </Stack>
-      </Box>
+
+      <Stack spacing={2} sx={{ width: "100%", marginBottom: "20px" }}>
+        {db?.user?.characters?.map((character, index) => (
+          <CharacterCard
+            key={index}
+            character={character}
+            handleDelete={handleDelete}
+          />
+        ))}
+      </Stack>
     </Box>
   );
 }

@@ -177,12 +177,7 @@ export function LfgPosts() {
         handleClose={() => setCreateLfgPostVisible(false)}
         handleAddNewPost={handleAddNewPost}
       />
-      <Box
-        sx={{
-          height: window.innerHeight * 0.87,
-          overflowY: "auto",
-        }}
-      >
+      <Box sx={{ display: "flex", flexDirection: "column" }}>
         {db?.lfgPosts?.map((post, index) => {
           return (
             <Paper key={index} sx={styles.postContainer}>

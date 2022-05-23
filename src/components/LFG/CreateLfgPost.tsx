@@ -8,6 +8,7 @@ import { LfgPost } from "./LfgPosts";
 import { v4 as uuidv4 } from "uuid";
 import { DateTime } from "luxon";
 
+const MAX_TITLE_LENGTH = 60;
 type Props = {
   handleAddNewPost?: (post: LfgPost) => void;
   visible: boolean;
@@ -23,7 +24,11 @@ export function CreateLfgPost({
   editExistingPost,
 }: Props) {
   const [title, setTitle] = useState<string>("");
+  const [titleHelper, setTitleHelper] = useState<string>("");
+
   const [startTime, setStartTime] = useState<Date>(new Date());
+  const [timeHelper, setTimeHelper] = useState<string>("");
+
   const [error, setError] = useState(false);
   const auth = useAuth();
   const allowedMinuteDifference = 10;
@@ -34,18 +39,38 @@ export function CreateLfgPost({
     }
   }, [editExistingPost, handleClose]);
   function validateInputs() {
-    let valid = true;
-    if (title.length === 0 || validateTime()) {
+    if (validateTitle() && validateTime()) {
+      setError(false);
+      return true;
+    } else {
       setError(true);
-      valid = false;
+      return false;
     }
-
-    return valid;
+  }
+  function validateTitle(): boolean {
+    if (title.length === 0) {
+      setTitleHelper("Title must be longer than 0 characters");
+      return false;
+    } else if (title.length > MAX_TITLE_LENGTH) {
+      setTitleHelper(
+        "Title cant be over " + MAX_TITLE_LENGTH + " characters long"
+      );
+      return false;
+    } else {
+      setTitleHelper("");
+      return true;
+    }
   }
   function validateTime() {
     const time = DateTime.fromISO(startTime.toJSON());
     const diff = time.diffNow("minutes").minutes;
-    return diff <= -allowedMinuteDifference;
+    if (diff <= -allowedMinuteDifference) {
+      setTimeHelper("No past times pls");
+      return false;
+    } else {
+      setTimeHelper("");
+      return true;
+    }
   }
   function createNewPost(): LfgPost | null {
     if (auth?.currentUser?.uid === undefined) return null;
@@ -62,7 +87,10 @@ export function CreateLfgPost({
     setTitle("");
     setStartTime(new Date());
     setError(false);
+    setTimeHelper("");
+    setTitleHelper("");
   }
+
   return (
     <Modal
       open={visible}
@@ -76,8 +104,9 @@ export function CreateLfgPost({
           <Box sx={styles.row}>
             <TextField
               fullWidth
-              error={error && title.length === 0}
+              error={error && titleHelper.length > 0}
               label="Title"
+              helperText={titleHelper}
               value={title}
               variant="standard"
               required={true}
@@ -87,7 +116,11 @@ export function CreateLfgPost({
           </Box>
           <DateTimePicker
             renderInput={(props) => (
-              <TextField {...props} error={validateTime()} />
+              <TextField
+                {...props}
+                error={error && timeHelper.length > 0}
+                helperText={timeHelper}
+              />
             )}
             label="Date and start time"
             value={startTime}

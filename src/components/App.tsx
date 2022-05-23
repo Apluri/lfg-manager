@@ -8,7 +8,6 @@ import { DatabaseProvider } from "./providers/DatabaseContext";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
-import { Box } from "@mui/system";
 
 const darkTheme = createTheme({
   palette: {
@@ -21,12 +20,10 @@ function App() {
       <AuthProvider>
         <DatabaseProvider>
           <LocalizationProvider dateAdapter={AdapterLuxon} locale="fi-FI">
-            <Box sx={{ maxHeight: window.innerHeight, overflow: "hidden" }}>
-              <NavBar />
-              <Routes>
-                <Route path="/" element={<Home />} />
-              </Routes>
-            </Box>
+            <NavBar />
+            <Routes>
+              <Route path="/" element={<Home />} />
+            </Routes>
           </LocalizationProvider>
         </DatabaseProvider>
       </AuthProvider>

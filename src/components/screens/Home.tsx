@@ -18,7 +18,14 @@ function Home() {
         flexDirection: "row",
       }}
     >
-      <LfgScreen style={{ flex: 2, marginLeft: "2em", marginRight: "2em" }} />
+      <LfgScreen
+        style={{
+          flex: 2,
+          marginLeft: "2em",
+          marginRight: "2em",
+          maxWidth: "66%",
+        }}
+      />
       <Profile style={{ flex: 1, marginRight: "2em" }} />
     </Box>
   );
