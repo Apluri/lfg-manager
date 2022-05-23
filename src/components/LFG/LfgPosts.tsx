@@ -6,6 +6,7 @@ import {
   MenuItem,
   Paper,
   Typography,
+  useTheme,
 } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useRef, useState } from "react";
@@ -32,6 +33,7 @@ export type LfgPost = {
 export function LfgPosts() {
   const auth = useAuth();
   const db = useDatabase();
+  const themeColors = useTheme().palette;
   const [createLfgPostVisible, setCreateLfgPostVisible] =
     useState<boolean>(false);
   const [editLfgPostVisible, setEditLfgPostVisible] = useState<boolean>(false);
@@ -178,21 +180,48 @@ export function LfgPosts() {
             <Box sx={styles.topRow}>
               <Box>
                 <Typography variant="h4">{post.title}</Typography>
-                <Typography>
-                  {"Date " + new Date(post.startTime).toLocaleDateString("fi")}
-                </Typography>
-                <Typography>
-                  {" Start time " +
-                    DateTime.fromISO(post.startTime).toLocaleString(
+                <Box sx={styles.row}>
+                  <Typography
+                    sx={{ marginRight: "3px", color: themeColors.grey["400"] }}
+                  >
+                    Date
+                  </Typography>
+                  <Typography>
+                    {new Date(post.startTime).toLocaleDateString("fi")}
+                  </Typography>
+                </Box>
+
+                <Box sx={styles.row}>
+                  <Typography
+                    sx={{ marginRight: "3px", color: themeColors.grey["400"] }}
+                  >
+                    Start time
+                  </Typography>
+                  <Typography>
+                    {DateTime.fromISO(post.startTime).toLocaleString(
                       DateTime.TIME_24_SIMPLE
                     )}
-                </Typography>
+                  </Typography>
+                </Box>
 
                 {isLfgStartTimeToday(post) && (
-                  <Typography variant="h6">Today</Typography>
+                  <Typography
+                    sx={{ color: themeColors.primary.main }}
+                    variant="h6"
+                  >
+                    Today
+                  </Typography>
                 )}
               </Box>
-              <Typography>Owner: {getPostOwnerName(post)}</Typography>
+              <Box sx={styles.row}>
+                <Typography
+                  sx={{ marginRight: "3px", color: themeColors.grey["400"] }}
+                >
+                  Owner:
+                </Typography>
+                <Typography> {getPostOwnerName(post)}</Typography>
+              </Box>
+
               <IconButton
                 disabled={!isEditAllowed(post)}
                 onClick={(e) => handleClickMenu(e, post)}
@@ -273,5 +302,9 @@ const styles: { [key: string]: React.CSSProperties } = {
   playerCard: {
     padding: "10px",
     marginTop: "1em",
+  },
+  row: {
+    display: "flex",
+    flexDirection: "row",
   },
 };

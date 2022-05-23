@@ -1,7 +1,7 @@
 import React from "react";
 import { Box } from "@mui/system";
 import { Applicant } from "./LfgPosts";
-import { Avatar, IconButton, Paper, Typography } from "@mui/material";
+import { Avatar, IconButton, Paper, Typography, useTheme } from "@mui/material";
 import PersonRemoveIcon from "@mui/icons-material/PersonRemove";
 import { classIcons } from "../../utils/CharacterUtils";
 import { useAuth } from "../providers/AuthContext";
@@ -13,7 +13,7 @@ type Props = {
 export function ApplicantCard({ applicant, handleLeaveRaid }: Props) {
   const auth = useAuth();
   const db = useDatabase();
-
+  const themeColors = useTheme().palette;
   function isRemoveAllowed() {
     if (db?.user?.role === "admin") return true;
     return auth?.currentUser?.uid === applicant.uid ?? false;
@@ -47,7 +47,7 @@ export function ApplicantCard({ applicant, handleLeaveRaid }: Props) {
             <Typography
               sx={{
                 fontSize: 12,
-                color: "#bab7b6",
+                color: themeColors.grey[400],
                 marginLeft: "5px",
               }}
             >
@@ -62,7 +62,7 @@ export function ApplicantCard({ applicant, handleLeaveRaid }: Props) {
               variant="caption"
               sx={{
                 fontSize: 12,
-                color: "#bab7b6",
+                color: themeColors.grey[400],
                 marginLeft: "5px",
               }}
             >
