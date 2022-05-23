@@ -20,6 +20,9 @@ import {
 } from "../../utils/CharacterUtils";
 import { v4 as uuidv4 } from "uuid";
 
+const MAX_CHARNAME_LENGTH = 25;
+const MIN_ITEM_LEVEL = 1;
+const MAX_ITEM_LEVEL = 1700;
 type Props = {
   visible: boolean;
   handleClose: () => void;
@@ -35,10 +38,12 @@ export function CreateCharacterModal({
   editCharacter,
 }: Props) {
   const [charName, setCharName] = useState<string>("");
+  const [charNameHelper, setCharNameHelper] = useState<string>("");
   const [selectedClass, setSelectedClass] = useState<ClassNames>(
     ClassNames.DEFAULT
   );
   const [itemLevel, setItemLevel] = useState<number>(1);
+  const [itemLevelHelper, setItemLevelHelper] = useState<string>("");
   const [error, setError] = useState(false);
 
   useEffect(() => {
@@ -52,14 +57,39 @@ export function CreateCharacterModal({
   function validateInputs() {
     let valid = true;
     if (
-      charName.length === 0 ||
+      !validateItemLevel() ||
       selectedClass === ClassNames.DEFAULT ||
-      itemLevel === 0
+      !validateCharName()
     ) {
       setError(true);
       valid = false;
     }
     return valid;
+  }
+  function validateCharName(): boolean {
+    if (charName.length === 0) {
+      setCharNameHelper("Charname must be longer than 0 characters");
+      return false;
+    } else if (charName.length > MAX_CHARNAME_LENGTH) {
+      setCharNameHelper(
+        "Charname must be shorter than " + MAX_CHARNAME_LENGTH + " characters"
+      );
+      return false;
+    } else {
+      setCharNameHelper("");
+      return true;
+    }
+  }
+  function validateItemLevel(): boolean {
+    if (itemLevel < MIN_ITEM_LEVEL || itemLevel > MAX_ITEM_LEVEL) {
+      setItemLevelHelper(
+        "Itemlevel must be between " + MIN_ITEM_LEVEL + " or " + MAX_ITEM_LEVEL
+      );
+      return false;
+    } else {
+      setItemLevelHelper("");
+      return true;
+    }
   }
   function createNewCharacter() {
     const newChar: Character = {
@@ -89,8 +119,9 @@ export function CreateCharacterModal({
           <Box sx={styles.row}>
             <TextField
               fullWidth
-              error={error && charName.length === 0}
+              error={error && charNameHelper.length > 0}
               label="Character name"
+              helperText={charNameHelper}
               value={charName}
               variant="standard"
               required={true}
@@ -99,10 +130,11 @@ export function CreateCharacterModal({
             />
 
             <TextField
-              error={error && itemLevel === 0}
+              error={error && itemLevelHelper.length > 0}
               label="Item level"
               variant="standard"
               type={"number"}
+              helperText={itemLevelHelper}
               value={itemLevel === 0 ? "" : itemLevel}
               required={true}
               onChange={(e) => setItemLevel(Number(e.target.value))}
@@ -145,6 +177,8 @@ export function CreateCharacterModal({
           </Button>
           <Button
             onClick={() => {
+              console.log(validateItemLevel());
+              console.log(validateCharName());
               if (validateInputs()) {
                 if (handleAddCharacter !== undefined) {
                   handleAddCharacter(createNewCharacter());
