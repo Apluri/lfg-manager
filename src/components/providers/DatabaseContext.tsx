@@ -106,6 +106,14 @@ export function DatabaseProvider({ children }: Props) {
     getData(Paths.USERS, (data) => setAllUsers(data));
   }
   function getLfgPosts() {
+    function filterOldPosts(posts: LfgPost[]): LfgPost[] {
+      return posts.filter((post) => {
+        const postStartTime = DateTime.fromISO(post.startTime);
+        const diff = postStartTime.diffNow("days").days;
+        if (diff < -1) return false;
+        return true;
+      });
+    }
     getData(Paths.LFG_POSTS, (data) => {
       const posts: LfgPost[] = data ?? [];
       const sortedPosts = posts.sort((a, b) => {
@@ -116,7 +124,8 @@ export function DatabaseProvider({ children }: Props) {
           return 1;
         else return -1;
       });
-      setLfgPosts(sortedPosts);
+
+      setLfgPosts(filterOldPosts(sortedPosts));
     });
   }
 

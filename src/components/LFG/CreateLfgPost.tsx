@@ -6,6 +6,7 @@ import { ClassNames } from "../../utils/CharacterUtils";
 import { useAuth } from "../providers/AuthContext";
 import { LfgPost } from "./LfgPosts";
 import { v4 as uuidv4 } from "uuid";
+import { DateTime } from "luxon";
 
 type Props = {
   handleAddNewPost?: (post: LfgPost) => void;
@@ -22,10 +23,10 @@ export function CreateLfgPost({
   editExistingPost,
 }: Props) {
   const [title, setTitle] = useState<string>("");
-  const [startTime, setStartTime] = useState<Date | null>(new Date());
+  const [startTime, setStartTime] = useState<Date>(new Date());
   const [error, setError] = useState(false);
   const auth = useAuth();
-
+  const allowedMinuteDifference = 10;
   useEffect(() => {
     if (editExistingPost !== undefined) {
       setTitle(editExistingPost.title);
@@ -34,19 +35,23 @@ export function CreateLfgPost({
   }, [editExistingPost, handleClose]);
   function validateInputs() {
     let valid = true;
-
-    if (title.length === 0) {
+    if (title.length === 0 || validateTime()) {
       setError(true);
       valid = false;
     }
 
     return valid;
   }
+  function validateTime() {
+    const time = DateTime.fromISO(startTime.toJSON());
+    const diff = time.diffNow("minutes").minutes;
+    return diff <= -allowedMinuteDifference;
+  }
   function createNewPost(): LfgPost | null {
     if (auth?.currentUser?.uid === undefined) return null;
     const post: LfgPost = {
       title,
-      startTime: startTime?.toJSON() ?? new Date().toJSON(),
+      startTime: startTime?.toJSON(),
       ownerId: editExistingPost?.ownerId ?? auth.currentUser.uid,
       lfgId: editExistingPost?.lfgId ?? uuidv4(),
       applicants: editExistingPost?.applicants ?? [],
@@ -81,10 +86,14 @@ export function CreateLfgPost({
             />
           </Box>
           <DateTimePicker
-            renderInput={(props) => <TextField {...props} />}
+            renderInput={(props) => (
+              <TextField {...props} error={validateTime()} />
+            )}
             label="Date and start time"
             value={startTime}
-            onChange={(newValue) => setStartTime(newValue)}
+            onChange={(newValue) => {
+              if (newValue) setStartTime(newValue);
+            }}
           />
         </Box>
         <Box sx={styles.actionButtons}>
