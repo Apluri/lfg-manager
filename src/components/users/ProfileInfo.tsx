@@ -7,7 +7,7 @@ export function ProfileInfo() {
   const username = db?.user?.userName;
   return (
     <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-      <Typography>{username && username}</Typography>
+      <Typography variant="h6">{username && username}</Typography>
     </Box>
   );
 }

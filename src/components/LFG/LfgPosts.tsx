@@ -166,7 +166,10 @@ export function LfgPosts() {
         width: "100%",
       }}
     >
-      <Button onClick={() => setCreateLfgPostVisible(true)}>
+      <Button
+        sx={{ marginBottom: "10px" }}
+        onClick={() => setCreateLfgPostVisible(true)}
+      >
         Add lfg post
       </Button>
       <CreateLfgPost
@@ -282,7 +285,7 @@ const styles: { [key: string]: React.CSSProperties } = {
   postContainer: {
     display: "flex",
     flexDirection: "column",
-    margin: "10px",
+    marginBottom: "20px",
     padding: "10px",
     flex: 1,
   },

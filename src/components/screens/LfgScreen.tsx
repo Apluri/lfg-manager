@@ -16,7 +16,7 @@ export function LfgScreen({ style }: Props) {
         ...style,
       }}
     >
-      <Typography>Cute find party</Typography>
+      <Typography variant="h6">Cute find party</Typography>
       <LfgPosts />
     </Box>
   );

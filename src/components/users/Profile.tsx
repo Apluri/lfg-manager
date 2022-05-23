@@ -8,6 +8,7 @@ import { useAuth } from "../providers/AuthContext";
 import { UserData, useDatabase } from "../providers/DatabaseContext";
 import { EditUserName } from "./EditUserName";
 import { ProfileInfo } from "./ProfileInfo";
+import AddIcon from "@mui/icons-material/Add";
 
 type Props = {
   style?: React.CSSProperties;
@@ -50,9 +51,13 @@ export function Profile({ style }: Props) {
         />
 
         <ProfileInfo />
-        <Button onClick={() => setEditUserName(true)}>edit</Button>
+        <Button sx={{ padding: 0 }} onClick={() => setEditUserName(true)}>
+          edit
+        </Button>
       </Box>
-      <Button onClick={openModal}>Add character</Button>
+      <Button sx={{ marginBottom: "10px" }} onClick={openModal}>
+        Add character
+      </Button>
       <CreateCharacterModal
         visible={addCharacterVisible}
         handleClose={closeModal}
@@ -76,7 +81,6 @@ const styles: { [key: string]: React.CSSProperties } = {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    padding: "1em",
     width: "100%",
   },
 
