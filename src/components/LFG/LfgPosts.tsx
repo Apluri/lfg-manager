@@ -177,106 +177,126 @@ export function LfgPosts() {
         handleClose={() => setCreateLfgPostVisible(false)}
         handleAddNewPost={handleAddNewPost}
       />
-      {db?.lfgPosts?.map((post, index) => {
-        return (
-          <Paper key={index} sx={styles.postContainer}>
-            <Box sx={styles.topRow}>
-              <Box>
-                <Typography variant="h4">{post.title}</Typography>
+      <Box
+        sx={{
+          height: window.innerHeight * 0.87,
+          overflowY: "auto",
+        }}
+      >
+        {db?.lfgPosts?.map((post, index) => {
+          return (
+            <Paper key={index} sx={styles.postContainer}>
+              <Box sx={styles.topRow}>
+                <Box>
+                  <Typography variant="h4">{post.title}</Typography>
+                  <Box sx={styles.row}>
+                    <Typography
+                      sx={{
+                        marginRight: "3px",
+                        color: themeColors.grey["400"],
+                      }}
+                    >
+                      Date
+                    </Typography>
+                    <Typography>
+                      {new Date(post.startTime).toLocaleDateString("fi")}
+                    </Typography>
+                  </Box>
+
+                  <Box sx={styles.row}>
+                    <Typography
+                      sx={{
+                        marginRight: "3px",
+                        color: themeColors.grey["400"],
+                      }}
+                    >
+                      Start time
+                    </Typography>
+                    <Typography>
+                      {DateTime.fromISO(post.startTime).toLocaleString(
+                        DateTime.TIME_24_SIMPLE
+                      )}
+                    </Typography>
+                  </Box>
+
+                  {isLfgStartTimeToday(post) && (
+                    <Typography
+                      sx={{ color: themeColors.primary.main }}
+                      variant="h6"
+                    >
+                      Today
+                    </Typography>
+                  )}
+                </Box>
                 <Box sx={styles.row}>
                   <Typography
-                    sx={{ marginRight: "3px", color: themeColors.grey["400"] }}
+                    sx={{
+                      marginRight: "3px",
+                      color: themeColors.grey["400"],
+                    }}
                   >
-                    Date
+                    Owner:
                   </Typography>
-                  <Typography>
-                    {new Date(post.startTime).toLocaleDateString("fi")}
-                  </Typography>
+                  <Typography> {getPostOwnerName(post)}</Typography>
                 </Box>
 
-                <Box sx={styles.row}>
-                  <Typography
-                    sx={{ marginRight: "3px", color: themeColors.grey["400"] }}
-                  >
-                    Start time
-                  </Typography>
-                  <Typography>
-                    {DateTime.fromISO(post.startTime).toLocaleString(
-                      DateTime.TIME_24_SIMPLE
-                    )}
-                  </Typography>
-                </Box>
-
-                {isLfgStartTimeToday(post) && (
-                  <Typography
-                    sx={{ color: themeColors.primary.main }}
-                    variant="h6"
-                  >
-                    Today
-                  </Typography>
-                )}
-              </Box>
-              <Box sx={styles.row}>
-                <Typography
-                  sx={{ marginRight: "3px", color: themeColors.grey["400"] }}
+                <IconButton
+                  disabled={!isEditAllowed(post)}
+                  onClick={(e) => handleClickMenu(e, post)}
+                  aria-label="settings"
                 >
-                  Owner:
-                </Typography>
-                <Typography> {getPostOwnerName(post)}</Typography>
+                  <MoreVertIcon />
+                </IconButton>
+                <Menu
+                  open={functionMenuVisible}
+                  onClose={handleCloseMenu}
+                  anchorEl={anchorEl}
+                >
+                  <MenuItem onClick={() => setEditLfgPostVisible(true)}>
+                    Edit
+                  </MenuItem>
+                  <CreateLfgPost
+                    visible={editLfgPostVisible}
+                    handleClose={() => {
+                      handleCloseMenu();
+                      setEditLfgPostVisible(false);
+                    }}
+                    editExistingPost={editLfgRef.current ?? undefined}
+                    handleEditExistingPost={(editedPost: LfgPost) =>
+                      handleEditLfg(editedPost)
+                    }
+                  />
+                  <MenuItem onClick={handleDeleteLfg}>Delete</MenuItem>
+                </Menu>
               </Box>
-
-              <IconButton
-                disabled={!isEditAllowed(post)}
-                onClick={(e) => handleClickMenu(e, post)}
-                aria-label="settings"
-              >
-                <MoreVertIcon />
-              </IconButton>
-              <Menu
-                open={functionMenuVisible}
-                onClose={handleCloseMenu}
-                anchorEl={anchorEl}
-              >
-                <MenuItem onClick={() => setEditLfgPostVisible(true)}>
-                  Edit
-                </MenuItem>
-                <CreateLfgPost
-                  visible={editLfgPostVisible}
-                  handleClose={() => {
-                    handleCloseMenu();
-                    setEditLfgPostVisible(false);
-                  }}
-                  editExistingPost={editLfgRef.current ?? undefined}
-                  handleEditExistingPost={(editedPost: LfgPost) =>
-                    handleEditLfg(editedPost)
-                  }
-                />
-                <MenuItem onClick={handleDeleteLfg}>Delete</MenuItem>
-              </Menu>
-            </Box>
-            <RaidList
-              applicants={post.applicants}
-              raidSize={8}
-              handleLeaveRaid={(applicant) => handleLeaveRaid(applicant, post)}
-            />
-            <Button onClick={() => openJoinPartyModal(post)}>Join party</Button>
-            <CustomAlert
-              visible={handleErrorVisible(post)}
-              handleClose={handleCloseError}
-              message={errorMsg}
-            />
-
-            {db.user?.characters !== undefined && (
-              <JoinLfg
-                visible={joinLfgVisible}
-                onJoin={(char) => handleJoinLfg(char)}
-                handleClose={() => setJoinLfgVisible(false)}
-                characters={db.user?.characters}
+              <RaidList
+                applicants={post.applicants}
+                raidSize={8}
+                handleLeaveRaid={(applicant) =>
+                  handleLeaveRaid(applicant, post)
+                }
               />
-            )}
-          </Paper>
-        );
-      })}
+              <Button onClick={() => openJoinPartyModal(post)}>
+                Join party
+              </Button>
+              <CustomAlert
+                visible={handleErrorVisible(post)}
+                handleClose={handleCloseError}
+                message={errorMsg}
+              />
+
+              {db.user?.characters !== undefined && (
+                <JoinLfg
+                  visible={joinLfgVisible}
+                  onJoin={(char) => handleJoinLfg(char)}
+                  handleClose={() => setJoinLfgVisible(false)}
+                  characters={db.user?.characters}
+                />
+              )}
+            </Paper>
+          );
+        })}
+      </Box>
     </Box>
   );
 }
