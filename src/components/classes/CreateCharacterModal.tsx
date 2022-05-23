@@ -52,7 +52,7 @@ export function CreateCharacterModal({
       setItemLevel(editCharacter.itemLevel);
       setSelectedClass(editCharacter.character);
     }
-  }, [editCharacter, clearState]);
+  }, [editCharacter, handleClose]);
 
   function validateInputs() {
     let valid = true;
