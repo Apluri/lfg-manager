@@ -7,6 +7,7 @@ import { Character, ClassNames } from "../../utils/CharacterUtils";
 import { Modal, Paper } from "@mui/material";
 import { EditUserName } from "../users/EditUserName";
 import { Applicant, LfgPost } from "../LFG/LfgPosts";
+import { DateTime } from "luxon";
 
 enum Paths {
   CHARACTERS = "characters/",
@@ -105,7 +106,18 @@ export function DatabaseProvider({ children }: Props) {
     getData(Paths.USERS, (data) => setAllUsers(data));
   }
   function getLfgPosts() {
-    getData(Paths.LFG_POSTS, (data) => setLfgPosts(data));
+    getData(Paths.LFG_POSTS, (data) => {
+      const posts: LfgPost[] = data ?? [];
+      const sortedPosts = posts.sort((a, b) => {
+        if (
+          DateTime.fromISO(a.startTime).valueOf() >
+          DateTime.fromISO(b.startTime).valueOf()
+        )
+          return 1;
+        else return -1;
+      });
+      setLfgPosts(sortedPosts);
+    });
   }
 
   function applicantIsInLfg(post: LfgPost, applicant: Applicant) {

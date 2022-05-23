@@ -177,7 +177,7 @@ export function LfgPosts() {
                     )}
                 </Typography>
               </Box>
-              <Typography>Post owner: {getPostOwnerName(post)}</Typography>
+              <Typography>Owner: {getPostOwnerName(post)}</Typography>
               <IconButton
                 disabled={!isEditAllowed(post)}
                 onClick={(e) => handleClickMenu(e, post)}
