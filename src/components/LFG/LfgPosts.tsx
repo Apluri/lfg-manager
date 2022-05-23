@@ -144,6 +144,17 @@ export function LfgPosts() {
     if (db?.user?.role === Roles.ADMIN) return true;
     return false;
   }
+  function isLfgStartTimeToday(post: LfgPost): boolean {
+    const diff = DateTime.fromISO(post.startTime).diffNow("days").days;
+    // basicly ensuring lastyear same date isnt valid, or some other month same day
+    const isWithinCoupleDays = diff < 1 && diff > -1;
+    if (
+      isWithinCoupleDays &&
+      DateTime.fromISO(post.startTime).day === DateTime.now().day
+    )
+      return true;
+    return false;
+  }
   return (
     <Box
       sx={{
@@ -176,6 +187,10 @@ export function LfgPosts() {
                       DateTime.TIME_24_SIMPLE
                     )}
                 </Typography>
+
+                {isLfgStartTimeToday(post) && (
+                  <Typography variant="h6">Today</Typography>
+                )}
               </Box>
               <Typography>Owner: {getPostOwnerName(post)}</Typography>
               <IconButton
