@@ -157,7 +157,7 @@ export function CreateCharacterModal({
               }
             }}
           >
-            Add
+            {editCharacter ? "Confirm" : "Add"}
           </Button>
         </Box>
       </Paper>
