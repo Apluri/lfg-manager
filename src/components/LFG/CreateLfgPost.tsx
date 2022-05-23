@@ -1,28 +1,37 @@
 import { Button, Modal, Paper, TextField } from "@mui/material";
 import { Box } from "@mui/system";
 import { DateTimePicker } from "@mui/x-date-pickers";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ClassNames } from "../../utils/CharacterUtils";
 import { useAuth } from "../providers/AuthContext";
 import { LfgPost } from "./LfgPosts";
 import { v4 as uuidv4 } from "uuid";
 
 type Props = {
-  handleAddNewPost: (post: LfgPost) => void;
+  handleAddNewPost?: (post: LfgPost) => void;
   visible: boolean;
   handleClose: () => void;
+  editExistingPost?: LfgPost;
+  handleEditExistingPost?: (post: LfgPost) => void;
 };
 export function CreateLfgPost({
   visible,
   handleAddNewPost,
   handleClose,
+  handleEditExistingPost,
+  editExistingPost,
 }: Props) {
   const [title, setTitle] = useState<string>("");
   const [startTime, setStartTime] = useState<Date | null>(new Date());
   const [error, setError] = useState(false);
-
   const auth = useAuth();
 
+  useEffect(() => {
+    if (editExistingPost !== undefined) {
+      setTitle(editExistingPost.title);
+      setStartTime(new Date(editExistingPost.startTime));
+    }
+  }, [editExistingPost, handleClose]);
   function validateInputs() {
     let valid = true;
 
@@ -38,9 +47,9 @@ export function CreateLfgPost({
     const post: LfgPost = {
       title,
       startTime: startTime?.toJSON() ?? new Date().toJSON(),
-      ownerId: auth.currentUser.uid,
-      lfgId: uuidv4(),
-      applicants: [],
+      ownerId: editExistingPost?.ownerId ?? auth.currentUser.uid,
+      lfgId: editExistingPost?.lfgId ?? uuidv4(),
+      applicants: editExistingPost?.applicants ?? [],
     };
     return post;
   }
@@ -91,13 +100,18 @@ export function CreateLfgPost({
             onClick={() => {
               if (validateInputs()) {
                 const newPost = createNewPost();
-                if (newPost) handleAddNewPost(newPost);
+                if (!newPost) return;
+                if (handleAddNewPost !== undefined) {
+                  handleAddNewPost(newPost);
+                } else if (handleEditExistingPost !== undefined) {
+                  handleEditExistingPost(newPost);
+                }
                 clearState();
                 handleClose();
               }
             }}
           >
-            Add
+            {editExistingPost ? "Confirm" : "Add"}
           </Button>
         </Box>
       </Paper>

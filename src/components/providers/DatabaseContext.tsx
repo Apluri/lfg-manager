@@ -30,6 +30,7 @@ interface DatabaseContextInterface {
   deleteCharacter: (charToDelete: Character) => void;
   editUserName: (newUserName: string) => void;
   addLfgPost: (post: LfgPost) => void;
+  editLfgPost: (post: LfgPost) => Promise<void>;
   deleteLfgPost: (post: LfgPost) => Promise<void>;
   joinLfg: (post: LfgPost, applicant: Applicant) => Promise<void>;
   leaveLfg: (post: LfgPost, applicant: Applicant) => void;
@@ -207,31 +208,49 @@ export function DatabaseProvider({ children }: Props) {
       editPosts([post]);
     }
   }
-  function deleteLfgPost(post: LfgPost): Promise<void> {
-    console.log(post.ownerId);
-    console.log(auth?.currentUser?.uid);
+  function editLfgPost(post: LfgPost): Promise<void> {
+    return new Promise((resolve, reject) => {
+      if (
+        !(post.ownerId === auth?.currentUser?.uid || user?.role === Roles.ADMIN)
+      ) {
+        reject("You are not authorized to edit this post");
+        return;
+      }
 
-    return new Promise((result, reject) => {
+      if (!lfgPosts) {
+        reject("There is no existing posts");
+        return;
+      }
+
+      // all good lets edit post
+      const newPosts: LfgPost[] = lfgPosts.map((p) =>
+        p.lfgId === post.lfgId ? post : p
+      );
+      editPosts(newPosts);
+      resolve();
+    });
+  }
+  function deleteLfgPost(post: LfgPost): Promise<void> {
+    return new Promise((resolve, reject) => {
       if (
         post.ownerId === auth?.currentUser?.uid ||
         user?.role === Roles.ADMIN
       ) {
         if (lfgPosts) {
-          console.log(lfgPosts);
           const newPosts: LfgPost[] = lfgPosts.filter(
             (p) => p.lfgId !== post.lfgId
           );
 
           editPosts(newPosts);
         }
-        result();
+        resolve();
       } else {
         reject("You are not allowed to delete this post");
       }
     });
   }
   function joinLfg(post: LfgPost, applicant: Applicant): Promise<void> {
-    return new Promise((result, reject) => {
+    return new Promise((resolve, reject) => {
       if (!applicantIsInLfg(post, applicant)) {
         // change 8 into raidSize variable later on
         if (post.applicants && post?.applicants?.length >= 8) {
@@ -251,7 +270,7 @@ export function DatabaseProvider({ children }: Props) {
 
         if (editedPosts) {
           editPosts(editedPosts);
-          result();
+          resolve();
         }
       }
       const alreadyInWith = post.applicants?.find(
@@ -287,6 +306,7 @@ export function DatabaseProvider({ children }: Props) {
     deleteCharacter,
     editUserName,
     addLfgPost,
+    editLfgPost,
     deleteLfgPost,
     joinLfg,
     leaveLfg,

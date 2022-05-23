@@ -34,6 +34,7 @@ export function LfgPosts() {
   const db = useDatabase();
   const [createLfgPostVisible, setCreateLfgPostVisible] =
     useState<boolean>(false);
+  const [editLfgPostVisible, setEditLfgPostVisible] = useState<boolean>(false);
   const [joinLfgVisible, setJoinLfgVisible] = useState<boolean>(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const functionMenuVisible = Boolean(anchorEl);
@@ -111,7 +112,19 @@ export function LfgPosts() {
         setErrorMsg(e);
         errorPostRef.current = editLfgRef.current;
         setErrorVisible(true);
-      });
+      })
+      .finally((editLfgRef.current = null));
+    handleCloseMenu();
+  }
+  function handleEditLfg(post: LfgPost) {
+    db?.editLfgPost(post)
+      .catch((e) => {
+        console.log(e);
+        setErrorMsg(e);
+        errorPostRef.current = editLfgRef.current;
+        setErrorVisible(true);
+      })
+      .finally((editLfgRef.current = null));
     handleCloseMenu();
   }
   function handleLeaveRaid(applicant: Applicant, post: LfgPost) {
@@ -177,9 +190,20 @@ export function LfgPosts() {
                 onClose={handleCloseMenu}
                 anchorEl={anchorEl}
               >
-                <MenuItem onClick={() => console.log("edit lfg")}>
+                <MenuItem onClick={() => setEditLfgPostVisible(true)}>
                   Edit
                 </MenuItem>
+                <CreateLfgPost
+                  visible={editLfgPostVisible}
+                  handleClose={() => {
+                    handleCloseMenu();
+                    setEditLfgPostVisible(false);
+                  }}
+                  editExistingPost={editLfgRef.current ?? undefined}
+                  handleEditExistingPost={(editedPost: LfgPost) =>
+                    handleEditLfg(editedPost)
+                  }
+                />
                 <MenuItem onClick={handleDeleteLfg}>Delete</MenuItem>
               </Menu>
             </Box>

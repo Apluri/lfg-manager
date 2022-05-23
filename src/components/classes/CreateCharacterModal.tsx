@@ -62,7 +62,6 @@ export function CreateCharacterModal({
     return valid;
   }
   function createNewCharacter() {
-    console.log(itemLevel);
     const newChar: Character = {
       id: editCharacter !== undefined ? editCharacter.id : uuidv4(),
       charName,
