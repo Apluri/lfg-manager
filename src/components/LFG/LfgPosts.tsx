@@ -158,20 +158,6 @@ export function LfgPosts() {
     return false;
   }
 
-  // check if unnesessary long words is being used and block them
-  // ex: thiswordistoolongsincethereisnospacessoweblockthis <- blocked
-  // ex: this word isnt too big since here we have white spaces <- ok
-  function renderValidatedTitle(title: string) {
-    // world longes word is 45 characters long :)
-    const longestAllowedWordSize = 45;
-    const words = title.split(" ");
-
-    const errorWord = words.find(
-      (word) => word.length > longestAllowedWordSize
-    );
-
-    return errorWord ? "Title contains too long words, pls edit." : title;
-  }
   return (
     <Box
       sx={{
@@ -198,9 +184,7 @@ export function LfgPosts() {
             <Paper key={index} sx={styles.postContainer}>
               <Box sx={styles.topRow}>
                 <Box>
-                  <Typography variant="h4">
-                    {renderValidatedTitle(post.title)}
-                  </Typography>
+                  <Typography variant="h4">{post.title}</Typography>
                   <Box sx={styles.row}>
                     <Typography
                       sx={{

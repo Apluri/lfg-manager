@@ -47,13 +47,25 @@ export function CreateLfgPost({
       return false;
     }
   }
+
   function validateTitle(): boolean {
+    const longestAllowedWordSize = 45;
+    const words = title.split(" ");
+    const tooLongWord = words.find(
+      (word) => word.length > longestAllowedWordSize
+    );
     if (title.length === 0) {
       setTitleHelper("Title must be longer than 0 characters");
       return false;
     } else if (title.length > MAX_TITLE_LENGTH) {
       setTitleHelper(
         "Title cant be over " + MAX_TITLE_LENGTH + " characters long"
+      );
+      return false;
+    } else if (tooLongWord !== undefined) {
+      setTitleHelper(
+        "Title contains too long words, max word length is " +
+          longestAllowedWordSize
       );
       return false;
     } else {
