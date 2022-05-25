@@ -35,6 +35,7 @@ interface DatabaseContextInterface {
   deleteLfgPost: (post: LfgPost) => Promise<void>;
   joinLfg: (post: LfgPost, applicant: Applicant) => Promise<void>;
   leaveLfg: (post: LfgPost, applicant: Applicant) => void;
+  editRole: (newRole: Roles, userId: string) => Promise<void>;
 }
 
 export type Users = {
@@ -316,6 +317,30 @@ export function DatabaseProvider({ children }: Props) {
     });
     if (editedPosts) editPosts(editedPosts);
   }
+  function editRole(newRole: Roles, userId: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+      if (
+        allUsers === null ||
+        allUsers === undefined ||
+        auth?.currentUser?.uid === undefined
+      ) {
+        reject("Users undefined, unable to change roles");
+        return;
+      }
+      if (allUsers[auth?.currentUser?.uid].role !== Roles.ADMIN) {
+        reject("Only admins are allowed to edit roles");
+        return;
+      }
+      const user = allUsers[userId];
+      if (user !== null && user !== undefined) {
+        const editedUser = { ...user, role: newRole };
+        editUser(editedUser, userId);
+        resolve();
+      } else {
+        reject("no user found with id, unable to edit role");
+      }
+    });
+  }
 
   const value: DatabaseContextInterface = {
     user,
@@ -331,6 +356,7 @@ export function DatabaseProvider({ children }: Props) {
     deleteLfgPost,
     joinLfg,
     leaveLfg,
+    editRole,
   };
   return (
     <DbContext.Provider value={value}>

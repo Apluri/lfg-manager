@@ -8,6 +8,7 @@ import { DatabaseProvider } from "./providers/DatabaseContext";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
+import { AdminPanel } from "./screens/AdminPanel";
 
 const darkTheme = createTheme({
   palette: {
@@ -23,6 +24,7 @@ function App() {
             <NavBar />
             <Routes>
               <Route path="/" element={<Home />} />
+              <Route path="/admin" element={<AdminPanel />} />
             </Routes>
           </LocalizationProvider>
         </DatabaseProvider>
