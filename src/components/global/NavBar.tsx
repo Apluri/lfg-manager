@@ -10,9 +10,11 @@ import { Avatar } from "@mui/material";
 import { useAuth } from "../providers/AuthContext";
 import { ProfileInfo } from "../users/ProfileInfo";
 import cuteLogo from "../../assets/images/cute-logo.jpg";
+import { useNavigate } from "react-router-dom";
 
 export default function NavBar() {
   const auth = useAuth();
+  const navigate = useNavigate();
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static" color="secondary">
@@ -30,6 +32,7 @@ export default function NavBar() {
           </Box>
 
           <Box
+            onClick={() => navigate("/")}
             sx={{
               display: "flex",
               flex: 1,
