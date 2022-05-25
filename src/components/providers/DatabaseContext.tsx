@@ -197,6 +197,23 @@ export function DatabaseProvider({ children }: Props) {
       resolve();
     });
   }
+
+  function leaveFromLfgs(charId: string) {
+    const editedPosts = lfgPosts?.map((post) => {
+      const newApplicants: Applicant[] =
+        post.applicants?.filter(
+          (applicant) => applicant.character.id !== charId
+        ) ?? [];
+      const newPost: LfgPost = {
+        ...post,
+        applicants: newApplicants,
+      };
+      return newPost;
+    });
+    if (editedPosts !== undefined) {
+      editPosts(editedPosts);
+    }
+  }
   function deleteCharacter(charToDelete: Character) {
     const newCharactersList = user?.characters?.filter(
       (char) => char.id !== charToDelete.id
@@ -205,6 +222,7 @@ export function DatabaseProvider({ children }: Props) {
       auth?.currentUser?.uid !== undefined &&
       newCharactersList !== undefined
     ) {
+      leaveFromLfgs(charToDelete.id);
       editUserCustomDataAndPath(
         newCharactersList,
         auth.currentUser.uid,
