@@ -21,7 +21,7 @@ export function AdminPanelUserCard({ user, userId }: Props) {
     return [Roles.ADMIN, Roles.MEMBER, Roles.QUEST];
   }
   function handleChangeRole(newRole: Roles) {
-    db?.editRole(newRole, userId);
+    db?.editRole(newRole, userId).catch((e) => console.log(e));
   }
   return (
     <Paper
@@ -51,7 +51,7 @@ export function AdminPanelUserCard({ user, userId }: Props) {
         </Select>
       </FormControl>
 
-      <Typography sx={styles.rowItem}>Delete user</Typography>
+      <Typography sx={styles.rowItem}>TODO: del user</Typography>
     </Paper>
   );
 }
