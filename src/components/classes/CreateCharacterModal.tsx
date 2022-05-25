@@ -177,8 +177,6 @@ export function CreateCharacterModal({
           </Button>
           <Button
             onClick={() => {
-              console.log(validateItemLevel());
-              console.log(validateCharName());
               if (validateInputs()) {
                 if (handleAddCharacter !== undefined) {
                   handleAddCharacter(createNewCharacter());

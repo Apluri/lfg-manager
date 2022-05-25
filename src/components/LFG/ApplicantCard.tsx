@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { Box } from "@mui/system";
 import { Applicant, LfgPost } from "./LfgPosts";
 import { Avatar, IconButton, Paper, Typography, useTheme } from "@mui/material";
 import PersonRemoveIcon from "@mui/icons-material/PersonRemove";
-import { classIcons } from "../../utils/CharacterUtils";
+import { classIcons, ClassNames } from "../../utils/CharacterUtils";
 import { useAuth } from "../providers/AuthContext";
 import { useDatabase } from "../providers/DatabaseContext";
 type Props = {
@@ -14,16 +14,45 @@ type Props = {
 export function ApplicantCard({ applicant, handleLeaveRaid, post }: Props) {
   const auth = useAuth();
   const db = useDatabase();
+
+  const userRef = db?.allUsers ? db?.allUsers[applicant.uid] : undefined;
   const themeColors = useTheme().palette;
+
   function isRemoveAllowed() {
     if (db?.user?.role === "admin") return true;
     if (auth?.currentUser?.uid === post.ownerId) return true;
     return auth?.currentUser?.uid === applicant.uid ?? false;
   }
   function getUserName() {
-    const users = db?.allUsers;
-    if (users && users[applicant.uid]) return users[applicant.uid].userName;
+    if (userRef) return userRef.userName;
     else return "No name found";
+  }
+  function getCharName() {
+    const charId = applicant.character.id;
+    if (userRef) {
+      return userRef.characters?.find((char) => char.id === charId)?.charName;
+    } else {
+      return "No charname found";
+    }
+  }
+  function getItemLevel() {
+    const charId = applicant.character.id;
+    if (userRef) {
+      return userRef.characters?.find((char) => char.id === charId)?.itemLevel;
+    } else {
+      return "No itemlevel found";
+    }
+  }
+  function getCharacter(): ClassNames {
+    const charId = applicant.character.id;
+    if (userRef) {
+      return (
+        userRef.characters?.find((char) => char.id === charId)?.character ??
+        ClassNames.DEFAULT
+      );
+    } else {
+      return ClassNames.DEFAULT;
+    }
   }
 
   return (
@@ -39,10 +68,7 @@ export function ApplicantCard({ applicant, handleLeaveRaid, post }: Props) {
       }}
     >
       <Box sx={styles.charInfo}>
-        <Avatar
-          src={classIcons[applicant.character.character]}
-          sx={{ marginRight: "10px" }}
-        />
+        <Avatar src={classIcons[getCharacter()]} sx={{ marginRight: "10px" }} />
         <Box sx={styles.column}>
           <Box sx={styles.row}>
             <Typography sx={{}}>{getUserName()}</Typography>
@@ -53,13 +79,11 @@ export function ApplicantCard({ applicant, handleLeaveRaid, post }: Props) {
                 marginLeft: "5px",
               }}
             >
-              {applicant.character.charName}
+              {getCharName()}
             </Typography>
           </Box>
           <Box>
-            <Typography variant="caption">
-              {applicant.character.character}
-            </Typography>
+            <Typography variant="caption">{getCharacter()}</Typography>
             <Typography
               variant="caption"
               sx={{
@@ -68,7 +92,7 @@ export function ApplicantCard({ applicant, handleLeaveRaid, post }: Props) {
                 marginLeft: "5px",
               }}
             >
-              {applicant.character.itemLevel}
+              {getItemLevel()}
             </Typography>
           </Box>
         </Box>
