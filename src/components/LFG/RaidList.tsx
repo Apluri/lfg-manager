@@ -4,15 +4,21 @@ import React, { useState } from "react";
 import { Character } from "../../utils/CharacterUtils";
 import { ApplicantCard } from "./ApplicantCard";
 import { EmptySlot } from "./EmptySlot";
-import { Applicant } from "./LfgPosts";
+import { Applicant, LfgPost } from "./LfgPosts";
 
 const PARTY_SIZE = 4;
 type Props = {
   raidSize: number;
   applicants?: Applicant[];
   handleLeaveRaid: (applicant: Applicant) => void;
+  post: LfgPost;
 };
-export function RaidList({ raidSize, applicants, handleLeaveRaid }: Props) {
+export function RaidList({
+  raidSize,
+  applicants,
+  handleLeaveRaid,
+  post,
+}: Props) {
   function displaySlots(startIndex: number, endIndex: number) {
     let raidSlots: JSX.Element[] = [];
     for (let i = startIndex; i < raidSize && i < endIndex; i++) {
@@ -22,6 +28,7 @@ export function RaidList({ raidSize, applicants, handleLeaveRaid }: Props) {
             key={i}
             applicant={applicants[i]}
             handleLeaveRaid={handleLeaveRaid}
+            post={post}
           />
         ) : (
           <EmptySlot key={i} />

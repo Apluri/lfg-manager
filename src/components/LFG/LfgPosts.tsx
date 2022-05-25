@@ -267,6 +267,7 @@ export function LfgPosts() {
               <RaidList
                 applicants={post.applicants}
                 raidSize={8}
+                post={post}
                 handleLeaveRaid={(applicant) =>
                   handleLeaveRaid(applicant, post)
                 }

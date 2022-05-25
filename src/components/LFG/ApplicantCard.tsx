@@ -1,6 +1,6 @@
 import React from "react";
 import { Box } from "@mui/system";
-import { Applicant } from "./LfgPosts";
+import { Applicant, LfgPost } from "./LfgPosts";
 import { Avatar, IconButton, Paper, Typography, useTheme } from "@mui/material";
 import PersonRemoveIcon from "@mui/icons-material/PersonRemove";
 import { classIcons } from "../../utils/CharacterUtils";
@@ -9,13 +9,15 @@ import { useDatabase } from "../providers/DatabaseContext";
 type Props = {
   applicant: Applicant;
   handleLeaveRaid: (applicant: Applicant) => void;
+  post: LfgPost;
 };
-export function ApplicantCard({ applicant, handleLeaveRaid }: Props) {
+export function ApplicantCard({ applicant, handleLeaveRaid, post }: Props) {
   const auth = useAuth();
   const db = useDatabase();
   const themeColors = useTheme().palette;
   function isRemoveAllowed() {
     if (db?.user?.role === "admin") return true;
+    if (auth?.currentUser?.uid === post.ownerId) return true;
     return auth?.currentUser?.uid === applicant.uid ?? false;
   }
   function getUserName() {
