@@ -12,6 +12,7 @@ import { AdminPanel } from "./screens/AdminPanel";
 import { Profile } from "./users/Profile";
 import { LfgScreen } from "./screens/LfgScreen";
 import { Box } from "@mui/system";
+import { Router } from "./screens/Router";
 
 const darkTheme = createTheme({
   palette: {
@@ -25,19 +26,8 @@ function App() {
         <DatabaseProvider>
           <LocalizationProvider dateAdapter={AdapterLuxon} locale="fi-FI">
             <NavBar />
-            <Box
-              sx={{
-                margin: "2em",
-                marginTop: "1em",
-              }}
-            >
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/admin" element={<AdminPanel />} />
-                <Route path="/profile" element={<Profile />} />
-                <Route path="/lfg" element={<LfgScreen />} />
-              </Routes>
-            </Box>
+
+            <Router />
           </LocalizationProvider>
         </DatabaseProvider>
       </AuthProvider>
