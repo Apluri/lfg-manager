@@ -346,6 +346,10 @@ export function DatabaseProvider({ children }: Props) {
         reject("Users undefined, unable to change roles");
         return;
       }
+      if (auth.currentUser.isAnonymous) {
+        reject("Anonymous users are not allowed to edit roles");
+        return;
+      }
       if (allUsers[auth?.currentUser?.uid].role !== Roles.ADMIN) {
         reject("Only admins are allowed to edit roles");
         return;

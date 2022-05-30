@@ -25,10 +25,9 @@ export function AdminPanel() {
     return userCards;
   }
 
-  //if (db?.user?.role !== Roles.ADMIN)
-  //  return <Box>Only admins are allowed here :)</Box>;
+  if (!(db?.user?.role === Roles.ADMIN || db?.user?.role === Roles.MEMBER))
+    return <Box>Only admins and members are allowed here :)</Box>;
 
-  renderUserCards();
   return (
     <Box
       sx={{
