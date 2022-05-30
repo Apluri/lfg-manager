@@ -85,6 +85,7 @@ export function DatabaseProvider({ children }: Props) {
       if (!data) {
         console.log("no data found, probably user not created yet");
         // create new user by giving username
+
         setUserNameModalVisible(true);
         return;
       }
@@ -147,7 +148,7 @@ export function DatabaseProvider({ children }: Props) {
     }
   }
   useEffect(() => {
-    if (auth?.currentUser != null) {
+    if (auth?.currentUser != null && !auth.currentUser.isAnonymous) {
       getUserData(auth.currentUser.uid);
     } else {
       setUser(null);

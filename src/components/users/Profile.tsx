@@ -1,4 +1,4 @@
-import { Avatar, Button, Stack, Typography } from "@mui/material";
+import { Avatar, Button, Stack, Typography, useTheme } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useEffect, useState } from "react";
 import { Character, ClassNames } from "../../utils/CharacterUtils";
@@ -17,6 +17,7 @@ type Props = {
 export function Profile({ style }: Props) {
   const db = useDatabase();
   const auth = useAuth();
+  const themeColors = useTheme().palette;
   const [editUserName, setEditUserName] = useState<boolean>(false);
   const [addCharacterVisible, setAddCharacterVisible] =
     useState<boolean>(false);
@@ -38,6 +39,15 @@ export function Profile({ style }: Props) {
     db?.editUserName(newUserName);
     setEditUserName(false);
   }
+
+  if (auth?.currentUser?.isAnonymous)
+    return (
+      <Box sx={{ ...styles.container, ...style }}>
+        <Typography sx={{ color: themeColors.info.main }}>
+          Only non anonymous users can view and edit profile
+        </Typography>
+      </Box>
+    );
   return (
     <Box sx={{ ...styles.container, ...style }}>
       <Box sx={styles.userInfoContainer}>

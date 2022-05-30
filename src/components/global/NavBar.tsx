@@ -49,7 +49,14 @@ export default function NavBar() {
           <Box sx={{ flex: 1, display: "flex", justifyContent: "flex-end" }}>
             {auth?.currentUser ? (
               <>
-                <ProfileInfo />
+                {auth.currentUser.isAnonymous ? (
+                  <Typography sx={{ display: "flex", alignSelf: "center" }}>
+                    Anonymous user
+                  </Typography>
+                ) : (
+                  <ProfileInfo />
+                )}
+
                 <Button onClick={() => auth?.logOut()}>Log Out</Button>
               </>
             ) : (

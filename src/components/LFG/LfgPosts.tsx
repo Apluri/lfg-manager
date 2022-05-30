@@ -167,12 +167,15 @@ export function LfgPosts() {
         width: "100%",
       }}
     >
-      <Button
-        sx={{ marginBottom: "10px" }}
-        onClick={() => setCreateLfgPostVisible(true)}
-      >
-        Add lfg post
-      </Button>
+      {!auth?.currentUser?.isAnonymous && (
+        <Button
+          sx={{ marginBottom: "10px" }}
+          onClick={() => setCreateLfgPostVisible(true)}
+        >
+          Add lfg post
+        </Button>
+      )}
+
       <CreateLfgPost
         visible={createLfgPostVisible}
         handleClose={() => setCreateLfgPostVisible(false)}

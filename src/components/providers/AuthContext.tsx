@@ -6,12 +6,14 @@ import {
   signOut,
   UserCredential,
   User,
+  signInAnonymously,
 } from "firebase/auth";
 
 interface AuthContextInterface {
   currentUser: User | null;
   signIn: () => Promise<UserCredential | void>;
   logOut: () => void;
+  signInAnonymous: () => Promise<UserCredential | void>;
 }
 
 const AuthContext = React.createContext<AuthContextInterface | null>(null);
@@ -35,6 +37,18 @@ export function AuthProvider({ children }: Props) {
     const provider = new GoogleAuthProvider();
     return signInWithPopup(auth, provider).catch((e) => console.log(e));
   }
+  function signInAnonymous(): Promise<UserCredential | void> {
+    return signInAnonymously(auth)
+      .then(() => {
+        // Signed in..
+        console.log("logged in as anonymous");
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // ...
+      });
+  }
   function logOut(): void {
     signOut(auth);
   }
@@ -43,6 +57,7 @@ export function AuthProvider({ children }: Props) {
     currentUser,
     signIn,
     logOut,
+    signInAnonymous,
   };
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
