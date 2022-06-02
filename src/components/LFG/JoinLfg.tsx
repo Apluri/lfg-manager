@@ -6,8 +6,8 @@ import {
   MenuItem,
   Modal,
   Paper,
-  Select,
   Typography,
+  useTheme,
 } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useEffect, useState } from "react";
@@ -18,6 +18,7 @@ import {
   getClassNameList,
 } from "../../utils/CharacterUtils";
 import { LfgPost } from "./LfgPosts";
+import Select, { StylesConfig, Theme, ThemeConfig } from "react-select";
 
 export type Props = {
   handleClose: () => void;
@@ -27,10 +28,12 @@ export type Props = {
 };
 export function JoinLfg({ visible, onJoin, handleClose, characters }: Props) {
   const [selectedClass, setSelectedClass] = useState<Character>(characters[0]);
-
+  const [charList, setCharList] = useState<Character[]>([...characters]);
+  const themeColors = useTheme().palette;
   useEffect(() => {
     if (characters) {
       setSelectedClass(characters[0]);
+      setCharList([...characters]);
     }
   }, [characters]);
 
@@ -39,38 +42,52 @@ export function JoinLfg({ visible, onJoin, handleClose, characters }: Props) {
       return classIcons[selectedClass?.character];
     } else return classIcons.NoClassSelected;
   }
-  function handleSelection(charName: string) {
-    const newSelectedClass = characters
-      .filter((char) => char.charName === charName)
-      .pop();
-    if (newSelectedClass) {
-      setSelectedClass(newSelectedClass);
-    }
+  function handleSelection(char: Character) {
+    if (char !== undefined && char !== null) setSelectedClass(char);
+  }
+
+  function customTheme(theme: Theme) {
+    return {
+      ...theme,
+      colors: {
+        ...theme.colors,
+        danger: "#DE350B",
+        dangerLight: "#FFBDAD",
+        neutral90: "hsl(0, 0%, 100%)",
+        neutral80: "hsl(0, 0%, 95%)",
+        neutral70: "hsl(0, 0%, 90%)",
+        neutral60: "hsl(0, 0%, 80%)",
+        neutral50: "hsl(0, 0%, 70%)",
+        neutral40: "hsl(0, 0%, 60%)",
+        neutral30: "hsl(0, 0%, 50%)",
+        neutral20: "hsl(0, 0%, 40%)",
+        neutral10: "hsl(0, 0%, 30%)",
+        neutral5: "hsl(0, 0%, 20%)",
+        neutral0: themeColors.background.default,
+        primary: themeColors.grey[500],
+        primary75: themeColors.primary.dark,
+        primary50: themeColors.primary.dark,
+        primary25: themeColors.primary.dark,
+      },
+    };
   }
   if (!characters) <></>;
   return (
     <Modal open={visible} onClose={handleClose} sx={styles.modal}>
       <Paper sx={styles.container}>
         <Typography> Select character you wish to join party with</Typography>
-        <FormControl fullWidth sx={styles.itemsMargin} required={true}>
-          <InputLabel id="demo-simple-select-label">Class</InputLabel>
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            value={selectedClass?.charName ?? ""}
-            label="Class"
-            startAdornment={
-              <Avatar src={getIconSrc()} sx={{ marginRight: "10px" }} />
-            }
-            onChange={(e) => handleSelection(e.target.value)}
-          >
-            {characters?.map((char, index) => (
-              <MenuItem key={index} value={char.charName}>
-                {`${char.charName} ${char.itemLevel}`}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+        <Select<Character>
+          options={charList}
+          value={selectedClass}
+          theme={(theme) => theme && customTheme(theme)}
+          name="Character"
+          getOptionValue={(char: Character) => char.id}
+          getOptionLabel={(char: Character) =>
+            `${char.charName} ${char.itemLevel}`
+          }
+          isClearable={true}
+          onChange={(char) => char && handleSelection(char)}
+        />
         <Box sx={styles.actionButtons}>
           <Button onClick={handleClose}>Cancel</Button>
           <Button onClick={() => onJoin(selectedClass)}>Confrim</Button>

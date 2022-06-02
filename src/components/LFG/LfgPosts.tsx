@@ -276,6 +276,11 @@ export function LfgPosts() {
                   handleLeaveRaid(applicant, post)
                 }
               />
+              {db.user?.role === Roles.ADMIN && (
+                <Button onClick={() => openJoinPartyModal(post)}>
+                  Join party admin
+                </Button>
+              )}
               <Button onClick={() => openJoinPartyModal(post)}>
                 Join party
               </Button>
