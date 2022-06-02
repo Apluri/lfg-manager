@@ -81,13 +81,29 @@ export function LfgPosts() {
       displayNoCharacterError();
     }
   }
+
+  function findCharacterOwnerId(char: Character): string | undefined {
+    if (db?.allUsers !== null && db?.allUsers !== undefined) {
+      for (const key in db.allUsers) {
+        if (db.allUsers[key].characters?.find((c) => c.id === char.id)) {
+          return key;
+        }
+      }
+    }
+
+    return undefined;
+  }
   function handleJoinLfg(char: Character) {
     if (auth?.currentUser?.uid && db?.joinLfg && joinLfgRef.current) {
       // save ref just in case
       errorPostRef.current = joinLfgRef.current;
+      const ownerId = findCharacterOwnerId(char);
+
+      // todo add errormessages?
+      if (ownerId === undefined) return;
       const applicant: Applicant = {
         character: char,
-        uid: auth?.currentUser?.uid,
+        uid: ownerId,
       };
       db?.joinLfg(joinLfgRef.current, applicant)
         .then()
@@ -156,6 +172,17 @@ export function LfgPosts() {
     )
       return true;
     return false;
+  }
+  function getAllCharacters(): Character[] {
+    let listOfAllChars: Character[] = [];
+    if (!db?.allUsers) return listOfAllChars;
+    for (const key in db.allUsers) {
+      const chars = db.allUsers[key].characters;
+      if (chars !== undefined) {
+        listOfAllChars = [...listOfAllChars, ...chars];
+      }
+    }
+    return listOfAllChars;
   }
 
   return (
@@ -295,7 +322,11 @@ export function LfgPosts() {
                   visible={joinLfgVisible}
                   onJoin={(char) => handleJoinLfg(char)}
                   handleClose={() => setJoinLfgVisible(false)}
-                  characters={db.user?.characters}
+                  characters={
+                    db.user.role === Roles.ADMIN
+                      ? getAllCharacters()
+                      : db.user?.characters
+                  }
                 />
               )}
             </Paper>
