@@ -108,11 +108,14 @@ export function DatabaseProvider({ children }: Props) {
     getData(Paths.USERS, (data) => setAllUsers(data));
   }
   function getLfgPosts() {
+    // note, this wont be updated to database before somone does some change to any lfg post (could cause issues?)
     function filterOldPosts(posts: LfgPost[]): LfgPost[] {
       return posts.filter((post) => {
         const postStartTime = DateTime.fromISO(post.startTime);
-        const diff = postStartTime.diffNow("days").days;
-        if (diff < -1) return false;
+        const diff = postStartTime.diffNow("hours").hours;
+
+        // delete 10 hour or older posts
+        if (diff < -10) return false;
         return true;
       });
     }
