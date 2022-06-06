@@ -12,22 +12,15 @@ import {
   IconButtonProps,
   Menu,
   MenuItem,
+  Box,
 } from "@mui/material";
-import { Box } from "@mui/system";
-import React, { useState, useEffect } from "react";
-import {
-  Character,
-  classIcons,
-  ClassNames,
-  Gem,
-} from "../../utils/CharacterUtils";
-import berserkerIcon from "../../assets/images/classIcons/berserker.png";
+import React, { useState } from "react";
+import { Character, classIcons } from "../../utils/CharacterUtils";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { styled } from "@mui/material/styles";
 import { CreateCharacterModal } from "./CreateCharacterModal";
 import { useDatabase } from "../providers/DatabaseContext";
-const axios = require("axios").default;
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
@@ -58,23 +51,9 @@ export function CharacterCard({
   const [expanded, setExpanded] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-  const [imgSrc, setImgSrc] = useState<string | undefined>();
-  const ayayaa = "https://i.waifu.pics/HeeBaFc.gif";
 
   const [editCharVisible, setEditCharVisible] = useState<boolean>(false);
 
-  useEffect(() => {
-    axios
-      .get("https://api.waifu.pics/sfw/wave")
-      .then((response: any) => {
-        // handle success
-        setImgSrc(response.data.url);
-      })
-      .catch((e: any) => {
-        // handle error
-        console.log(e);
-      });
-  }, []);
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
@@ -118,20 +97,20 @@ export function CharacterCard({
         handleEditCharacter={(editedChar) => handleEditCharacter(editedChar)}
       />
       {/*
-  <CardContent>
-        <Box sx={styles.row}>
-          <Box>
-            <Typography>Currently applied to</Typography>
-            <Typography variant="body2" color="text.secondary">
-              Argos P3 su 16.5 start time: 18.00
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Valtan proge la 15.5 start time: 20.15
-            </Typography>
+        <CardContent>
+          <Box sx={styles.row}>
+            <Box>
+              <Typography>Currently applied to</Typography>
+              <Typography variant="body2" color="text.secondary">
+                Argos P3 su 16.5 start time: 18.00
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Valtan proge la 15.5 start time: 20.15
+              </Typography>
+            </Box>
           </Box>
-        </Box>
-      </CardContent>
-  */}
+        </CardContent>
+      */}
 
       <CardActions disableSpacing>
         <ExpandMore expand={expanded} onClick={handleExpandClick}>
@@ -139,18 +118,7 @@ export function CharacterCard({
         </ExpandMore>
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
-        <CardContent>
-          <img
-            src={imgSrc}
-            style={{
-              display: "block",
-              maxWidth: "400px",
-              maxHeight: "400px",
-              width: "auto",
-              height: "auto",
-            }}
-          ></img>
-        </CardContent>
+        <CardContent></CardContent>
       </Collapse>
     </Card>
   );
