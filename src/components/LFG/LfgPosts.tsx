@@ -218,42 +218,25 @@ export function LfgPosts() {
               <Box sx={styles.topRow}>
                 <Box>
                   <Typography variant="h4">{post.title}</Typography>
+
                   <Box sx={styles.row}>
                     <Typography
+                      variant="h6"
                       sx={{
-                        marginRight: "3px",
-                        color: themeColors.grey["400"],
+                        color: themeColors.primary.main,
+                        align: "center",
                       }}
                     >
-                      Date
+                      {`${getWeekDay(post)} ${DateTime.fromISO(
+                        post.startTime
+                      ).toLocaleString(DateTime.TIME_24_SIMPLE)}`}
                     </Typography>
+                  </Box>
+                  <Box sx={styles.row}>
                     <Typography>
                       {new Date(post.startTime).toLocaleDateString("fi")}
                     </Typography>
                   </Box>
-
-                  <Box sx={styles.row}>
-                    <Typography
-                      sx={{
-                        marginRight: "3px",
-                        color: themeColors.grey["400"],
-                      }}
-                    >
-                      Start time
-                    </Typography>
-                    <Typography>
-                      {DateTime.fromISO(post.startTime).toLocaleString(
-                        DateTime.TIME_24_SIMPLE
-                      )}
-                    </Typography>
-                  </Box>
-
-                  <Typography
-                    sx={{ color: themeColors.primary.main }}
-                    variant="h6"
-                  >
-                    {getWeekDay(post)}
-                  </Typography>
                 </Box>
                 <Box sx={styles.row}>
                   <Typography
@@ -362,5 +345,6 @@ const styles: { [key: string]: React.CSSProperties } = {
   row: {
     display: "flex",
     flexDirection: "row",
+    alignItems: "center",
   },
 };
