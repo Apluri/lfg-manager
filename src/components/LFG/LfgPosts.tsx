@@ -162,16 +162,19 @@ export function LfgPosts() {
     if (db?.user?.role === Roles.ADMIN) return true;
     return false;
   }
-  function isLfgStartTimeToday(post: LfgPost): boolean {
-    const diff = DateTime.fromISO(post.startTime).diffNow("days").days;
-    // basicly ensuring lastyear same date isnt valid, or some other month same day
-    const isWithinCoupleDays = diff < 1 && diff > -1;
-    if (
-      isWithinCoupleDays &&
-      DateTime.fromISO(post.startTime).day === DateTime.now().day
-    )
-      return true;
-    return false;
+
+  function getWeekDay(post: LfgPost): string {
+    const days = [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ];
+    const dayOfWeek = new Date(post.startTime).getDay();
+    return days[dayOfWeek];
   }
   function getAllCharacters(): Character[] {
     let listOfAllChars: Character[] = [];
@@ -245,14 +248,12 @@ export function LfgPosts() {
                     </Typography>
                   </Box>
 
-                  {isLfgStartTimeToday(post) && (
-                    <Typography
-                      sx={{ color: themeColors.primary.main }}
-                      variant="h6"
-                    >
-                      Today
-                    </Typography>
-                  )}
+                  <Typography
+                    sx={{ color: themeColors.primary.main }}
+                    variant="h6"
+                  >
+                    {getWeekDay(post)}
+                  </Typography>
                 </Box>
                 <Box sx={styles.row}>
                   <Typography
