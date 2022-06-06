@@ -70,6 +70,20 @@ export function CharacterCard({
     handleClose();
   }
 
+  function getJoinedPostsInfo(): string[] {
+    const allLfgPosts = db?.lfgPosts;
+    if (allLfgPosts === undefined && allLfgPosts === null) return [];
+
+    let joinedPostTitles: string[] = [];
+    allLfgPosts?.forEach((post) => {
+      post.applicants?.forEach((applicant) => {
+        if (applicant.character.id === character.id)
+          joinedPostTitles.push(post.title);
+      });
+    });
+
+    return joinedPostTitles;
+  }
   return (
     <Card sx={containerStyles}>
       <CardHeader
@@ -96,21 +110,26 @@ export function CharacterCard({
         editCharacter={character}
         handleEditCharacter={(editedChar) => handleEditCharacter(editedChar)}
       />
-      {/*
+      {
         <CardContent>
           <Box sx={styles.row}>
-            <Box>
-              <Typography>Currently applied to</Typography>
-              <Typography variant="body2" color="text.secondary">
-                Argos P3 su 16.5 start time: 18.00
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Valtan proge la 15.5 start time: 20.15
-              </Typography>
-            </Box>
+            {getJoinedPostsInfo().length > 0 && (
+              <Box>
+                <Typography>Currently applied to</Typography>
+                {getJoinedPostsInfo().map((title, index) => (
+                  <Typography
+                    key={index}
+                    variant="body2"
+                    color="text.secondary"
+                  >
+                    {title}
+                  </Typography>
+                ))}
+              </Box>
+            )}
           </Box>
         </CardContent>
-      */}
+      }
 
       <CardActions disableSpacing>
         <ExpandMore expand={expanded} onClick={handleExpandClick}>
