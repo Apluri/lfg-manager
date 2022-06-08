@@ -1,5 +1,6 @@
 import { Button, Typography } from "@mui/material";
 import { Box } from "@mui/system";
+import { Paper } from "@mui/material";
 import React from "react";
 import { useAuth } from "../providers/AuthContext";
 import GoogleIcon from "@mui/icons-material/Google";
@@ -16,28 +17,36 @@ export function Login() {
       }}
     >
       <Typography variant="h4">
-        Authenticate in order to view guild content
+        Authentication required to view LFG content
       </Typography>
 
-      <Button
-        variant="outlined"
-        sx={{ marginTop: "2em" }}
-        startIcon={<GoogleIcon />}
-        onClick={() => auth?.signIn()}
+      <Paper
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          padding: "2em",
+          marginTop: "2em",
+        }}
       >
-        Sign in with google
-      </Button>
-      <Button
-        variant="outlined"
-        sx={{ marginTop: "2em" }}
-        onClick={() => auth?.signInAnonymous()}
-      >
-        Sign in as anonymous quest
-      </Button>
-      <Typography variant="caption">
-        You will not be able to edit anything with anonymous quest, just view
-        LFG posts
-      </Typography>
+        <Button
+          variant="outlined"
+          startIcon={<GoogleIcon />}
+          onClick={() => auth?.signIn()}
+        >
+          Sign in with google
+        </Button>
+        <Button
+          variant="outlined"
+          sx={{ marginTop: "2em" }}
+          onClick={() => auth?.signInAnonymous()}
+        >
+          Sign in as anonymous quest
+        </Button>
+        <Typography variant="caption">
+          You will not be able to edit anything with anonymous quest, just view
+          LFG posts
+        </Typography>
+      </Paper>
     </Box>
   );
 }
