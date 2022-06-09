@@ -57,12 +57,9 @@ export function ApplicantCard({ applicant, handleLeaveRaid, post }: Props) {
 
   return (
     <Paper
+      className="applicantCard"
       elevation={6}
       sx={{
-        display: "flex",
-        flex: 1,
-        padding: "10px",
-        marginTop: "1em",
         alignItems: "center",
         justifyContent: "space-between",
       }}

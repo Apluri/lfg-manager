@@ -12,3 +12,13 @@
 p {
   color: "red";
 }
+.screenContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+@media only screen and (min-width: 768px) {
+  .screenContainer{
+      flex-direction: row;
+  }
+}

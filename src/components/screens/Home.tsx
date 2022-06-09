@@ -13,13 +13,7 @@ function Home() {
   const ayayaa = "https://i.waifu.pics/HeeBaFc.gif";
 
   return (
-    <Box
-      className="container"
-      sx={{
-        display: "flex",
-        flexDirection: "row",
-      }}
-    >
+    <Box className="screenContainer">
       <LfgScreen
         style={{
           flex: 2,

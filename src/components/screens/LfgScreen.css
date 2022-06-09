@@ -1,0 +1,10 @@
+.applicantCard {
+    display: flex;
+    min-width: 200px;
+    height: 40px;
+    flex-grow: 1;
+    width: 40%;
+    padding: 10px;
+    margin: 10px;
+    align-items: center;
+}

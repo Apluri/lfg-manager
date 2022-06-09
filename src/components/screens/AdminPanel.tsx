@@ -30,9 +30,10 @@ export function AdminPanel() {
 
   return (
     <Box
+      className="screenContainer"
       sx={{
-        display: "flex",
         justifyContent: "center",
+        alignItems: "center",
       }}
     >
       <Box

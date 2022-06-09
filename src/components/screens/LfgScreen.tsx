@@ -2,6 +2,7 @@ import { Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import React from "react";
 import { LfgPosts } from "../LFG/LfgPosts";
+import "./LfgScreen.css";
 
 type Props = {
   style?: React.CSSProperties;
@@ -9,8 +10,8 @@ type Props = {
 export function LfgScreen({ style }: Props) {
   return (
     <Box
+      className="sceenContainer"
       sx={{
-        display: "flex",
         alignItems: "center",
         flexDirection: "column",
         ...style,
