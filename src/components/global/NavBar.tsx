@@ -5,6 +5,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Avatar, Menu, MenuItem } from "@mui/material";
 import { useAuth } from "../providers/AuthContext";
@@ -69,6 +70,9 @@ export default function NavBar() {
                 ) : (
                   <ProfileInfo onClick={handleClick} />
                 )}
+                <IconButton onClick={handleClick}>
+                  <ArrowDropDownIcon />
+                </IconButton>
                 <Menu open={open} onClose={handleClose} anchorEl={anchorEl}>
                   <MenuItem
                     onClick={() => {
