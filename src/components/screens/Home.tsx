@@ -17,7 +17,6 @@ function Home() {
       <LfgScreen
         style={{
           flex: 2,
-          marginRight: "2em",
         }}
       />
       <Profile style={{ flex: 1 }} />
