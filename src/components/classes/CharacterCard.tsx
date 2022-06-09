@@ -102,8 +102,8 @@ export function CharacterCard({
             <MoreVertIcon />
           </IconButton>
         }
-        title={character.character}
-        subheader={`${character.charName}  ${character.itemLevel}`}
+        title={character.charName}
+        subheader={`${character.character}  ${character.itemLevel}`}
       />
       <Menu open={open} onClose={handleClose} anchorEl={anchorEl}>
         <MenuItem onClick={() => setEditCharVisible(true)}>Edit</MenuItem>
