@@ -49,7 +49,12 @@ export function Profile({ style }: Props) {
       </Box>
     );
   return (
-    <Box className="screenContainer" sx={{ ...styles.container, ...style }}>
+    <Box
+      sx={{
+        ...styles.container,
+        ...style,
+      }}
+    >
       <Box sx={styles.userInfoContainer}>
         <EditUserName
           visible={editUserName}

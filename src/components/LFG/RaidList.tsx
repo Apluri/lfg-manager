@@ -37,18 +37,5 @@ export function RaidList({
     }
     return <>{raidSlots}</>;
   }
-  return <Box sx={styles.groupContainer}>{displaySlots(0, raidSize)}</Box>;
+  return <Box className="applicantContainer">{displaySlots(0, raidSize)}</Box>;
 }
-const styles: { [key: string]: React.CSSProperties } = {
-  groupContainer: {
-    display: "flex",
-    flexDirection: "row",
-    flexWrap: "wrap",
-  },
-  playerCard: {
-    display: "flex",
-    flex: 1,
-    padding: "10px",
-    marginTop: "1em",
-  },
-};

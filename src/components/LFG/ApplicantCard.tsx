@@ -60,7 +60,6 @@ export function ApplicantCard({ applicant, handleLeaveRaid, post }: Props) {
       className="applicantCard"
       elevation={6}
       sx={{
-        alignItems: "center",
         justifyContent: "space-between",
       }}
     >

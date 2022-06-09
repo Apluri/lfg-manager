@@ -86,6 +86,15 @@ export function CharacterCard({
   }
   return (
     <Card sx={containerStyles}>
+      <CreateCharacterModal
+        visible={editCharVisible}
+        handleClose={() => {
+          setEditCharVisible(false);
+          handleClose();
+        }}
+        editCharacter={character}
+        handleEditCharacter={(editedChar) => handleEditCharacter(editedChar)}
+      />
       <CardHeader
         avatar={<Avatar src={classIcons[character.character]} />}
         action={
@@ -101,54 +110,22 @@ export function CharacterCard({
         <MenuItem onClick={() => handleDelete(character)}>Delete</MenuItem>
       </Menu>
 
-      <CreateCharacterModal
-        visible={editCharVisible}
-        handleClose={() => {
-          setEditCharVisible(false);
-          handleClose();
-        }}
-        editCharacter={character}
-        handleEditCharacter={(editedChar) => handleEditCharacter(editedChar)}
-      />
-      {
+      {getJoinedPostsInfo().length > 0 && (
         <CardContent>
-          <Box sx={styles.row}>
-            {getJoinedPostsInfo().length > 0 && (
-              <Box>
-                <Typography>Currently applied to</Typography>
-                {getJoinedPostsInfo().map((title, index) => (
-                  <Typography
-                    key={index}
-                    variant="body2"
-                    color="text.secondary"
-                  >
-                    {title}
-                  </Typography>
-                ))}
-              </Box>
-            )}
+          <Box>
+            <Typography>Currently applied to</Typography>
+            {getJoinedPostsInfo().map((title, index) => (
+              <Typography key={index} variant="body2" color="text.secondary">
+                {title}
+              </Typography>
+            ))}
           </Box>
         </CardContent>
-      }
-
-      <CardActions disableSpacing>
-        <ExpandMore expand={expanded} onClick={handleExpandClick}>
-          <ExpandMoreIcon />
-        </ExpandMore>
-      </CardActions>
-      <Collapse in={expanded} timeout="auto" unmountOnExit>
-        <CardContent></CardContent>
-      </Collapse>
+      )}
     </Card>
   );
 }
 const styles: { [key: string]: React.CSSProperties } = {
-  row: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
   column: {
     display: "flex",
     flexDirection: "column",

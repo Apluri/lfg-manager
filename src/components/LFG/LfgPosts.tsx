@@ -192,9 +192,7 @@ export function LfgPosts() {
     <Box
       sx={{
         display: "flex",
-        flex: 1,
         flexDirection: "column",
-        width: "100%",
       }}
     >
       {!auth?.currentUser?.isAnonymous && (

@@ -1,3 +1,9 @@
+
+.applicantContainer {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
 .applicantCard {
     display: flex;
     min-width: 200px;
@@ -5,6 +11,12 @@
     flex-grow: 1;
     width: 40%;
     padding: 10px;
-    margin: 10px;
+    margin: 5px;
     align-items: center;
+}
+
+@media only screen and (min-width: 768px) {
+    .screenContainer{
+        flex-direction: row;
+    }
 }
