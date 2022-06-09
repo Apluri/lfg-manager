@@ -6,6 +6,7 @@ import { useAuth } from "../providers/AuthContext";
 import { useDatabase } from "../providers/DatabaseContext";
 import { Profile } from "../users/Profile";
 import { LfgScreen } from "./LfgScreen";
+import "./Home.css";
 
 function Home() {
   const db = useDatabase();
@@ -13,6 +14,7 @@ function Home() {
 
   return (
     <Box
+      className="container"
       sx={{
         display: "flex",
         flexDirection: "row",

@@ -1,5 +1,5 @@
 import React from "react";
-import "../styles/App.css";
+import "./App.css";
 import { AuthProvider } from "../components/providers/AuthContext";
 import { Route, Routes } from "react-router-dom";
 import Home from "./screens/Home";
@@ -26,7 +26,6 @@ function App() {
         <DatabaseProvider>
           <LocalizationProvider dateAdapter={AdapterLuxon} locale="fi-FI">
             <NavBar />
-
             <Router />
           </LocalizationProvider>
         </DatabaseProvider>
