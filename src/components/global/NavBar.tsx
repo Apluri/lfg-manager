@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -14,12 +14,23 @@ import cuteLogo from "../../assets/images/cute-logo.jpg";
 import { useNavigate } from "react-router-dom";
 import { Sidebar } from "./Sidebar";
 
+const desktopBreakPoint = 768;
+const DESKTOP_SIDEBAR_WIDTH = 250;
 export default function NavBar() {
   const auth = useAuth();
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const [sideBarWidth, setSideBarWidth] = useState<number>(0); // hidden
+
+  useEffect(() => {
+    const handleResize = () => {
+      openSideBar();
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -28,7 +39,12 @@ export default function NavBar() {
     setAnchorEl(null);
   };
   const openSideBar = () => {
-    setSideBarWidth(250);
+    if (window.innerWidth > desktopBreakPoint) {
+      if (sideBarWidth === DESKTOP_SIDEBAR_WIDTH) return;
+      setSideBarWidth(DESKTOP_SIDEBAR_WIDTH);
+    } else {
+      setSideBarWidth(window.innerWidth * 0.8);
+    }
   };
 
   return (
