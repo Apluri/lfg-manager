@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -26,9 +26,11 @@ export default function NavBar({ setSideBarMargin }: Props) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const [sideBarWidth, setSideBarWidth] = useState<number>(0); // hidden
+  const sideBarRef = useRef(0);
 
   useEffect(() => {
     const handleResize = () => {
+      if (sideBarRef.current === 0) return;
       openSideBar();
     };
 
@@ -46,9 +48,11 @@ export default function NavBar({ setSideBarMargin }: Props) {
     if (window.innerWidth > desktopBreakPoint) {
       if (sideBarWidth === DESKTOP_SIDEBAR_WIDTH) return;
       setSideBarWidth(DESKTOP_SIDEBAR_WIDTH);
+      sideBarRef.current = DESKTOP_SIDEBAR_WIDTH;
       setSideBarMargin(DESKTOP_SIDEBAR_WIDTH);
     } else {
       setSideBarWidth(window.innerWidth * 0.8);
+      sideBarRef.current = window.innerWidth * 0.8;
       setSideBarMargin(0);
     }
   };
@@ -71,7 +75,10 @@ export default function NavBar({ setSideBarMargin }: Props) {
           </Box>
           <Sidebar
             width={sideBarWidth}
-            setWidth={setSideBarWidth}
+            setWidth={(num) => {
+              setSideBarWidth(num);
+              sideBarRef.current = num;
+            }}
             setSideBarMargin={setSideBarMargin}
           />
           <Box
