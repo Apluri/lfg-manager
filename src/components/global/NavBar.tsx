@@ -16,7 +16,11 @@ import { Sidebar } from "./Sidebar";
 
 const desktopBreakPoint = 768;
 const DESKTOP_SIDEBAR_WIDTH = 250;
-export default function NavBar() {
+
+type Props = {
+  setSideBarMargin: (pixels: number) => void;
+};
+export default function NavBar({ setSideBarMargin }: Props) {
   const auth = useAuth();
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -42,8 +46,10 @@ export default function NavBar() {
     if (window.innerWidth > desktopBreakPoint) {
       if (sideBarWidth === DESKTOP_SIDEBAR_WIDTH) return;
       setSideBarWidth(DESKTOP_SIDEBAR_WIDTH);
+      setSideBarMargin(DESKTOP_SIDEBAR_WIDTH);
     } else {
       setSideBarWidth(window.innerWidth * 0.8);
+      setSideBarMargin(0);
     }
   };
 
@@ -63,7 +69,11 @@ export default function NavBar() {
               <MenuIcon />
             </IconButton>
           </Box>
-          <Sidebar width={sideBarWidth} setWidth={setSideBarWidth} />
+          <Sidebar
+            width={sideBarWidth}
+            setWidth={setSideBarWidth}
+            setSideBarMargin={setSideBarMargin}
+          />
           <Box
             onClick={() => navigate("/")}
             sx={{

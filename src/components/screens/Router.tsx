@@ -8,15 +8,20 @@ import Home from "./Home";
 import { LfgScreen } from "./LfgScreen";
 import { Login } from "./Login";
 
-export function Router() {
+type Props = {
+  marginLeft: number;
+};
+export function Router({ marginLeft }: Props) {
   const auth = useAuth();
 
   if (auth?.currentUser?.uid === undefined) return <Login />;
   return (
     <Box
+      className="routerContainer"
       sx={{
         margin: "2em",
         marginTop: "1em",
+        marginLeft: marginLeft > 0 ? marginLeft + "px" : "2em",
       }}
     >
       <Routes>

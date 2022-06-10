@@ -7,9 +7,10 @@ import { CustomNavLink } from "./CustomNavLink";
 type Props = {
   width: number;
   setWidth: (width: number) => void;
+  setSideBarMargin: (pixels: number) => void;
 };
 
-export function Sidebar({ width, setWidth }: Props) {
+export function Sidebar({ width, setWidth, setSideBarMargin }: Props) {
   const themeColors = useTheme().palette;
 
   useEffect(() => {
@@ -26,6 +27,7 @@ export function Sidebar({ width, setWidth }: Props) {
   }, [width]);
   const closeSideBar = () => {
     setWidth(0);
+    setSideBarMargin(0);
   };
 
   return (

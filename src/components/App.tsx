@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./App.css";
 import { AuthProvider } from "../components/providers/AuthContext";
 import { Route, Routes } from "react-router-dom";
@@ -27,13 +27,14 @@ const darkTheme = responsiveFontSizes(
 );
 
 function App() {
+  const [sideBarMargin, setSideBarMargin] = useState<number>(0);
   return (
     <ThemeProvider theme={darkTheme}>
       <AuthProvider>
         <DatabaseProvider>
           <LocalizationProvider dateAdapter={AdapterLuxon} locale="fi-FI">
-            <NavBar />
-            <Router />
+            <NavBar setSideBarMargin={setSideBarMargin} />
+            <Router marginLeft={sideBarMargin} />
           </LocalizationProvider>
         </DatabaseProvider>
       </AuthProvider>

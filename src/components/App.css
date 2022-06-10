@@ -60,10 +60,14 @@ p {
 @media only screen and (min-width: 768px) {
   .screenContainer{
       flex-direction: row;
-     
+  
   }
   .screenContainer > :first-child {
     margin-right: 2em
   }
+  .routerContainer {
+    transition: 0.5s;
+  }
+ 
  
 }
