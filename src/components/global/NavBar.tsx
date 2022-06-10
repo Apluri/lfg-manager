@@ -19,7 +19,7 @@ export default function NavBar() {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-  const [sideBarWidth, setSideBarWidth] = useState("0px"); // hidden
+  const [sideBarWidth, setSideBarWidth] = useState<number>(0); // hidden
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -28,7 +28,7 @@ export default function NavBar() {
     setAnchorEl(null);
   };
   const openSideBar = () => {
-    setSideBarWidth("250px");
+    setSideBarWidth(250);
   };
 
   return (
