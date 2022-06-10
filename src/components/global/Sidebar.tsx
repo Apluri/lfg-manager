@@ -1,8 +1,10 @@
-import { IconButton, Typography, useTheme } from "@mui/material";
+import { Button, IconButton, Typography, useTheme } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useEffect } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import { CustomNavLink } from "./CustomNavLink";
+import { useAuth } from "../providers/AuthContext";
+import { Roles, useDatabase } from "../providers/DatabaseContext";
 
 type Props = {
   width: number;
@@ -12,6 +14,8 @@ type Props = {
 
 export function Sidebar({ width, setWidth, setSideBarMargin }: Props) {
   const themeColors = useTheme().palette;
+  const auth = useAuth();
+  const db = useDatabase();
 
   useEffect(() => {
     const checkIfClickedOutside = (e: MouseEvent) => {
@@ -36,15 +40,25 @@ export function Sidebar({ width, setWidth, setSideBarMargin }: Props) {
         <CloseIcon />
       </IconButton>
 
-      <Box className="sideBarLinkContainer">
-        <Typography variant="caption" sx={{ letterSpacing: 3 }}>
-          Navigation
-        </Typography>
+      <Box className="sideBarContainer">
+        <Box className="sideBarLinkContainer">
+          <Typography variant="caption" sx={{ letterSpacing: 3 }}>
+            Navigation
+          </Typography>
 
-        <CustomNavLink to="profile" label="Profile" />
-        <CustomNavLink to="lfg" label="Lfg" />
-        <CustomNavLink to="admin" label="Admin" />
-        <CustomNavLink to="/" label="Home" />
+          <CustomNavLink to="/" label="Dashboard" />
+          <CustomNavLink to="profile" label="Profile" />
+          <CustomNavLink to="lfg" label="LFG" />
+          {db?.user?.role === Roles.ADMIN && (
+            <CustomNavLink to="admin" label="Admin" />
+          )}
+        </Box>
+        <Box className="sideBarActionContainer">
+          <Typography variant="caption" sx={{ letterSpacing: 3 }}>
+            Actions
+          </Typography>
+          <Button onClick={() => auth?.logOut()}>Log out</Button>
+        </Box>
       </Box>
     </Box>
   );
