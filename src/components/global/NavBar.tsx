@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -12,18 +12,23 @@ import { useAuth } from "../providers/AuthContext";
 import { ProfileInfo } from "../users/ProfileInfo";
 import cuteLogo from "../../assets/images/cute-logo.jpg";
 import { useNavigate } from "react-router-dom";
+import { Sidebar } from "./Sidebar";
 
 export default function NavBar() {
   const auth = useAuth();
   const navigate = useNavigate();
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+  const [sideBarWidth, setSideBarWidth] = useState("0px"); // hidden
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
     setAnchorEl(null);
+  };
+  const openSideBar = () => {
+    setSideBarWidth("250px");
   };
 
   return (
@@ -37,11 +42,12 @@ export default function NavBar() {
               color="inherit"
               aria-label="menu"
               sx={{ mr: 2 }}
+              onClick={openSideBar}
             >
               <MenuIcon />
             </IconButton>
           </Box>
-
+          <Sidebar width={sideBarWidth} setWidth={setSideBarWidth} />
           <Box
             onClick={() => navigate("/")}
             sx={{
