@@ -82,6 +82,10 @@ p {
 
 }
 
+li {
+  list-style: none;
+}
+
 
 @media only screen and (min-width: 768px) {
   .screenContainer{

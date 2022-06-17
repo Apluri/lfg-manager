@@ -14,7 +14,19 @@ type Props = {
 export function Router({ marginLeft }: Props) {
   const auth = useAuth();
 
-  if (auth?.currentUser?.uid === undefined) return <Login />;
+  if (auth?.currentUser?.uid === undefined)
+    return (
+      <Box
+        className="routerContainer"
+        sx={{
+          margin: "2em",
+          marginTop: "1em",
+          marginLeft: marginLeft > 0 ? marginLeft + "px" : "2em",
+        }}
+      >
+        <Login />
+      </Box>
+    );
   return (
     <Box
       className="routerContainer"
