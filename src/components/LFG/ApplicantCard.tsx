@@ -1,11 +1,21 @@
 import React, { useState } from "react";
 import { Box } from "@mui/system";
 import { Applicant, LfgPost } from "./LfgPosts";
-import { Avatar, IconButton, Paper, Typography, useTheme } from "@mui/material";
+import {
+  Alert,
+  Avatar,
+  Button,
+  IconButton,
+  Paper,
+  Snackbar,
+  Typography,
+  useTheme,
+} from "@mui/material";
 import PersonRemoveIcon from "@mui/icons-material/PersonRemove";
 import { classIcons, ClassNames } from "../../utils/CharacterUtils";
 import { useAuth } from "../providers/AuthContext";
 import { useDatabase } from "../providers/DatabaseContext";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 type Props = {
   applicant: Applicant;
   handleLeaveRaid: (applicant: Applicant) => void;
@@ -18,6 +28,8 @@ export function ApplicantCard({ applicant, handleLeaveRaid, post }: Props) {
   const userRef = db?.allUsers ? db?.allUsers[applicant.uid] : undefined;
   const themeColors = useTheme().palette;
 
+  const [snackOpen, setSnackOpen] = useState(false);
+
   function isRemoveAllowed() {
     if (db?.user?.role === "admin") return true;
     if (auth?.currentUser?.uid === post.ownerId) return true;
@@ -27,10 +39,13 @@ export function ApplicantCard({ applicant, handleLeaveRaid, post }: Props) {
     if (userRef) return userRef.userName;
     else return "No name found";
   }
-  function getCharName() {
+  function getCharName(): string {
     const charId = applicant.character.id;
     if (userRef) {
-      return userRef.characters?.find((char) => char.id === charId)?.charName;
+      return (
+        userRef.characters?.find((char) => char.id === charId)?.charName ??
+        "No charname found"
+      );
     } else {
       return "No charname found";
     }
@@ -54,7 +69,10 @@ export function ApplicantCard({ applicant, handleLeaveRaid, post }: Props) {
       return ClassNames.DEFAULT;
     }
   }
-
+  function handleCopyClick() {
+    setSnackOpen(true);
+    navigator.clipboard.writeText(getCharName());
+  }
   return (
     <Paper
       className="applicantCard"
@@ -63,6 +81,14 @@ export function ApplicantCard({ applicant, handleLeaveRaid, post }: Props) {
         justifyContent: "space-between",
       }}
     >
+      <Snackbar
+        open={snackOpen}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        autoHideDuration={2000}
+        onClose={() => setSnackOpen(false)}
+      >
+        <Alert severity="info">{getCharName() + " copied to clipboard"}</Alert>
+      </Snackbar>
       <Box sx={styles.charInfo}>
         <Avatar src={classIcons[getCharacter()]} sx={{ marginRight: "10px" }} />
         <Box sx={styles.column}>
@@ -95,6 +121,13 @@ export function ApplicantCard({ applicant, handleLeaveRaid, post }: Props) {
       </Box>
 
       <Box>
+        <IconButton
+          onClick={() => {
+            handleCopyClick();
+          }}
+        >
+          <ContentCopyIcon />
+        </IconButton>
         <IconButton
           disabled={!isRemoveAllowed()}
           onClick={() => handleLeaveRaid(applicant)}
