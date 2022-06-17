@@ -1,4 +1,11 @@
-import { Avatar, Button, Stack, Typography, useTheme } from "@mui/material";
+import {
+  Avatar,
+  Button,
+  Stack,
+  TextField,
+  Typography,
+  useTheme,
+} from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useEffect, useState } from "react";
 import { Character, ClassNames } from "../../utils/CharacterUtils";
@@ -65,10 +72,7 @@ export function Profile({ style }: Props) {
           }}
         />
 
-        <ProfileInfo />
-        <Button sx={{ padding: 0 }} onClick={() => setEditUserName(true)}>
-          edit
-        </Button>
+        <ProfileInfo onClick={() => setEditUserName(true)} />
       </Box>
       <Button sx={{ marginBottom: "10px" }} onClick={openModal}>
         Add character

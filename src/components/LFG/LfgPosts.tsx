@@ -197,10 +197,10 @@ export function LfgPosts() {
     >
       {!auth?.currentUser?.isAnonymous && (
         <Button
-          sx={{ marginBottom: "10px" }}
+          sx={{ marginBottom: "10px", alignSelf: "center" }}
           onClick={() => setCreateLfgPostVisible(true)}
         >
-          Add lfg post
+          Create lfg post
         </Button>
       )}
 
@@ -286,7 +286,10 @@ export function LfgPosts() {
                 }
               />
 
-              <Button onClick={() => openJoinPartyModal(post)}>
+              <Button
+                onClick={() => openJoinPartyModal(post)}
+                sx={{ alignSelf: "center" }}
+              >
                 Join party
               </Button>
               <CustomAlert
