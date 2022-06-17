@@ -81,22 +81,14 @@ export default function NavBar({ setSideBarMargin }: Props) {
             }}
             setSideBarMargin={setSideBarMargin}
           />
-          <Box
-            onClick={() => navigate("/")}
-            sx={{
-              display: "flex",
-              flex: 1,
-              justifyContent: "center",
-              flexDirection: "row",
-            }}
-          >
+          <Box className="appTitleContainer" onClick={() => navigate("/")}>
             <Typography variant="h4" sx={{ paddingRight: "10px" }}>
               Cute guild
             </Typography>
             <Avatar src={cuteLogo} sx={{ alignSelf: "center" }} />
           </Box>
 
-          <Box sx={{ flex: 1, display: "flex", justifyContent: "flex-end" }}>
+          <Box className="profileBtn">
             {auth?.currentUser ? (
               <>
                 {auth.currentUser.isAnonymous ? (

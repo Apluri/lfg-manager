@@ -1,11 +1,4 @@
-import {
-  Avatar,
-  Button,
-  Stack,
-  TextField,
-  Typography,
-  useTheme,
-} from "@mui/material";
+import { Button, Stack, Typography, useTheme } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useEffect, useState } from "react";
 import { Character, ClassNames } from "../../utils/CharacterUtils";
@@ -15,7 +8,6 @@ import { useAuth } from "../providers/AuthContext";
 import { UserData, useDatabase } from "../providers/DatabaseContext";
 import { EditUserName } from "./EditUserName";
 import { ProfileInfo } from "./ProfileInfo";
-import AddIcon from "@mui/icons-material/Add";
 
 type Props = {
   style?: React.CSSProperties;
