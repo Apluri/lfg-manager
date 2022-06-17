@@ -58,79 +58,77 @@ export default function NavBar({ setSideBarMargin }: Props) {
   };
 
   return (
-    <Box sx={{}}>
-      <AppBar position="static" color="secondary">
-        <Toolbar sx={{ justifyContent: "space-between" }}>
-          <Box sx={{ flex: 1, display: "flex", justifyContent: "flex-start" }}>
-            <IconButton
-              size="large"
-              edge="start"
-              color="inherit"
-              aria-label="menu"
-              sx={{ mr: 2 }}
-              onClick={openSideBar}
-            >
-              <MenuIcon />
-            </IconButton>
-          </Box>
-          <Sidebar
-            width={sideBarWidth}
-            setWidth={(num) => {
-              setSideBarWidth(num);
-              sideBarRef.current = num;
-            }}
-            setSideBarMargin={setSideBarMargin}
-          />
-          <Box className="appTitleContainer" onClick={() => navigate("/")}>
-            <Typography variant="h4" sx={{ paddingRight: "10px" }}>
-              Cute guild
-            </Typography>
-            <Avatar src={cuteLogo} sx={{ alignSelf: "center" }} />
-          </Box>
+    <AppBar position="sticky" color="secondary">
+      <Toolbar sx={{ justifyContent: "space-between" }}>
+        <Box sx={{ flex: 1, display: "flex", justifyContent: "flex-start" }}>
+          <IconButton
+            size="large"
+            edge="start"
+            color="inherit"
+            aria-label="menu"
+            sx={{ mr: 2 }}
+            onClick={openSideBar}
+          >
+            <MenuIcon />
+          </IconButton>
+        </Box>
+        <Sidebar
+          width={sideBarWidth}
+          setWidth={(num) => {
+            setSideBarWidth(num);
+            sideBarRef.current = num;
+          }}
+          setSideBarMargin={setSideBarMargin}
+        />
+        <Box className="appTitleContainer" onClick={() => navigate("/")}>
+          <Typography variant="h4" sx={{ paddingRight: "10px" }}>
+            Cute guild
+          </Typography>
+          <Avatar src={cuteLogo} sx={{ alignSelf: "center" }} />
+        </Box>
 
-          <Box className="profileBtn">
-            {auth?.currentUser ? (
-              <>
-                {auth.currentUser.isAnonymous ? (
-                  <Typography
-                    onClick={handleClick}
-                    sx={{ display: "flex", alignSelf: "center" }}
-                  >
-                    Anonymous user
-                  </Typography>
-                ) : (
-                  <ProfileInfo onClick={handleClick} />
-                )}
-                <IconButton onClick={handleClick}>
-                  <ArrowDropDownIcon />
-                </IconButton>
-                <Menu open={open} onClose={handleClose} anchorEl={anchorEl}>
-                  <MenuItem
-                    onClick={() => {
-                      navigate("/profile");
-                      handleClose();
-                    }}
-                  >
-                    Profile
-                  </MenuItem>
-                  <MenuItem
-                    onClick={() => {
-                      auth?.logOut();
-                      handleClose();
-                    }}
-                  >
-                    Log out
-                  </MenuItem>
-                </Menu>
-              </>
-            ) : (
-              <Button color="inherit" onClick={() => auth?.signIn()}>
-                Login
-              </Button>
-            )}
-          </Box>
-        </Toolbar>
-      </AppBar>
-    </Box>
+        <Box className="profileBtn">
+          {auth?.currentUser ? (
+            <>
+              {auth.currentUser.isAnonymous ? (
+                <Typography
+                  onClick={handleClick}
+                  sx={{ display: "flex", alignSelf: "center" }}
+                >
+                  Anonymous user
+                </Typography>
+              ) : (
+                <ProfileInfo onClick={handleClick} />
+              )}
+              <IconButton onClick={handleClick}>
+                <ArrowDropDownIcon />
+              </IconButton>
+              <Menu open={open} onClose={handleClose} anchorEl={anchorEl}>
+                <MenuItem
+                  onClick={() => {
+                    navigate("/profile");
+                    handleClose();
+                  }}
+                >
+                  Profile
+                </MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    auth?.logOut();
+                    handleClose();
+                  }}
+                >
+                  Log out
+                </MenuItem>
+              </Menu>
+            </>
+          ) : (
+            <Button color="inherit" onClick={() => auth?.signIn()}>
+              Login
+            </Button>
+          )}
+        </Box>
+      </Toolbar>
+    </AppBar>
   );
 }
