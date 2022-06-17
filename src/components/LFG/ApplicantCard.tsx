@@ -21,6 +21,8 @@ import { classIcons, ClassNames } from "../../utils/CharacterUtils";
 import { useAuth } from "../providers/AuthContext";
 import { useDatabase } from "../providers/DatabaseContext";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import copySoundEffect from "./../../assets/sounds/ayaya.mp3";
+
 type Props = {
   applicant: Applicant;
   handleLeaveRaid: (applicant: Applicant) => void;
@@ -35,6 +37,8 @@ export function ApplicantCard({ applicant, handleLeaveRaid, post }: Props) {
 
   const [snackOpen, setSnackOpen] = useState(false);
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+
+  const copyAudio = new Audio("./../../assets/sounds/ayaya.mp3");
 
   function isRemoveAllowed() {
     if (db?.user?.role === "admin") return true;
@@ -77,6 +81,7 @@ export function ApplicantCard({ applicant, handleLeaveRaid, post }: Props) {
   }
   function handleCopyClick() {
     setSnackOpen(true);
+    new Audio(copySoundEffect).play();
     navigator.clipboard.writeText(getCharName());
   }
   return (
