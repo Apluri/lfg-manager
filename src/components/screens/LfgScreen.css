@@ -6,7 +6,7 @@
 }
 .applicantCard {
     display: flex;
-    min-width: 200px;
+    min-width: 250px;
     height: 40px;
     flex-grow: 1;
     width: 40%;
@@ -14,9 +14,15 @@
     margin: 5px;
     align-items: center;
 }
+.copyCharname {
+    display:none;
+}
 
 @media only screen and (min-width: 768px) {
     .screenContainer{
         flex-direction: row;
+    }
+    .copyCharname {
+        display: initial;
     }
 }

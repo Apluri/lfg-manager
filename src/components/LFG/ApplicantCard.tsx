@@ -143,13 +143,16 @@ export function ApplicantCard({ applicant, handleLeaveRaid, post }: Props) {
       </Box>
 
       <Box>
-        <IconButton
-          onClick={() => {
-            handleCopyClick();
-          }}
-        >
-          <ContentCopyIcon />
-        </IconButton>
+        <Box className="copyCharname">
+          <IconButton
+            onClick={() => {
+              handleCopyClick();
+            }}
+          >
+            <ContentCopyIcon />
+          </IconButton>
+        </Box>
+
         <IconButton
           disabled={!isRemoveAllowed()}
           onClick={() => setConfirmDialogOpen(true)}
