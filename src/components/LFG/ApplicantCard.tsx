@@ -5,6 +5,11 @@ import {
   Alert,
   Avatar,
   Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   IconButton,
   Paper,
   Snackbar,
@@ -29,6 +34,7 @@ export function ApplicantCard({ applicant, handleLeaveRaid, post }: Props) {
   const themeColors = useTheme().palette;
 
   const [snackOpen, setSnackOpen] = useState(false);
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
 
   function isRemoveAllowed() {
     if (db?.user?.role === "admin") return true;
@@ -89,6 +95,22 @@ export function ApplicantCard({ applicant, handleLeaveRaid, post }: Props) {
       >
         <Alert severity="info">{getCharName() + " copied to clipboard"}</Alert>
       </Snackbar>
+      <Dialog
+        open={confirmDialogOpen}
+        onClose={() => setConfirmDialogOpen(false)}
+      >
+        <DialogTitle>
+          {"Are you sure you wish to leave " + post.title}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>Leaving user: {getUserName()}</DialogContentText>
+          <DialogContentText>character name: {getCharName()}</DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setConfirmDialogOpen(false)}>Cancel</Button>
+          <Button onClick={() => handleLeaveRaid(applicant)}>Confirm</Button>
+        </DialogActions>
+      </Dialog>
       <Box sx={styles.charInfo}>
         <Avatar src={classIcons[getCharacter()]} sx={{ marginRight: "10px" }} />
         <Box sx={styles.column}>
@@ -130,7 +152,7 @@ export function ApplicantCard({ applicant, handleLeaveRaid, post }: Props) {
         </IconButton>
         <IconButton
           disabled={!isRemoveAllowed()}
-          onClick={() => handleLeaveRaid(applicant)}
+          onClick={() => setConfirmDialogOpen(true)}
         >
           <PersonRemoveIcon />
         </IconButton>
