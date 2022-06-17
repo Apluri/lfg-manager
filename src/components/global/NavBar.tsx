@@ -39,6 +39,7 @@ export default function NavBar({ setSideBarMargin }: Props) {
   }, []);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    console.log(event.currentTarget);
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
@@ -60,6 +61,8 @@ export default function NavBar({ setSideBarMargin }: Props) {
   type ScrollProps = {
     children: React.ReactElement;
   };
+  // could be used to hide navbar when scrolling down
+  // issue, breaks anchorElements to menu items
   function HideOnScroll({ children }: ScrollProps) {
     const trigger = useScrollTrigger();
     return (
@@ -70,75 +73,71 @@ export default function NavBar({ setSideBarMargin }: Props) {
   }
   return (
     <>
-      <HideOnScroll>
-        <AppBar position="sticky" color="secondary" sx={{ zIndex: 1 }}>
-          <Toolbar sx={{ justifyContent: "space-between" }}>
-            <Box
-              sx={{ flex: 1, display: "flex", justifyContent: "flex-start" }}
+      <AppBar position="sticky" color="secondary" sx={{ zIndex: 1 }}>
+        <Toolbar sx={{ justifyContent: "space-between" }}>
+          <Box sx={{ flex: 1, display: "flex", justifyContent: "flex-start" }}>
+            <IconButton
+              size="large"
+              edge="start"
+              color="inherit"
+              aria-label="menu"
+              sx={{ mr: 2 }}
+              onClick={openSideBar}
             >
-              <IconButton
-                size="large"
-                edge="start"
-                color="inherit"
-                aria-label="menu"
-                sx={{ mr: 2 }}
-                onClick={openSideBar}
-              >
-                <MenuIcon />
-              </IconButton>
-            </Box>
+              <MenuIcon />
+            </IconButton>
+          </Box>
 
-            <Box className="appTitleContainer" onClick={() => navigate("/")}>
-              <Typography variant="h4" sx={{ paddingRight: "10px" }}>
-                Cute guild
-              </Typography>
-              <Avatar src={cuteLogo} sx={{ alignSelf: "center" }} />
-            </Box>
+          <Box className="appTitleContainer" onClick={() => navigate("/")}>
+            <Typography variant="h4" sx={{ paddingRight: "10px" }}>
+              Cute guild
+            </Typography>
+            <Avatar src={cuteLogo} sx={{ alignSelf: "center" }} />
+          </Box>
 
-            <Box className="profileBtn">
-              {auth?.currentUser ? (
-                <>
-                  {auth.currentUser.isAnonymous ? (
-                    <Typography
-                      onClick={handleClick}
-                      sx={{ display: "flex", alignSelf: "center" }}
-                    >
-                      Anonymous user
-                    </Typography>
-                  ) : (
-                    <ProfileInfo onClick={handleClick} />
-                  )}
-                  <IconButton onClick={handleClick}>
-                    <ArrowDropDownIcon />
-                  </IconButton>
-                  <Menu open={open} onClose={handleClose} anchorEl={anchorEl}>
-                    <MenuItem
-                      onClick={() => {
-                        navigate("/profile");
-                        handleClose();
-                      }}
-                    >
-                      Profile
-                    </MenuItem>
-                    <MenuItem
-                      onClick={() => {
-                        auth?.logOut();
-                        handleClose();
-                      }}
-                    >
-                      Log out
-                    </MenuItem>
-                  </Menu>
-                </>
-              ) : (
-                <Button color="inherit" onClick={() => auth?.signIn()}>
-                  Login
-                </Button>
-              )}
-            </Box>
-          </Toolbar>
-        </AppBar>
-      </HideOnScroll>
+          <Box className="profileBtn">
+            {auth?.currentUser ? (
+              <>
+                {auth.currentUser.isAnonymous ? (
+                  <Typography
+                    onClick={handleClick}
+                    sx={{ display: "flex", alignSelf: "center" }}
+                  >
+                    Anonymous user
+                  </Typography>
+                ) : (
+                  <ProfileInfo onClick={handleClick} />
+                )}
+                <IconButton onClick={handleClick}>
+                  <ArrowDropDownIcon />
+                </IconButton>
+                <Menu open={open} onClose={handleClose} anchorEl={anchorEl}>
+                  <MenuItem
+                    onClick={() => {
+                      navigate("/profile");
+                      handleClose();
+                    }}
+                  >
+                    Profile
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => {
+                      auth?.logOut();
+                      handleClose();
+                    }}
+                  >
+                    Log out
+                  </MenuItem>
+                </Menu>
+              </>
+            ) : (
+              <Button color="inherit" onClick={() => auth?.signIn()}>
+                Login
+              </Button>
+            )}
+          </Box>
+        </Toolbar>
+      </AppBar>
       <Sidebar
         width={sideBarWidth}
         setWidth={(num) => {
