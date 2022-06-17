@@ -40,10 +40,10 @@ export function Login() {
           sx={{ marginTop: "2em" }}
           onClick={() => auth?.signInAnonymous()}
         >
-          Sign in as anonymous quest
+          Sign in as anonymous guest
         </Button>
         <Typography variant="caption">
-          You will not be able to edit anything with anonymous quest, just view
+          You will not be able to edit anything as anonymous guest, just view
           LFG posts
         </Typography>
       </Paper>
