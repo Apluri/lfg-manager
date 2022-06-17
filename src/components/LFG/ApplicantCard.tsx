@@ -38,8 +38,6 @@ export function ApplicantCard({ applicant, handleLeaveRaid, post }: Props) {
   const [snackOpen, setSnackOpen] = useState(false);
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
 
-  const copyAudio = new Audio("./../../assets/sounds/ayaya.mp3");
-
   function isRemoveAllowed() {
     if (db?.user?.role === "admin") return true;
     if (auth?.currentUser?.uid === post.ownerId) return true;
