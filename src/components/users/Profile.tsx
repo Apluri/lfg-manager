@@ -11,9 +11,10 @@ import { ProfileInfo } from "./ProfileInfo";
 
 type Props = {
   style?: React.CSSProperties;
+  stackMinWidth?: number;
 };
 
-export function Profile({ style }: Props) {
+export function Profile({ style, stackMinWidth }: Props) {
   const db = useDatabase();
   const auth = useAuth();
   const themeColors = useTheme().palette;
@@ -75,7 +76,10 @@ export function Profile({ style }: Props) {
         handleAddCharacter={handleAddCharacter}
       />
 
-      <Stack spacing={2} sx={{ width: "100%", marginBottom: "20px" }}>
+      <Stack
+        spacing={2}
+        sx={{ minWidth: stackMinWidth ?? "50%", marginBottom: "20px" }}
+      >
         {db?.user?.characters?.map((character, index) => (
           <CharacterCard
             key={index}
@@ -93,7 +97,6 @@ const styles: { [key: string]: React.CSSProperties } = {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    width: "100%",
   },
 
   userInfoContainer: {

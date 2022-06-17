@@ -16,10 +16,10 @@ function Home() {
     <Box className="screenContainer">
       <LfgScreen
         style={{
-          flex: 2,
+          flex: 1,
         }}
       />
-      <Profile style={{ flex: 1 }} />
+      <Profile stackMinWidth={280} />
     </Box>
   );
 }
