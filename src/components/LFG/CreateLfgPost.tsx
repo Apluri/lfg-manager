@@ -134,6 +134,7 @@ export function CreateLfgPost({
       ownerId: editExistingPost?.ownerId ?? auth.currentUser.uid,
       lfgId: editExistingPost?.lfgId ?? uuidv4(),
       applicants: editExistingPost?.applicants ?? [],
+      creationTime: new Date().toJSON(),
     };
     return post;
   }

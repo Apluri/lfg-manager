@@ -31,6 +31,7 @@ export type LfgPost = {
   ownerId: string;
   lfgId: string;
   applicants?: Applicant[];
+  creationTime: string;
 };
 export function LfgPosts() {
   const auth = useAuth();

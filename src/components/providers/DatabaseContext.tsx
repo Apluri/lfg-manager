@@ -124,10 +124,12 @@ export function DatabaseProvider({ children }: Props) {
       const sortedPosts = posts.sort((a, b) => {
         if (
           DateTime.fromISO(a.startTime).valueOf() >
-          DateTime.fromISO(b.startTime).valueOf()
-        )
+            DateTime.fromISO(b.startTime).valueOf() ||
+          DateTime.fromISO(a.creationTime).valueOf() >
+            DateTime.fromISO(b.creationTime).valueOf()
+        ) {
           return 1;
-        else return -1;
+        } else return -1;
       });
 
       setLfgPosts(filterOldPosts(sortedPosts));
