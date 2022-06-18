@@ -346,8 +346,15 @@ export function DatabaseProvider({ children }: Props) {
       );
     });
   }
+
+  function isAllowedToEdit(post: LfgPost, applicant: Applicant): boolean {
+    if (user?.role === Roles.ADMIN) return true;
+    return applicant.uid === auth?.currentUser?.uid;
+  }
   function leaveLfg(post: LfgPost, applicant: Applicant) {
     if (!applicantIsInLfg(post, applicant)) return;
+
+    if (!isAllowedToEdit(post, applicant)) return;
 
     const editedPosts = lfgPosts?.map((p) => {
       if (p.lfgId === post.lfgId) {
