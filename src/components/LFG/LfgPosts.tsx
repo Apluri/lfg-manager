@@ -114,7 +114,6 @@ export function LfgPosts() {
         .then()
         .catch((e) => {
           setErrorMsg(e);
-          console.log(e);
           setErrorVisible(true);
         });
       joinLfgRef.current = null;
