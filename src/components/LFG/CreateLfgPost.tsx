@@ -51,10 +51,12 @@ export function CreateLfgPost({
     if (editExistingPost !== undefined) {
       setTitle(editExistingPost.title);
       setStartTime(new Date(editExistingPost.startTime));
+      setSelectedRaid(editExistingPost.raid);
     }
   }, [editExistingPost, handleClose]);
 
   function isInputsValid() {
+    console.log(selectedRaid);
     const isTitleValid = validateTitle();
     const isRaidSelectionValid = validateRaidSelection();
     const isTimeValid = validateTime();
@@ -124,8 +126,10 @@ export function CreateLfgPost({
   }
   function createNewPost(): LfgPost | null {
     if (auth?.currentUser?.uid === undefined) return null;
+    if (selectedRaid === null) return null;
     const post: LfgPost = {
       title,
+      raid: selectedRaid,
       startTime: startTime?.toJSON(),
       ownerId: editExistingPost?.ownerId ?? auth.currentUser.uid,
       lfgId: editExistingPost?.lfgId ?? uuidv4(),
@@ -200,14 +204,13 @@ export function CreateLfgPost({
 
           <Box sx={{ ...styles.row, alignItems: "center" }}>
             <Autocomplete
-              disablePortal
               options={getLostArkRaidsList().map((raid) => raid.name)}
               onChange={(event, value) => handleChangeRaid(value)}
+              value={selectedRaid?.name}
               sx={{ width: "100%" }}
               renderInput={(params) => (
                 <TextField
                   {...params}
-                  value={selectedRaid?.name}
                   label="Raid"
                   error={error && raidHelper.length > 0}
                   helperText={raidHelper}

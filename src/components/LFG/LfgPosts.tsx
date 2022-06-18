@@ -18,6 +18,7 @@ import { JoinLfg } from "./JoinLfg";
 import { RaidList } from "./RaidList";
 import { CustomAlert } from "../global/CustomAlert";
 import { DateTime } from "luxon";
+import { Raid } from "../../utils/RaidUtils";
 
 export type Applicant = {
   uid: string;
@@ -25,6 +26,7 @@ export type Applicant = {
 };
 export type LfgPost = {
   title: string;
+  raid: Raid;
   startTime: string;
   ownerId: string;
   lfgId: string;
@@ -215,7 +217,8 @@ export function LfgPosts() {
             <Paper key={index} sx={styles.postContainer}>
               <Box sx={styles.topRow}>
                 <Box>
-                  <Typography variant="h4">{post.title}</Typography>
+                  <Typography variant="h4">{post.raid.name}</Typography>
+                  <Typography variant="h6">{post.title}</Typography>
 
                   <Box sx={styles.row}>
                     <Typography
