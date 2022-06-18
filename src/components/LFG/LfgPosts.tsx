@@ -112,7 +112,7 @@ export function LfgPosts() {
         .then()
         .catch((e) => {
           setErrorMsg(e);
-
+          console.log(e);
           setErrorVisible(true);
         });
       joinLfgRef.current = null;
@@ -129,7 +129,6 @@ export function LfgPosts() {
     db?.deleteLfgPost(editLfgRef.current)
       .then()
       .catch((e) => {
-        console.log(e);
         setErrorMsg(e);
         errorPostRef.current = editLfgRef.current;
         setErrorVisible(true);
@@ -140,7 +139,6 @@ export function LfgPosts() {
   function handleEditLfg(post: LfgPost) {
     db?.editLfgPost(post)
       .catch((e) => {
-        console.log(e);
         setErrorMsg(e);
         errorPostRef.current = editLfgRef.current;
         setErrorVisible(true);

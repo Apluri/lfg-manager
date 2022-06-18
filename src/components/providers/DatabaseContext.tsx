@@ -319,8 +319,14 @@ export function DatabaseProvider({ children }: Props) {
         });
 
         if (editedPosts) {
-          editPosts(editedPosts);
-          resolve();
+          editPosts(editedPosts)
+            .then(() => resolve())
+            .catch((e) =>
+              reject(
+                "No permissions to join or edit LFG, contact Cute Guild admins to get permissions"
+              )
+            );
+          return;
         }
       }
       const alreadyInWith = post.applicants?.find(
