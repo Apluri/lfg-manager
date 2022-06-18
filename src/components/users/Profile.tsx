@@ -1,4 +1,4 @@
-import { Button, Stack, Typography, useTheme } from "@mui/material";
+import { Alert, Button, Stack, Typography, useTheme } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useEffect, useState } from "react";
 import { Character, ClassNames } from "../../utils/CharacterUtils";
@@ -43,9 +43,10 @@ export function Profile({ style, stackMinWidth }: Props) {
   if (auth?.currentUser?.isAnonymous)
     return (
       <Box sx={{ ...styles.container, ...style }}>
-        <Typography sx={{ color: themeColors.info.main }}>
+        <Typography variant="h6">Profile</Typography>
+        <Alert severity="error">
           Only non anonymous users can view and edit profile
-        </Typography>
+        </Alert>
       </Box>
     );
   return (

@@ -1,5 +1,6 @@
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import {
+  Alert,
   Button,
   IconButton,
   Menu,
@@ -19,6 +20,7 @@ import { RaidList } from "./RaidList";
 import { CustomAlert } from "../global/CustomAlert";
 import { DateTime } from "luxon";
 import { Raid } from "../../utils/RaidUtils";
+import { isDisabled } from "@testing-library/user-event/dist/utils";
 
 export type Applicant = {
   uid: string;
@@ -189,6 +191,9 @@ export function LfgPosts() {
     return listOfAllChars;
   }
 
+  function isDisabledForCurrentUser(): boolean {
+    return auth?.currentUser?.isAnonymous || db?.user?.role === Roles.QUEST;
+  }
   return (
     <Box
       sx={{
@@ -196,14 +201,20 @@ export function LfgPosts() {
         flexDirection: "column",
       }}
     >
-      {!auth?.currentUser?.isAnonymous && (
-        <Button
-          sx={{ marginBottom: "10px", alignSelf: "center" }}
-          onClick={() => setCreateLfgPostVisible(true)}
-        >
-          Create lfg post
-        </Button>
+      {isDisabledForCurrentUser() && (
+        <Alert severity="error">
+          {auth?.currentUser?.isAnonymous
+            ? "Editing content disabled for anonymous users, please create if you wish to use the application"
+            : "No permissions to edit or join LFG posts, contact Cute Guild admins to get permissions"}
+        </Alert>
       )}
+      <Button
+        sx={{ marginBottom: "10px", alignSelf: "center" }}
+        onClick={() => setCreateLfgPostVisible(true)}
+        disabled={isDisabledForCurrentUser()}
+      >
+        Create lfg post
+      </Button>
 
       <CreateLfgPost
         visible={createLfgPostVisible}
@@ -291,6 +302,7 @@ export function LfgPosts() {
               <Button
                 onClick={() => openJoinPartyModal(post)}
                 sx={{ alignSelf: "center" }}
+                disabled={isDisabledForCurrentUser()}
               >
                 Join party
               </Button>
