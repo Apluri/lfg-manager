@@ -121,6 +121,7 @@ export function DatabaseProvider({ children }: Props) {
     }
     getData(Paths.LFG_POSTS, (data) => {
       const posts: LfgPost[] = data ?? [];
+      // sort mainy by startime, if they are identical sort by creation time
       const sortedPosts = posts.sort((a, b) => {
         if (
           DateTime.fromISO(a.startTime).valueOf() >
@@ -299,7 +300,10 @@ export function DatabaseProvider({ children }: Props) {
     return new Promise((resolve, reject) => {
       if (!applicantIsInLfg(post, applicant)) {
         // change 8 into raidSize variable later on
-        if (post.applicants && post?.applicants?.length >= 8) {
+        if (
+          post.applicants &&
+          post?.applicants?.length >= post.raid.maxPlayers
+        ) {
           reject("Raid is full");
           return;
         }

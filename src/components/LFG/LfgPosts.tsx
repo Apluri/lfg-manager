@@ -283,7 +283,7 @@ export function LfgPosts() {
               </Box>
               <RaidList
                 applicants={post.applicants}
-                raidSize={8}
+                raidSize={post.raid.maxPlayers}
                 post={post}
                 handleLeaveRaid={(applicant) =>
                   handleLeaveRaid(applicant, post)
