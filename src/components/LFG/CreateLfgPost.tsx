@@ -1,4 +1,5 @@
 import {
+  Autocomplete,
   Button,
   Modal,
   Paper,
@@ -14,6 +15,7 @@ import { useAuth } from "../providers/AuthContext";
 import { LfgPost } from "./LfgPosts";
 import { v4 as uuidv4 } from "uuid";
 import { DateTime } from "luxon";
+import { getLostArkRaidsList, LostArkRaids, Raid } from "../../utils/RaidUtils";
 
 const MAX_TITLE_LENGTH = 60;
 const TYPICAL_RAID_SIZE = 8;
@@ -35,6 +37,8 @@ export function CreateLfgPost({
   const [titleHelper, setTitleHelper] = useState<string>("");
 
   const [maxApplicants, setMaxApplicants] = useState(TYPICAL_RAID_SIZE);
+
+  const [selectedRaid, setSelectedRaid] = useState<Raid | null>(null);
 
   const [startTime, setStartTime] = useState<Date>(new Date());
   const [timeHelper, setTimeHelper] = useState<string>("");
@@ -118,6 +122,14 @@ export function CreateLfgPost({
       setMaxApplicants(value);
     }
   }
+  function handleChangeRaid(value: LostArkRaids | null) {
+    let newRaidValue: Raid | null = null;
+    if (value) {
+      newRaidValue =
+        getLostArkRaidsList().find((item) => item.name === value) ?? null;
+    }
+    setSelectedRaid(newRaidValue);
+  }
 
   return (
     <Modal
@@ -139,10 +151,11 @@ export function CreateLfgPost({
               variant="standard"
               required={true}
               onChange={(e) => setTitle(e.target.value)}
-              sx={{ ...styles.itemsMargin, marginRight: "5px" }}
             />
           </Box>
-          <Box sx={{ ...styles.row, alignItems: "center" }}>
+          {/**
+           * 
+           *      <Box sx={{ ...styles.row, alignItems: "center" }}>
             <Typography sx={{ minWidth: 90 }} variant="caption">
               Max players
             </Typography>
@@ -159,10 +172,22 @@ export function CreateLfgPost({
               valueLabelDisplay="on"
             />
           </Box>
+           */}
+
+          <Box sx={{ ...styles.row, alignItems: "center" }}>
+            <Autocomplete
+              disablePortal
+              options={getLostArkRaidsList().map((raid) => raid.name)}
+              onChange={(event, value) => handleChangeRaid(value)}
+              sx={{ width: "100%" }}
+              renderInput={(params) => <TextField {...params} label="Raid" />}
+            />
+          </Box>
           <DateTimePicker
             renderInput={(props) => (
               <TextField
                 {...props}
+                sx={styles.itemsMargin}
                 error={error && timeHelper.length > 0}
                 helperText={timeHelper}
               />
@@ -219,7 +244,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     justifyContent: "space-between",
   },
   itemsMargin: {
-    marginBottom: "3em",
+    marginBottom: "2em",
   },
   actionButtons: {
     display: "flex",
@@ -229,9 +254,11 @@ const styles: { [key: string]: React.CSSProperties } = {
   row: {
     display: "flex",
     flexDirection: "row",
+    marginBottom: "2em",
   },
   column: {
     display: "flex",
     flexDirection: "column",
+    marginBottom: "2em",
   },
 };
