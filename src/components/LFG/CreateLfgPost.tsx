@@ -39,6 +39,7 @@ export function CreateLfgPost({
   const [maxApplicants, setMaxApplicants] = useState(TYPICAL_RAID_SIZE);
 
   const [selectedRaid, setSelectedRaid] = useState<Raid | null>(null);
+  const [raidHelper, setRaidHelper] = useState<string>("");
 
   const [startTime, setStartTime] = useState<Date>(new Date());
   const [timeHelper, setTimeHelper] = useState<string>("");
@@ -52,8 +53,12 @@ export function CreateLfgPost({
       setStartTime(new Date(editExistingPost.startTime));
     }
   }, [editExistingPost, handleClose]);
-  function validateInputs() {
-    if (validateTitle() && validateTime()) {
+
+  function isInputsValid() {
+    const isTitleValid = validateTitle();
+    const isRaidSelectionValid = validateRaidSelection();
+    const isTimeValid = validateTime();
+    if (isTitleValid && isRaidSelectionValid && isTimeValid) {
       setError(false);
       return true;
     } else {
@@ -62,30 +67,49 @@ export function CreateLfgPost({
     }
   }
 
+  function clearHelperTexts() {
+    setRaidHelper("");
+    setTimeHelper("");
+    setTitleHelper("");
+  }
+
   function validateTitle(): boolean {
     const longestAllowedWordSize = 45;
     const words = title.split(" ");
     const tooLongWord = words.find(
       (word) => word.length > longestAllowedWordSize
     );
+
     if (title.length === 0) {
       setTitleHelper("Title must be longer than 0 characters");
+
       return false;
     } else if (title.length > MAX_TITLE_LENGTH) {
       setTitleHelper(
         "Title cant be over " + MAX_TITLE_LENGTH + " characters long"
       );
+
       return false;
     } else if (tooLongWord !== undefined) {
       setTitleHelper(
         "Title contains too long words, max word length is " +
           longestAllowedWordSize
       );
+
       return false;
     } else {
+      console.log("title reset");
       setTitleHelper("");
       return true;
     }
+  }
+  function validateRaidSelection(): boolean {
+    if (selectedRaid === null) {
+      setRaidHelper("Select raid");
+    } else {
+      setRaidHelper("");
+    }
+    return selectedRaid != null;
   }
   function validateTime() {
     const time = DateTime.fromISO(startTime.toJSON());
@@ -110,11 +134,11 @@ export function CreateLfgPost({
     return post;
   }
   function clearState() {
-    setTitle("");
     setStartTime(new Date());
+    setTitle("");
+    setSelectedRaid(null);
     setError(false);
-    setTimeHelper("");
-    setTitleHelper("");
+    clearHelperTexts();
   }
 
   function handleChangeMaxApplicants(value: number | number[]) {
@@ -180,7 +204,15 @@ export function CreateLfgPost({
               options={getLostArkRaidsList().map((raid) => raid.name)}
               onChange={(event, value) => handleChangeRaid(value)}
               sx={{ width: "100%" }}
-              renderInput={(params) => <TextField {...params} label="Raid" />}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  value={selectedRaid?.name}
+                  label="Raid"
+                  error={error && raidHelper.length > 0}
+                  helperText={raidHelper}
+                />
+              )}
             />
           </Box>
           <DateTimePicker
@@ -210,7 +242,7 @@ export function CreateLfgPost({
           </Button>
           <Button
             onClick={() => {
-              if (validateInputs()) {
+              if (isInputsValid()) {
                 const newPost = createNewPost();
                 if (!newPost) return;
                 if (handleAddNewPost !== undefined) {
