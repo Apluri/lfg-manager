@@ -25,7 +25,7 @@ export function RaidList({
       raidSlots.push(
         applicants && applicants[i] ? (
           <ApplicantCard
-            key={i}
+            key={applicants[i].uid}
             applicant={applicants[i]}
             handleLeaveRaid={handleLeaveRaid}
             post={post}

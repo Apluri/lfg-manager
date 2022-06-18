@@ -83,7 +83,7 @@ export function Profile({ style, stackMinWidth }: Props) {
       >
         {db?.user?.characters?.map((character, index) => (
           <CharacterCard
-            key={index}
+            key={character.id}
             character={character}
             handleDelete={handleDelete}
           />

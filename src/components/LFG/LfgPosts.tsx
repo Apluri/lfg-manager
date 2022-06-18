@@ -20,7 +20,6 @@ import { RaidList } from "./RaidList";
 import { CustomAlert } from "../global/CustomAlert";
 import { DateTime } from "luxon";
 import { Raid } from "../../utils/RaidUtils";
-import { isDisabled } from "@testing-library/user-event/dist/utils";
 
 export type Applicant = {
   uid: string;
@@ -223,7 +222,7 @@ export function LfgPosts() {
       <Box sx={{ display: "flex", flexDirection: "column" }}>
         {db?.lfgPosts?.map((post, index) => {
           return (
-            <Paper key={index} sx={styles.postContainer}>
+            <Paper key={post.lfgId} sx={styles.postContainer}>
               <Box sx={styles.topRow}>
                 <Box>
                   <Typography variant="h4">{post.raid.name}</Typography>
