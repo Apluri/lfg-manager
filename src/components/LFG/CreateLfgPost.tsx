@@ -1,4 +1,11 @@
-import { Button, Modal, Paper, TextField } from "@mui/material";
+import {
+  Button,
+  Modal,
+  Paper,
+  Slider,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { Box } from "@mui/system";
 import { DateTimePicker } from "@mui/x-date-pickers";
 import React, { useEffect, useState } from "react";
@@ -9,6 +16,7 @@ import { v4 as uuidv4 } from "uuid";
 import { DateTime } from "luxon";
 
 const MAX_TITLE_LENGTH = 60;
+const TYPICAL_RAID_SIZE = 8;
 type Props = {
   handleAddNewPost?: (post: LfgPost) => void;
   visible: boolean;
@@ -25,6 +33,8 @@ export function CreateLfgPost({
 }: Props) {
   const [title, setTitle] = useState<string>("");
   const [titleHelper, setTitleHelper] = useState<string>("");
+
+  const [maxApplicants, setMaxApplicants] = useState(TYPICAL_RAID_SIZE);
 
   const [startTime, setStartTime] = useState<Date>(new Date());
   const [timeHelper, setTimeHelper] = useState<string>("");
@@ -103,6 +113,12 @@ export function CreateLfgPost({
     setTitleHelper("");
   }
 
+  function handleChangeMaxApplicants(value: number | number[]) {
+    if (typeof value === "number") {
+      setMaxApplicants(value);
+    }
+  }
+
   return (
     <Modal
       open={visible}
@@ -124,6 +140,23 @@ export function CreateLfgPost({
               required={true}
               onChange={(e) => setTitle(e.target.value)}
               sx={{ ...styles.itemsMargin, marginRight: "5px" }}
+            />
+          </Box>
+          <Box sx={{ ...styles.row, alignItems: "center" }}>
+            <Typography sx={{ minWidth: 90 }} variant="caption">
+              Max players
+            </Typography>
+            <Slider
+              aria-label="maxPlayersSlider"
+              defaultValue={TYPICAL_RAID_SIZE}
+              onChangeCommitted={(event, value) =>
+                handleChangeMaxApplicants(value)
+              }
+              min={4}
+              max={16}
+              step={4}
+              marks
+              valueLabelDisplay="on"
             />
           </Box>
           <DateTimePicker
@@ -196,5 +229,9 @@ const styles: { [key: string]: React.CSSProperties } = {
   row: {
     display: "flex",
     flexDirection: "row",
+  },
+  column: {
+    display: "flex",
+    flexDirection: "column",
   },
 };
