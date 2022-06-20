@@ -40,22 +40,22 @@ export function LfgScreen({ style }: Props) {
         ...style,
       }}
     >
-      <Typography variant="h6">LFG</Typography>
-      <LfgFilterButtons lfgFilters={lfgFilters} toggleFilter={toggleFilter} />
-      <Button
-        sx={{ marginBottom: "10px" }}
-        onClick={() => setCreateLfgPostVisible(true)}
-        disabled={isDisabledForCurrentUser()}
-      >
-        Create lfg post
-      </Button>
+      <Box className="top-container">
+        <Typography variant="h6">LFG</Typography>
+        <LfgFilterButtons lfgFilters={lfgFilters} toggleFilter={toggleFilter} />
+        <Button
+          onClick={() => setCreateLfgPostVisible(true)}
+          disabled={isDisabledForCurrentUser()}
+        >
+          Create lfg post
+        </Button>
 
-      <CreateLfgPost
-        visible={createLfgPostVisible}
-        handleClose={() => setCreateLfgPostVisible(false)}
-        handleAddNewPost={(post: LfgPost) => db?.addLfgPost(post)}
-      />
-
+        <CreateLfgPost
+          visible={createLfgPostVisible}
+          handleClose={() => setCreateLfgPostVisible(false)}
+          handleAddNewPost={(post: LfgPost) => db?.addLfgPost(post)}
+        />
+      </Box>
       <LfgPosts lfgFilters={lfgFilters} />
     </Box>
   );

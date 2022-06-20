@@ -86,7 +86,13 @@ li {
   list-style: none;
 }
 
-
+.top-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 150px;
+}
 @media only screen and (min-width: 768px) {
   .screenContainer{
       flex-direction: row;
