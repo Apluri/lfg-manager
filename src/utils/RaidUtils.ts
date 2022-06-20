@@ -14,6 +14,35 @@ export enum LostArkRaids {
   CUSTOM = "Custom raid",
 }
 
+export enum LostArkRaidNames {
+  ARGOS = "Argos",
+  VALTAN = "Valtan",
+  VYKAS = "Vykas",
+  CUSTOM = "Custom raid",
+}
+export const lostArkRaidFilterList: LostArkRaidNames[] = [
+  LostArkRaidNames.ARGOS,
+  LostArkRaidNames.VALTAN,
+  LostArkRaidNames.VYKAS,
+  LostArkRaidNames.CUSTOM,
+];
+export const lostArkRaidFilters: Record<LostArkRaidNames, LostArkRaids[]> = {
+  [LostArkRaidNames.ARGOS]: [
+    LostArkRaids.ARGOS_P1,
+    LostArkRaids.ARGOS_P2,
+    LostArkRaids.ARGOS_P3,
+  ],
+  [LostArkRaidNames.VALTAN]: [
+    LostArkRaids.VALTAN_NORMAL,
+    LostArkRaids.VALTAN_HARD,
+  ],
+  [LostArkRaidNames.VYKAS]: [
+    LostArkRaids.VYKAS_NORMAL,
+    LostArkRaids.VYKAS_HARD,
+  ],
+  [LostArkRaidNames.CUSTOM]: [LostArkRaids.CUSTOM],
+};
+
 export function getLostArkRaidsList(): Raid[] {
   return [
     { name: LostArkRaids.ARGOS_P1, maxPlayers: 8 },
