@@ -237,7 +237,7 @@ export function LfgPosts({ lfgFilters }: Props) {
           return (
             <Paper key={post.lfgId} sx={styles.postContainer}>
               <Box sx={styles.topRow}>
-                <Box>
+                <Box sx={{ flex: 1 }}>
                   <Typography variant="h4">{post.raid.name}</Typography>
                   <Typography variant="h6">{post.title}</Typography>
 
@@ -260,7 +260,9 @@ export function LfgPosts({ lfgFilters }: Props) {
                     </Typography>
                   </Box>
                 </Box>
-                <Box sx={styles.row}>
+                <Box
+                  sx={{ display: "flex", flex: 1, justifyContent: "center" }}
+                >
                   <Typography
                     sx={{
                       marginRight: "3px",
@@ -271,14 +273,17 @@ export function LfgPosts({ lfgFilters }: Props) {
                   </Typography>
                   <Typography> {getPostOwnerName(post)}</Typography>
                 </Box>
-
-                <IconButton
-                  disabled={!isEditAllowed(post)}
-                  onClick={(e) => handleClickMenu(e, post)}
-                  aria-label="settings"
+                <Box
+                  sx={{ display: "flex", flex: 1, justifyContent: "flex-end" }}
                 >
-                  <MoreVertIcon />
-                </IconButton>
+                  <IconButton
+                    disabled={!isEditAllowed(post)}
+                    onClick={(e) => handleClickMenu(e, post)}
+                    aria-label="settings"
+                  >
+                    <MoreVertIcon />
+                  </IconButton>
+                </Box>
                 <Menu
                   open={functionMenuVisible}
                   onClose={handleCloseMenu}
@@ -371,6 +376,5 @@ const styles: { [key: string]: React.CSSProperties } = {
   row: {
     display: "flex",
     flexDirection: "row",
-    alignItems: "center",
   },
 };
