@@ -47,8 +47,7 @@ export function LfgPosts({ lfgFilters }: Props) {
   const auth = useAuth();
   const db = useDatabase();
   const themeColors = useTheme().palette;
-  const [createLfgPostVisible, setCreateLfgPostVisible] =
-    useState<boolean>(false);
+
   const [editLfgPostVisible, setEditLfgPostVisible] = useState<boolean>(false);
   const [joinLfgVisible, setJoinLfgVisible] = useState<boolean>(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -80,10 +79,6 @@ export function LfgPosts({ lfgFilters }: Props) {
     }
 
     return "No name found";
-  }
-
-  function handleAddNewPost(post: LfgPost) {
-    db?.addLfgPost(post);
   }
 
   function openJoinPartyModal(post: LfgPost) {
@@ -236,19 +231,7 @@ export function LfgPosts({ lfgFilters }: Props) {
             : "No permissions to edit or join LFG posts, contact Cute Guild admins to get permissions"}
         </Alert>
       )}
-      <Button
-        sx={{ marginBottom: "10px", alignSelf: "center" }}
-        onClick={() => setCreateLfgPostVisible(true)}
-        disabled={isDisabledForCurrentUser()}
-      >
-        Create lfg post
-      </Button>
 
-      <CreateLfgPost
-        visible={createLfgPostVisible}
-        handleClose={() => setCreateLfgPostVisible(false)}
-        handleAddNewPost={handleAddNewPost}
-      />
       <Box sx={{ display: "flex", flexDirection: "column" }}>
         {getFilteredLfgPosts().map((post, index) => {
           return (
