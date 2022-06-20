@@ -28,7 +28,7 @@ type Props = {
 };
 export function LfgFilterButtons({ lfgFilters, toggleFilter }: Props) {
   return (
-    <Box>
+    <Box sx={{ display: "flex", flexWrap: "wrap" }}>
       {lostArkRaidFilterList.map((raid) => (
         <LfgFitlerButton
           raid={raid}
