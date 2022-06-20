@@ -32,7 +32,7 @@ export function LfgScreen({ style }: Props) {
         LFG
       </Typography>
       <LfgFilterButtons lfgFilters={lfgFilters} toggleFilter={toggleFilter} />
-      <LfgPosts />
+      <LfgPosts lfgFilters={lfgFilters} />
     </Box>
   );
 }
