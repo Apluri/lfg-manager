@@ -1,26 +1,62 @@
-import { Typography } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import React from "react";
-import { LfgPosts } from "../LFG/LfgPosts";
+import React, { useState } from "react";
+import { LostArkRaidNames } from "../../utils/RaidUtils";
+import { CreateLfgPost } from "../LFG/CreateLfgPost";
+import { LfgFilterButtons } from "../LFG/LfgFilterButtons";
+import { LfgPost, LfgPosts } from "../LFG/LfgPosts";
+import { useAuth } from "../providers/AuthContext";
+import { Roles, useDatabase } from "../providers/DatabaseContext";
 import "./LfgScreen.css";
 
 type Props = {
   style?: React.CSSProperties;
 };
 export function LfgScreen({ style }: Props) {
+  const auth = useAuth();
+  const db = useDatabase();
+  const [lfgFilters, setLfgFilters] = useState<LostArkRaidNames[]>([]);
+  const [createLfgPostVisible, setCreateLfgPostVisible] =
+    useState<boolean>(false);
+  function toggleFilter(raid: LostArkRaidNames) {
+    const raidExistInFilter = lfgFilters.find((r) => r === raid);
+    if (raidExistInFilter) {
+      setLfgFilters(lfgFilters.filter((r) => r !== raid));
+    } else {
+      setLfgFilters([...lfgFilters, raid]);
+    }
+  }
+  function isDisabledForCurrentUser(): boolean {
+    return auth?.currentUser?.isAnonymous || db?.user?.role === Roles.QUEST;
+  }
+
   return (
     <Box
       className="sceenContainer"
       sx={{
+        display: "flex",
         alignItems: "center",
         flexDirection: "column",
         ...style,
       }}
     >
-      <Typography sx={{ textAlign: "center" }} variant="h6">
-        LFG
-      </Typography>
-      <LfgPosts />
+      <Box className="top-container">
+        <Typography variant="h6">LFG</Typography>
+        <LfgFilterButtons lfgFilters={lfgFilters} toggleFilter={toggleFilter} />
+        <Button
+          onClick={() => setCreateLfgPostVisible(true)}
+          disabled={isDisabledForCurrentUser()}
+        >
+          Create lfg post
+        </Button>
+
+        <CreateLfgPost
+          visible={createLfgPostVisible}
+          handleClose={() => setCreateLfgPostVisible(false)}
+          handleAddNewPost={(post: LfgPost) => db?.addLfgPost(post)}
+        />
+      </Box>
+      <LfgPosts lfgFilters={lfgFilters} />
     </Box>
   );
 }

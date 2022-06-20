@@ -10,7 +10,7 @@ import {
   useTheme,
 } from "@mui/material";
 import { Box } from "@mui/system";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Character, ClassNames } from "../../utils/CharacterUtils";
 import { useAuth } from "../providers/AuthContext";
 import { Roles, useDatabase, UserData } from "../providers/DatabaseContext";
@@ -19,7 +19,12 @@ import { JoinLfg } from "./JoinLfg";
 import { RaidList } from "./RaidList";
 import { CustomAlert } from "../global/CustomAlert";
 import { DateTime } from "luxon";
-import { Raid } from "../../utils/RaidUtils";
+import {
+  lostArkRaidFilters,
+  LostArkRaidNames,
+  LostArkRaids,
+  Raid,
+} from "../../utils/RaidUtils";
 
 export type Applicant = {
   uid: string;
@@ -34,12 +39,15 @@ export type LfgPost = {
   applicants?: Applicant[];
   creationTime: string;
 };
-export function LfgPosts() {
+
+type Props = {
+  lfgFilters: LostArkRaidNames[];
+};
+export function LfgPosts({ lfgFilters }: Props) {
   const auth = useAuth();
   const db = useDatabase();
   const themeColors = useTheme().palette;
-  const [createLfgPostVisible, setCreateLfgPostVisible] =
-    useState<boolean>(false);
+
   const [editLfgPostVisible, setEditLfgPostVisible] = useState<boolean>(false);
   const [joinLfgVisible, setJoinLfgVisible] = useState<boolean>(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -71,10 +79,6 @@ export function LfgPosts() {
     }
 
     return "No name found";
-  }
-
-  function handleAddNewPost(post: LfgPost) {
-    db?.addLfgPost(post);
   }
 
   function openJoinPartyModal(post: LfgPost) {
@@ -192,6 +196,27 @@ export function LfgPosts() {
   function isDisabledForCurrentUser(): boolean {
     return auth?.currentUser?.isAnonymous || db?.user?.role === Roles.QUEST;
   }
+
+  // Shows all posts incase of no filters selected
+  function getFilteredLfgPosts(): LfgPost[] {
+    if (lfgFilters.length === 0) return db?.lfgPosts ?? [];
+    const raidFilters = lfgFilters.map((filter) => lostArkRaidFilters[filter]);
+    let raidFiltersFlat: LostArkRaids[] = [];
+    raidFilters.forEach((filter) => {
+      filter.forEach((raid) => {
+        raidFiltersFlat.push(raid);
+      });
+    });
+
+    const filteredPosts = db?.lfgPosts?.filter((post) => {
+      return raidFiltersFlat.includes(post.raid.name);
+    });
+
+    return filteredPosts ?? [];
+  }
+  useEffect(() => {
+    getFilteredLfgPosts();
+  }, [lfgFilters]);
   return (
     <Box
       sx={{
@@ -206,21 +231,9 @@ export function LfgPosts() {
             : "No permissions to edit or join LFG posts, contact Cute Guild admins to get permissions"}
         </Alert>
       )}
-      <Button
-        sx={{ marginBottom: "10px", alignSelf: "center" }}
-        onClick={() => setCreateLfgPostVisible(true)}
-        disabled={isDisabledForCurrentUser()}
-      >
-        Create lfg post
-      </Button>
 
-      <CreateLfgPost
-        visible={createLfgPostVisible}
-        handleClose={() => setCreateLfgPostVisible(false)}
-        handleAddNewPost={handleAddNewPost}
-      />
       <Box sx={{ display: "flex", flexDirection: "column" }}>
-        {db?.lfgPosts?.map((post, index) => {
+        {getFilteredLfgPosts().map((post, index) => {
           return (
             <Paper key={post.lfgId} sx={styles.postContainer}>
               <Box sx={styles.topRow}>
@@ -310,15 +323,15 @@ export function LfgPosts() {
                 message={errorMsg}
               />
 
-              {db.user?.characters !== undefined && (
+              {db?.user?.characters !== undefined && (
                 <JoinLfg
                   visible={joinLfgVisible}
                   onJoin={(char) => handleJoinLfg(char)}
                   handleClose={() => setJoinLfgVisible(false)}
                   characters={
-                    db.user.role === Roles.ADMIN
+                    db?.user.role === Roles.ADMIN
                       ? getAllCharacters()
-                      : db.user?.characters
+                      : db?.user?.characters
                   }
                 />
               )}

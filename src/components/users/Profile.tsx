@@ -56,27 +56,26 @@ export function Profile({ style, stackMinWidth }: Props) {
         ...style,
       }}
     >
-      <Box sx={styles.userInfoContainer}>
-        <EditUserName
-          visible={editUserName}
-          oldName={db?.user?.userName}
-          onClose={(newUserName) => handleEditUserName(newUserName)}
-          onCancel={() => {
-            setEditUserName(false);
-          }}
+      <Box className="top-container">
+        <Box sx={styles.userInfoContainer}>
+          <EditUserName
+            visible={editUserName}
+            oldName={db?.user?.userName}
+            onClose={(newUserName) => handleEditUserName(newUserName)}
+            onCancel={() => {
+              setEditUserName(false);
+            }}
+          />
+
+          <ProfileInfo onClick={() => setEditUserName(true)} />
+        </Box>
+        <Button onClick={openModal}>Add character</Button>
+        <CreateCharacterModal
+          visible={addCharacterVisible}
+          handleClose={closeModal}
+          handleAddCharacter={handleAddCharacter}
         />
-
-        <ProfileInfo onClick={() => setEditUserName(true)} />
       </Box>
-      <Button sx={{ marginBottom: "10px" }} onClick={openModal}>
-        Add character
-      </Button>
-      <CreateCharacterModal
-        visible={addCharacterVisible}
-        handleClose={closeModal}
-        handleAddCharacter={handleAddCharacter}
-      />
-
       <Stack
         spacing={2}
         sx={{ minWidth: stackMinWidth ?? "50%", marginBottom: "20px" }}
