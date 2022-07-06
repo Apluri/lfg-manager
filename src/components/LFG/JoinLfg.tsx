@@ -43,7 +43,12 @@ export function JoinLfg({ visible, onJoin, handleClose, characters }: Props) {
     }
     return "Error finding owner";
   }
-  const options = characters
+
+  type Option = {
+    owner: string;
+    char: Character;
+  };
+  const options: Option[] = characters
     .map((char) => {
       const owner = getOwner(char);
       return {
@@ -73,6 +78,21 @@ export function JoinLfg({ visible, onJoin, handleClose, characters }: Props) {
           getOptionLabel={(option) =>
             `${option.char.charName} ${option.char.itemLevel} `
           }
+          filterOptions={(options, state) => {
+            let newOptions: Option[] = [];
+            options.forEach((option) => {
+              if (
+                option.char.charName
+                  .toLowerCase()
+                  .includes(state.inputValue.toLowerCase()) ||
+                option.owner
+                  .toLowerCase()
+                  .includes(state.inputValue.toLowerCase())
+              )
+                newOptions.push(option);
+            });
+            return newOptions;
+          }}
           renderOption={(props, option) => (
             <Box {...props} component="li">
               <Avatar
