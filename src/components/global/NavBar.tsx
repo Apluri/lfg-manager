@@ -39,7 +39,6 @@ export default function NavBar({ setSideBarMargin }: Props) {
   }, []);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    console.log(event.currentTarget);
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {

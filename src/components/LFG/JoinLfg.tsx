@@ -59,7 +59,6 @@ export function JoinLfg({ visible, onJoin, handleClose, characters }: Props) {
     .sort((a, b) => -b.owner[0].localeCompare(a.owner[0]));
 
   function getIconSrc(char: Character) {
-    console.log(char.charName);
     return classIcons[char.character];
   }
   function handleSelection(char: Character | null) {

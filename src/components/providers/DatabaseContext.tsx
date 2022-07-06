@@ -435,9 +435,7 @@ export function DatabaseProvider({ children }: Props) {
       <EditUserName
         visible={userNameModalVisible}
         onClose={(newUserName) => handleCreateUser(newUserName)}
-        onCancel={() => {
-          console.log("canceled do nothing");
-        }}
+        onCancel={() => {}}
       />
       {children}
     </DbContext.Provider>
