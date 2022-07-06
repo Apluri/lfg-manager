@@ -1,6 +1,9 @@
 import {
   Autocomplete,
   Button,
+  Checkbox,
+  FormControlLabel,
+  FormGroup,
   Modal,
   Paper,
   Slider,
@@ -44,7 +47,9 @@ export function CreateLfgPost({
   const [startTime, setStartTime] = useState<Date>(new Date());
   const [timeHelper, setTimeHelper] = useState<string>("");
 
+  const [autoDelete, setAutoDelete] = useState<boolean>(false);
   const [error, setError] = useState(false);
+
   const auth = useAuth();
   const allowedMinuteDifference = 10;
   useEffect(() => {
@@ -135,6 +140,7 @@ export function CreateLfgPost({
       lfgId: editExistingPost?.lfgId ?? uuidv4(),
       applicants: editExistingPost?.applicants ?? [],
       creationTime: new Date().toJSON(),
+      autoDelete,
     };
     return post;
   }
@@ -219,6 +225,20 @@ export function CreateLfgPost({
               )}
             />
           </Box>
+          <Box sx={styles.row}>
+            <FormGroup>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={autoDelete}
+                    onChange={(event) => setAutoDelete(event.target.checked)}
+                  />
+                }
+                label="Auto delete"
+              />
+            </FormGroup>
+          </Box>
+
           <DateTimePicker
             renderInput={(props) => (
               <TextField

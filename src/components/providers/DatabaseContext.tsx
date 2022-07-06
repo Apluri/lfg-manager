@@ -111,6 +111,8 @@ export function DatabaseProvider({ children }: Props) {
     // note, this wont be updated to database before somone does some change to any lfg post (could cause issues?)
     function filterOldPosts(posts: LfgPost[]): LfgPost[] {
       return posts.filter((post) => {
+        // ignore filter if autodelete is diasbled
+        if (!post.autoDelete) return true;
         const postStartTime = DateTime.fromISO(post.startTime);
         const diff = postStartTime.diffNow("hours").hours;
 
