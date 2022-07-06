@@ -38,7 +38,7 @@ export type LfgPost = {
   lfgId: string;
   applicants?: Applicant[];
   creationTime: string;
-  autoDelete: boolean;
+  repeat: boolean;
 };
 
 type Props = {

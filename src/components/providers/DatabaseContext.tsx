@@ -111,14 +111,31 @@ export function DatabaseProvider({ children }: Props) {
     // note, this wont be updated to database before somone does some change to any lfg post (could cause issues?)
     function filterOldPosts(posts: LfgPost[]): LfgPost[] {
       return posts.filter((post) => {
-        // ignore filter if autodelete is diasbled
-        if (!post.autoDelete) return true;
+        // ignore filter if repeat is enabled
+        if (post.repeat) return true;
         const postStartTime = DateTime.fromISO(post.startTime);
         const diff = postStartTime.diffNow("hours").hours;
 
         // delete 10 hour or older posts
         if (diff < -10) return false;
         return true;
+      });
+    }
+    function updateRepeatLfgPosts(posts: LfgPost[]): LfgPost[] {
+      return posts.map((post) => {
+        if (post.repeat) {
+          const postStartTime = DateTime.fromISO(post.startTime);
+          const diff = postStartTime.diffNow("hours").hours;
+          // update post after 30min from start time
+          if (diff < -1) {
+            const oldStartTime = new Date(post.startTime);
+            const newStartTime = oldStartTime.setDate(
+              oldStartTime.getDate() + 7
+            );
+            post.startTime = new Date(newStartTime).toJSON();
+          }
+        }
+        return post;
       });
     }
     getData(Paths.LFG_POSTS, (data) => {
@@ -143,7 +160,7 @@ export function DatabaseProvider({ children }: Props) {
         }
       });
 
-      setLfgPosts(filterOldPosts(sortedPosts));
+      setLfgPosts(filterOldPosts(updateRepeatLfgPosts(sortedPosts)));
     });
   }
 

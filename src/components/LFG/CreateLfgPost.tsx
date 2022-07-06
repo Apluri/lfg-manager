@@ -47,7 +47,7 @@ export function CreateLfgPost({
   const [startTime, setStartTime] = useState<Date>(new Date());
   const [timeHelper, setTimeHelper] = useState<string>("");
 
-  const [autoDelete, setAutoDelete] = useState<boolean>(false);
+  const [repeat, setRepeat] = useState<boolean>(false);
   const [error, setError] = useState(false);
 
   const auth = useAuth();
@@ -57,6 +57,7 @@ export function CreateLfgPost({
       setTitle(editExistingPost.title);
       setStartTime(new Date(editExistingPost.startTime));
       setSelectedRaid(editExistingPost.raid);
+      setRepeat(editExistingPost.repeat);
     }
   }, [editExistingPost, handleClose]);
 
@@ -140,7 +141,7 @@ export function CreateLfgPost({
       lfgId: editExistingPost?.lfgId ?? uuidv4(),
       applicants: editExistingPost?.applicants ?? [],
       creationTime: new Date().toJSON(),
-      autoDelete,
+      repeat: repeat,
     };
     return post;
   }
@@ -230,11 +231,11 @@ export function CreateLfgPost({
               <FormControlLabel
                 control={
                   <Checkbox
-                    checked={autoDelete}
-                    onChange={(event) => setAutoDelete(event.target.checked)}
+                    checked={repeat}
+                    onChange={(event) => setRepeat(event.target.checked)}
                   />
                 }
-                label="Auto delete"
+                label="Repeat automatically"
               />
             </FormGroup>
           </Box>

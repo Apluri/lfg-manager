@@ -18,6 +18,7 @@ import { useDatabase } from "../providers/DatabaseContext";
 import { useAuth } from "../providers/AuthContext";
 import PersonOffOutlinedIcon from "@mui/icons-material/PersonOffOutlined";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
+import RepeatIcon from "@mui/icons-material/Repeat";
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
@@ -86,11 +87,18 @@ export function RaidList({
           justifyContent: "space-between",
         }}
       >
-        {isUserInRaid() ? (
-          <PersonOutlineOutlinedIcon color="success" />
-        ) : (
-          <PersonOffOutlinedIcon color="disabled" />
-        )}
+        <Box>
+          {isUserInRaid() ? (
+            <PersonOutlineOutlinedIcon color="success" />
+          ) : (
+            <PersonOffOutlinedIcon color="disabled" />
+          )}
+          {post.repeat ? (
+            <RepeatIcon color="success" />
+          ) : (
+            <RepeatIcon color="disabled" />
+          )}
+        </Box>
 
         <Typography>
           {applicants?.length ?? 0} / {raidSize}
