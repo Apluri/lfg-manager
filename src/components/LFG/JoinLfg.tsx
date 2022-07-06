@@ -2,9 +2,6 @@ import {
   Autocomplete,
   Avatar,
   Button,
-  FormControl,
-  InputLabel,
-  MenuItem,
   Modal,
   Paper,
   TextField,
@@ -13,14 +10,7 @@ import {
 } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useEffect, useState } from "react";
-import {
-  Character,
-  classIcons,
-  ClassNames,
-  getClassNameList,
-} from "../../utils/CharacterUtils";
-import { LfgPost } from "./LfgPosts";
-import Select, { StylesConfig, Theme, ThemeConfig } from "react-select";
+import { Character, classIcons } from "../../utils/CharacterUtils";
 import { useDatabase } from "../providers/DatabaseContext";
 
 export type Props = {
@@ -31,13 +21,11 @@ export type Props = {
 };
 export function JoinLfg({ visible, onJoin, handleClose, characters }: Props) {
   const db = useDatabase();
-  const [selectedClass, setSelectedClass] = useState<Character>(characters[0]);
-  const [charList, setCharList] = useState<Character[]>([...characters]);
-  const themeColors = useTheme().palette;
+  const [selectedClass, setSelectedClass] = useState<Character | null>(null);
+
   useEffect(() => {
     if (characters) {
-      setSelectedClass(characters[0]);
-      setCharList([...characters]);
+      setSelectedClass(null);
     }
   }, [characters]);
 
@@ -65,72 +53,57 @@ export function JoinLfg({ visible, onJoin, handleClose, characters }: Props) {
     })
     .sort((a, b) => -b.owner[0].localeCompare(a.owner[0]));
 
-  function getIconSrc() {
-    if (selectedClass) {
-      return classIcons[selectedClass?.character];
-    } else return classIcons.NoClassSelected;
+  function getIconSrc(char: Character) {
+    console.log(char.charName);
+    return classIcons[char.character];
   }
-  function handleSelection(char: Character) {
-    if (char !== undefined && char !== null) setSelectedClass(char);
+  function handleSelection(char: Character | null) {
+    setSelectedClass(char);
   }
 
-  function customTheme(theme: Theme) {
-    return {
-      ...theme,
-      colors: {
-        ...theme.colors,
-        danger: "#DE350B",
-        dangerLight: "#FFBDAD",
-        neutral90: "hsl(0, 0%, 100%)",
-        neutral80: "hsl(0, 0%, 95%)",
-        neutral70: "hsl(0, 0%, 90%)",
-        neutral60: "hsl(0, 0%, 80%)",
-        neutral50: "hsl(0, 0%, 70%)",
-        neutral40: "hsl(0, 0%, 60%)",
-        neutral30: "hsl(0, 0%, 50%)",
-        neutral20: "hsl(0, 0%, 40%)",
-        neutral10: "hsl(0, 0%, 30%)",
-        neutral5: "hsl(0, 0%, 20%)",
-        neutral0: themeColors.background.default,
-        primary: themeColors.grey[500],
-        primary75: themeColors.primary.dark,
-        primary50: themeColors.primary.dark,
-        primary25: themeColors.primary.dark,
-      },
-    };
-  }
   if (!characters) <></>;
   return (
     <Modal open={visible} onClose={handleClose} sx={styles.modal}>
       <Paper sx={styles.container}>
         <Typography> Select character you wish to join party with</Typography>
-        {/**
-         *   <Select<Character>
-          options={charList}
-          value={selectedClass}
-          theme={(theme) => theme && customTheme(theme)}
-          name="Character"
-          getOptionValue={(char: Character) => char.id}
-          getOptionLabel={(char: Character) =>
-            `${char.charName} ${char.itemLevel}`
-          }
-          isClearable={true}
-          onChange={(char) => char && handleSelection(char)}
-        />
-         */}
+
         <Autocomplete
           options={options}
           groupBy={(option) => option.owner}
-          getOptionLabel={(option) => option.char.charName}
+          getOptionLabel={(option) =>
+            `${option.char.charName} ${option.char.itemLevel} `
+          }
+          renderOption={(props, option) => (
+            <Box {...props} component="li">
+              <Avatar
+                src={getIconSrc(option.char)}
+                sx={{ width: 30, height: 30 }}
+              />
+              <Typography
+                sx={{ marginLeft: "5px" }}
+              >{`${option.char.charName} ${option.char.itemLevel}`}</Typography>
+            </Box>
+          )}
           renderInput={(params) => (
-            <TextField {...params} label={"Search characters"} />
+            <TextField
+              {...params}
+              InputProps={{
+                ...params.InputProps,
+                startAdornment: selectedClass && (
+                  <Avatar src={getIconSrc(selectedClass)} />
+                ),
+              }}
+              label={"Search characters"}
+            />
           )}
           isOptionEqualToValue={(option, val) => option.char.id == val.char.id}
-          onChange={(event, value) => value && handleSelection(value.char)}
+          onChange={(event, value) => handleSelection(value?.char ?? null)}
         />
         <Box sx={styles.actionButtons}>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={() => onJoin(selectedClass)}>Confrim</Button>
+          <Button onClick={() => selectedClass && onJoin(selectedClass)}>
+            Confrim
+          </Button>
         </Box>
       </Paper>
     </Modal>
