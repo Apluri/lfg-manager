@@ -62,7 +62,6 @@ export function CreateLfgPost({
   }, [editExistingPost, handleClose]);
 
   function isInputsValid() {
-    console.log(selectedRaid);
     const isTitleValid = validateTitle();
     const isRaidSelectionValid = validateRaidSelection();
     const isTimeValid = validateTime();
@@ -106,7 +105,6 @@ export function CreateLfgPost({
 
       return false;
     } else {
-      console.log("title reset");
       setTitleHelper("");
       return true;
     }
