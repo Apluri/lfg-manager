@@ -22,15 +22,15 @@ Link to our guild app: https://cuteapp-df5c1.web.app/
 
 ### Dashboard
 
-![Dashboard preview](screenshots/dashboard.png?raw=true)
+![Dashboard preview](https://github.com/Apluri/lfg-manager/blob/master/screenshots/dashboard.PNG?raw=true)
 
 ### Create LFG
 
-![Dashboard preview](screenshots/createRaid.png?raw=true)
+![Dashboard preview](https://github.com/Apluri/lfg-manager/blob/master/screenshots/createRaid.PNG?raw=true)
 
 ### Create character
 
-![Dashboard preview](screenshots/createChar.png?raw=true)
+![Dashboard preview](https://github.com/Apluri/lfg-manager/blob/master/screenshots/createChar.PNG?raw=true)
 
 ## Host your own version
 
