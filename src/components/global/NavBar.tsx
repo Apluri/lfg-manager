@@ -89,7 +89,7 @@ export default function NavBar({ setSideBarMargin }: Props) {
 
           <Box className="appTitleContainer" onClick={() => navigate("/")}>
             <Typography variant="h4" sx={{ paddingRight: "10px" }}>
-              Cute guild
+              Cute Guild
             </Typography>
             <Avatar src={cuteLogo} sx={{ alignSelf: "center" }} />
           </Box>

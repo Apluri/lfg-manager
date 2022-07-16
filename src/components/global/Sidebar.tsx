@@ -57,7 +57,9 @@ export function Sidebar({ width, setWidth, setSideBarMargin }: Props) {
           <Typography variant="caption" sx={{ letterSpacing: 3 }}>
             Actions
           </Typography>
-          <Button onClick={() => auth?.logOut()}>Log out</Button>
+          {auth?.currentUser && (
+            <Button onClick={() => auth?.logOut()}>Log out</Button>
+          )}
         </Box>
       </Box>
     </Box>

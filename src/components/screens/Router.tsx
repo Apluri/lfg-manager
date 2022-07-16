@@ -1,5 +1,4 @@
 import { Box } from "@mui/system";
-import React from "react";
 import { Route, Routes } from "react-router-dom";
 import { useAuth } from "../providers/AuthContext";
 import { Profile } from "../users/Profile";
