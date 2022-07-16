@@ -11,7 +11,7 @@ export function LoginButtons() {
       sx={{
         display: "flex",
         flexDirection: "column",
-        padding: "2em",
+        padding: "1em",
       }}
     >
       <Button

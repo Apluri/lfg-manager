@@ -30,31 +30,35 @@ export function FeatureIntro() {
           alignItems: "center",
         }}
       >
-        <Typography variant="h2">Core features</Typography>
+        <Box>
+          <Typography variant="h2">Core features</Typography>
 
-        <ul>
-          <li>
-            <Typography>Create / edit raid LFG</Typography>
-          </li>
-          <li>
-            <Typography>Join / leave raid LFG</Typography>
-          </li>
-          <li>
-            <Typography>Create / edit your characters</Typography>
-          </li>
-          <li>
-            <Typography>
-              <span style={{ fontWeight: "bold" }}>Admin / LFG post owner</span>{" "}
-              edit raid applicants
-            </Typography>
-          </li>
-          <li>
-            <Typography>
-              <span style={{ fontWeight: "bold" }}>Admin</span> edit user
-              permissions
-            </Typography>
-          </li>
-        </ul>
+          <ul>
+            <li>
+              <Typography>Create / edit raid LFG</Typography>
+            </li>
+            <li>
+              <Typography>Join / leave raid LFG</Typography>
+            </li>
+            <li>
+              <Typography>Create / edit your characters</Typography>
+            </li>
+            <li>
+              <Typography>
+                <span style={{ fontWeight: "bold" }}>
+                  Admin / LFG post owner
+                </span>{" "}
+                edit raid applicants
+              </Typography>
+            </li>
+            <li>
+              <Typography>
+                <span style={{ fontWeight: "bold" }}>Admin</span> edit user
+                permissions
+              </Typography>
+            </li>
+          </ul>
+        </Box>
       </Box>
     </Paper>
   );
