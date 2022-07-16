@@ -225,14 +225,6 @@ export function LfgPosts({ lfgFilters }: Props) {
         flexDirection: "column",
       }}
     >
-      {isDisabledForCurrentUser() && (
-        <Alert severity="warning" sx={{ marginBottom: "2em" }}>
-          {auth?.currentUser?.isAnonymous
-            ? "Editing content disabled for anonymous users, please create user if you wish to use the application"
-            : "No permissions to edit or join LFG posts, contact Cute Guild admins to get permissions"}
-        </Alert>
-      )}
-
       <Box sx={{ display: "flex", flexDirection: "column" }}>
         {getFilteredLfgPosts().map((post, index) => {
           return (
