@@ -4,8 +4,10 @@ import Valtan from "../../../assets/images/splashArt/Splash8.png";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import { IconButton } from "@mui/material";
 import { LoginButtons } from "./LoginButtons";
-
+import useMediaQuery from "@mui/material/useMediaQuery";
 export function PageIntro() {
+  const isMobile = useMediaQuery("(max-width:768px)");
+  const isTablet = useMediaQuery("(max-width:1000px)");
   const handleGitClick = () => {
     window.open("https://github.com/Apluri/lfg-manager");
   };
@@ -13,7 +15,7 @@ export function PageIntro() {
     <Box
       sx={{
         display: "flex",
-        flexDirection: "row",
+        flexDirection: isTablet ? "column" : "row",
         padding: "2em",
       }}
     >
@@ -43,16 +45,18 @@ export function PageIntro() {
           </IconButton>
         </Box>
       </Box>
-      <Box
-        sx={{
-          display: "flex",
-          flex: 1,
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
-        <img src={Valtan} style={{ maxWidth: 800 }} />
-      </Box>
+      {!isMobile && (
+        <Box
+          sx={{
+            display: "flex",
+            flex: 1,
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <img src={Valtan} style={{ maxWidth: "90%", height: "auto" }} />
+        </Box>
+      )}
     </Box>
   );
 }

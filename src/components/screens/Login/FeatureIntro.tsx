@@ -1,26 +1,32 @@
-import { Paper, Typography } from "@mui/material";
+import { Paper, Typography, useMediaQuery } from "@mui/material";
 import { Box } from "@mui/system";
 import Valtan from "../../../assets/images/dashboard.jpg";
 
 export function FeatureIntro() {
+  const isMobile = useMediaQuery("(max-width:768px)");
+  const isTablet = useMediaQuery("(max-width:1000px)");
+
   return (
     <Paper
       sx={{
         display: "flex",
-        flexDirection: "row",
+        flexDirection: isTablet ? "column" : "row",
         padding: "2em",
       }}
     >
-      <Box
-        sx={{
-          display: "flex",
-          flex: 1,
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
-        <img src={Valtan} style={{ maxWidth: 800 }} />
-      </Box>
+      {!isMobile && (
+        <Box
+          sx={{
+            display: "flex",
+            flex: 1,
+            flexDirection: "column",
+            alignItems: "center",
+            order: isTablet ? 2 : 1,
+          }}
+        >
+          <img src={Valtan} style={{ maxWidth: "90%", height: "auto" }} />
+        </Box>
+      )}
       <Box
         sx={{
           display: "flex",
@@ -28,6 +34,7 @@ export function FeatureIntro() {
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
+          order: 1,
         }}
       >
         <Box>

@@ -1,13 +1,17 @@
 import { Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import MemePlans from "../../../assets/images/memeplans.png";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 export function FuturePlansIntro() {
+  const isMobile = useMediaQuery("(max-width:768px)");
+  const isTablet = useMediaQuery("(max-width:1000px)");
+
   return (
     <Box
       sx={{
         display: "flex",
-        flexDirection: "row",
+        flexDirection: isTablet ? "column" : "row",
         padding: "2em",
       }}
     >
@@ -38,16 +42,18 @@ export function FuturePlansIntro() {
           </ul>
         </Box>
       </Box>
-      <Box
-        sx={{
-          display: "flex",
-          flex: 1,
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
-        <img src={MemePlans} style={{ maxWidth: 800 }} />
-      </Box>
+      {!isMobile && (
+        <Box
+          sx={{
+            display: "flex",
+            flex: 1,
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <img src={MemePlans} style={{ maxWidth: "90%", height: "auto" }} />
+        </Box>
+      )}
     </Box>
   );
 }
