@@ -1,10 +1,10 @@
 
-.applicantContainer {
+.applicant-container {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
 }
-.applicantCard {
+.applicant-card {
     display: flex;
     min-width: 250px;
     height: 40px;
@@ -14,7 +14,7 @@
     margin: 5px;
     align-items: center;
 }
-.copyCharname {
+.copy-character-name {
     display:none;
 }
 
@@ -22,7 +22,7 @@
     .screen-container{
         flex-direction: row;
     }
-    .copyCharname {
+    .copy-character-name {
         display: initial;
     }
 }

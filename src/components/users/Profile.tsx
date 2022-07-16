@@ -43,10 +43,14 @@ export function Profile({ style, stackMinWidth }: Props) {
   if (auth?.currentUser?.isAnonymous)
     return (
       <Box sx={{ ...styles.container, ...style }}>
-        <Typography variant="h6">Profile</Typography>
-        <Alert severity="error">
-          Only non anonymous users can view and edit profile
-        </Alert>
+        <Box className="top-container">
+          <Typography variant="h6">Profile</Typography>
+
+          <Button disabled={true}> Add character</Button>
+          <Alert severity="warning">
+            Only non anonymous users can view and edit profile
+          </Alert>
+        </Box>
       </Box>
     );
   return (

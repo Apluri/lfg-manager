@@ -114,7 +114,7 @@ export function RaidList({
       </Box>
 
       <Collapse in={open}>
-        <Box className="applicantContainer">{displaySlots(0, raidSize)}</Box>
+        <Box className="applicant-container">{displaySlots(0, raidSize)}</Box>
       </Collapse>
     </Box>
   );

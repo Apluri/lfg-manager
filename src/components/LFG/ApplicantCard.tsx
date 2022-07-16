@@ -81,7 +81,7 @@ export function ApplicantCard({ applicant, handleLeaveRaid, post }: Props) {
   }
   return (
     <Paper
-      className="applicantCard"
+      className="applicant-card"
       elevation={6}
       sx={{
         justifyContent: "space-between",
@@ -143,7 +143,7 @@ export function ApplicantCard({ applicant, handleLeaveRaid, post }: Props) {
       </Box>
 
       <Box>
-        <Box className="copyCharname">
+        <Box className="copy-character-name">
           <IconButton
             onClick={() => {
               handleCopyClick();
