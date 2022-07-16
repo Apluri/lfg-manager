@@ -3,6 +3,7 @@ import { Box } from "@mui/system";
 import Valtan from "../../../assets/images/splashArt/Splash8.png";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import { IconButton } from "@mui/material";
+import { LoginButtons } from "./LoginButtons";
 
 export function PageIntro() {
   const handleGitClick = () => {
@@ -34,6 +35,7 @@ export function PageIntro() {
           created to help guild leaders plan out upcoming raids and guild
           events.
         </Typography>
+        <LoginButtons />
         <Box sx={{ display: "flex", paddingTop: "1em", alignItems: "center" }}>
           <Typography>Check out the project repository</Typography>
           <IconButton size="large" onClick={handleGitClick}>
