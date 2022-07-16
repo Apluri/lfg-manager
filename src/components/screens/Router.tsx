@@ -6,7 +6,7 @@ import { Profile } from "../users/Profile";
 import { AdminPanel } from "./AdminPanel";
 import Home from "./Home";
 import { LfgScreen } from "./LfgScreen";
-import { Login } from "./Login";
+import { Login } from "./Login/Login";
 
 type Props = {
   marginLeft: number;

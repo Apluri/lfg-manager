@@ -1,9 +1,11 @@
 import { Button, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { Paper } from "@mui/material";
-import React from "react";
-import { useAuth } from "../providers/AuthContext";
+import { useAuth } from "../../providers/AuthContext";
 import GoogleIcon from "@mui/icons-material/Google";
+import { PageIntro } from "./PageIntro";
+import { FeatureIntro } from "./FeatureIntro";
+import { FuturePlansIntro } from "./FuturePlansIntro";
 
 export function Login() {
   const auth = useAuth();
@@ -19,28 +21,11 @@ export function Login() {
         sx={{
           display: "flex",
           flexDirection: "column",
-          maxWidth: 700,
         }}
       >
-        <Paper sx={{ padding: "2em" }}>
-          <Typography variant="h4">
-            Welcome to the official Cute Guild web application
-          </Typography>
-          <Typography sx={{ paddingTop: "1em" }}>
-            This application is created for managing guild content for Lost Ark
-            game.
-          </Typography>
-          <Typography sx={{ paddingTop: "1em" }}>
-            Core features include: manage raid times, manage raid members,
-            manage roster.
-          </Typography>
-
-          <Typography sx={{ paddingTop: "1em" }}>
-            Future plans: add calendar view for raids, add raid categories for
-            easy filtering, add raid party management, add discord login with
-            discord notifications.
-          </Typography>
-        </Paper>
+        <PageIntro />
+        <FeatureIntro />
+        <FuturePlansIntro />
 
         <Paper
           sx={{
