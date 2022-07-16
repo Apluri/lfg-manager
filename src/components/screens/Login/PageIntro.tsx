@@ -22,6 +22,8 @@ export function PageIntro() {
           flex: 1,
           flexDirection: "column",
           justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
         }}
       >
         <Typography variant="h2">
@@ -44,7 +46,7 @@ export function PageIntro() {
           display: "flex",
           flex: 1,
           flexDirection: "column",
-          justifyContent: "center",
+          alignItems: "center",
         }}
       >
         <img src={Valtan} style={{ maxWidth: 800 }} />
