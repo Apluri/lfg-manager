@@ -1,11 +1,11 @@
-import { Alert, Button, Stack, Typography, useTheme } from "@mui/material";
+import { Alert, Button, Stack, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import React, { useEffect, useState } from "react";
-import { Character, ClassNames } from "../../utils/CharacterUtils";
+import React, { useState } from "react";
+import { Character } from "../../utils/CharacterUtils";
 import { CharacterCard } from "../classes/CharacterCard";
 import { CreateCharacterModal } from "../classes/CreateCharacterModal";
 import { useAuth } from "../providers/AuthContext";
-import { UserData, useDatabase } from "../providers/DatabaseContext";
+import { useDatabase, Roles } from "../providers/DatabaseContext";
 import { EditUserName } from "./EditUserName";
 import { ProfileInfo } from "./ProfileInfo";
 
@@ -17,7 +17,6 @@ type Props = {
 export function Profile({ style, stackMinWidth }: Props) {
   const db = useDatabase();
   const auth = useAuth();
-  const themeColors = useTheme().palette;
   const [editUserName, setEditUserName] = useState<boolean>(false);
   const [addCharacterVisible, setAddCharacterVisible] =
     useState<boolean>(false);
@@ -39,16 +38,31 @@ export function Profile({ style, stackMinWidth }: Props) {
     db?.editUserName(newUserName);
     setEditUserName(false);
   }
+  function isQuest(): boolean {
+    return db?.user?.role === Roles.QUEST;
+  }
 
   if (auth?.currentUser?.isAnonymous)
     return (
       <Box sx={{ ...styles.container, ...style }}>
-        <Typography variant="h6">Profile</Typography>
-        <Alert severity="error">
-          Only non anonymous users can view and edit profile
-        </Alert>
+        <Box className="top-container" sx={{ minHeight: "200px" }}>
+          <Box
+            sx={{
+              flex: 1,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Typography variant="h6">PROFILE</Typography>
+          </Box>
+          <Alert severity="warning">
+            Only non anonymous users can view and edit profile
+          </Alert>
+        </Box>
       </Box>
     );
+
   return (
     <Box
       sx={{
@@ -56,7 +70,10 @@ export function Profile({ style, stackMinWidth }: Props) {
         ...style,
       }}
     >
-      <Box className="top-container">
+      <Box
+        className="top-container"
+        sx={{ minHeight: isQuest() ? "200px" : "150px" }}
+      >
         <Box sx={styles.userInfoContainer}>
           <EditUserName
             visible={editUserName}
@@ -66,10 +83,16 @@ export function Profile({ style, stackMinWidth }: Props) {
               setEditUserName(false);
             }}
           />
+          <Typography variant="h6">PROFILE</Typography>
 
           <ProfileInfo onClick={() => setEditUserName(true)} />
+          <Button onClick={openModal}>Add character</Button>
         </Box>
-        <Button onClick={openModal}>Add character</Button>
+        {auth?.currentUser?.isAnonymous && (
+          <Alert severity="warning" sx={{ alignSelf: "flex-end" }}>
+            Only non anonymous users can view and edit profile
+          </Alert>
+        )}
         <CreateCharacterModal
           visible={addCharacterVisible}
           handleClose={closeModal}
@@ -101,8 +124,10 @@ const styles: { [key: string]: React.CSSProperties } = {
 
   userInfoContainer: {
     display: "flex",
-    flexDirection: "row",
+    flex: 1,
+    flexDirection: "column",
     alignItems: "center",
+    justifyContent: "center",
   },
   rowContainer: {},
   text: {

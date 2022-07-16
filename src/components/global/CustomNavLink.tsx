@@ -39,7 +39,7 @@ export function CustomNavLink({ to, label }: Props) {
     <NavLink
       onMouseEnter={(e) => handleMouseEnter(e)}
       onMouseLeave={(e) => handleMouseLeave(e)}
-      className="sideBarLink"
+      className="sidebar-link"
       style={({ isActive }) => {
         if (hover) return hoverStyle;
         if (isActive) return activeStyle;

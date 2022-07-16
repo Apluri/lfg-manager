@@ -1,4 +1,4 @@
-import { Button, Typography } from "@mui/material";
+import { Alert, Button, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useState } from "react";
 import { LostArkRaidNames } from "../../utils/RaidUtils";
@@ -40,22 +40,46 @@ export function LfgScreen({ style }: Props) {
         ...style,
       }}
     >
-      <Box className="top-container">
-        <Typography variant="h6">LFG</Typography>
-        <LfgFilterButtons lfgFilters={lfgFilters} toggleFilter={toggleFilter} />
-        <Button
-          onClick={() => setCreateLfgPostVisible(true)}
-          disabled={isDisabledForCurrentUser()}
+      <Box
+        className="top-container"
+        sx={{ minHeight: isDisabledForCurrentUser() ? "200px" : "150px" }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            flex: 1,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
         >
-          Create lfg post
-        </Button>
+          <Typography variant="h6">LFG</Typography>
+          <LfgFilterButtons
+            lfgFilters={lfgFilters}
+            toggleFilter={toggleFilter}
+          />
+          <Button
+            onClick={() => setCreateLfgPostVisible(true)}
+            disabled={isDisabledForCurrentUser()}
+          >
+            Create lfg post
+          </Button>
 
-        <CreateLfgPost
-          visible={createLfgPostVisible}
-          handleClose={() => setCreateLfgPostVisible(false)}
-          handleAddNewPost={(post: LfgPost) => db?.addLfgPost(post)}
-        />
+          <CreateLfgPost
+            visible={createLfgPostVisible}
+            handleClose={() => setCreateLfgPostVisible(false)}
+            handleAddNewPost={(post: LfgPost) => db?.addLfgPost(post)}
+          />
+        </Box>
+        {isDisabledForCurrentUser() && (
+          <Alert severity="warning">
+            {auth?.currentUser?.isAnonymous
+              ? "Editing content disabled for anonymous users, please create user if you wish to use the application"
+              : "No permissions to edit or join LFG posts, contact Cute Guild admins to get permissions"}
+          </Alert>
+        )}
       </Box>
+
       <LfgPosts lfgFilters={lfgFilters} />
     </Box>
   );

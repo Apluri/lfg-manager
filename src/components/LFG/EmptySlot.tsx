@@ -4,7 +4,7 @@ import { Paper, Typography } from "@mui/material";
 export function EmptySlot() {
   return (
     <Paper
-      className="applicantCard"
+      className="applicant-card"
       sx={{ justifyContent: "center" }}
       elevation={2}
     >

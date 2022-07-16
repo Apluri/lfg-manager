@@ -35,13 +35,13 @@ export function Sidebar({ width, setWidth, setSideBarMargin }: Props) {
   };
 
   return (
-    <Box className="sideBar" sx={{ width: width + "px" }}>
+    <Box className="sidebar" sx={{ width: width + "px" }}>
       <IconButton className="closeBtn" onClick={closeSideBar}>
         <CloseIcon />
       </IconButton>
 
-      <Box className="sideBarContainer">
-        <Box className="sideBarLinkContainer">
+      <Box className="sidebar-container">
+        <Box className="sidebar-link-container">
           <Typography variant="caption" sx={{ letterSpacing: 3 }}>
             Navigation
           </Typography>
@@ -53,11 +53,13 @@ export function Sidebar({ width, setWidth, setSideBarMargin }: Props) {
             <CustomNavLink to="admin" label="Admin" />
           )}
         </Box>
-        <Box className="sideBarActionContainer">
+        <Box className="sidebar-action-container">
           <Typography variant="caption" sx={{ letterSpacing: 3 }}>
             Actions
           </Typography>
-          <Button onClick={() => auth?.logOut()}>Log out</Button>
+          {auth?.currentUser && (
+            <Button onClick={() => auth?.logOut()}>Log out</Button>
+          )}
         </Box>
       </Box>
     </Box>

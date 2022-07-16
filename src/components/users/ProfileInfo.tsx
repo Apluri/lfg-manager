@@ -13,7 +13,9 @@ export function ProfileInfo({ onClick }: Props) {
       onClick={(e) => onClick && onClick(e)}
       sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}
     >
-      <Typography variant="h6">{username && username}</Typography>
+      <Typography variant="h6">
+        {username ? username : "Anonymous user"}
+      </Typography>
     </Box>
   );
 }

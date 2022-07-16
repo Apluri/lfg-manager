@@ -1,12 +1,11 @@
 import { Box } from "@mui/system";
-import React from "react";
 import { Route, Routes } from "react-router-dom";
 import { useAuth } from "../providers/AuthContext";
 import { Profile } from "../users/Profile";
 import { AdminPanel } from "./AdminPanel";
 import Home from "./Home";
 import { LfgScreen } from "./LfgScreen";
-import { Login } from "./Login";
+import { Login } from "./Login/Login";
 
 type Props = {
   marginLeft: number;
@@ -17,7 +16,7 @@ export function Router({ marginLeft }: Props) {
   if (auth?.currentUser?.uid === undefined)
     return (
       <Box
-        className="routerContainer"
+        className="router-container"
         sx={{
           margin: "2em",
           marginTop: "1em",
@@ -29,7 +28,7 @@ export function Router({ marginLeft }: Props) {
     );
   return (
     <Box
-      className="routerContainer"
+      className="router-container"
       sx={{
         margin: "2em",
         marginTop: "1em",
