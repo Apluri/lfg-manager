@@ -1,6 +1,6 @@
 import { Paper, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import Valtan from "../../../assets/images/splashArt/Splash8.png";
+import Valtan from "../../../assets/images/splashArt/valtan.png";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import { IconButton } from "@mui/material";
 import { LoginButtons } from "./LoginButtons";
@@ -51,6 +51,7 @@ export function PageIntro() {
             display: "flex",
             flex: 1,
             flexDirection: "column",
+            justifyContent: "center",
             alignItems: "center",
           }}
         >
