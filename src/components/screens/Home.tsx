@@ -5,7 +5,7 @@ import "./Home.css";
 
 function Home() {
   return (
-    <Box className="screenContainer">
+    <Box className="screen-container">
       <LfgScreen
         style={{
           flex: 1,

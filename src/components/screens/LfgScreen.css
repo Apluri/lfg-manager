@@ -19,7 +19,7 @@
 }
 
 @media only screen and (min-width: 768px) {
-    .screenContainer{
+    .screen-container{
         flex-direction: row;
     }
     .copyCharname {

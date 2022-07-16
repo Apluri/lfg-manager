@@ -11,7 +11,7 @@
   
 }
 
-.sideBar {
+.sidebar {
   height: 100vh; /* Specify a height */
   width: 0; /* 0 width - change this with JavaScript */
   position: fixed; /* Stay in place */
@@ -24,38 +24,38 @@
   transition: 0.5s; /* 0.5 second transition effect to slide in the sidepanel */
 
 }
-.sideBar > div {
+.sidebar > div {
   padding-left: 10px;
 }
-.sideBarLink{
+.sidebar-link{
   font-size: 30px;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   transition: 0.5s;
 }
 
-.sideBarLink:hover {
+.sidebar-link:hover {
   transform: translateX(5px);
 }
 
 
-.sideBar .closeBtn {
+.sidebar .closeBtn {
   position: absolute;
   top: 10px;
   right: 10px;
 }
 
-.sideBarLinkContainer {
+.sidebar-link-container {
   display: flex;
   flex-direction: column;
   text-decoration: none;
   flex: 1;
 }
-.sideBarContainer {
+.sidebar-container {
   display: flex;
   height: 100%;
   flex-direction: column;
 }
-.sideBarActionContainer {
+.sidebar-action-container {
   display: flex;
   flex: 1;
   justify-content: flex-end;
@@ -66,14 +66,14 @@
 p {
   color: "red";
 }
-.screenContainer {
+.screen-container {
   display: flex;
   flex-direction: column;
 }
-.profileBtn {
+.profile-btn {
   display: none;
 }
-.appTitleContainer {
+.app-title-container {
 
   display: flex;
   justify-content: center;
@@ -92,18 +92,18 @@ p {
   min-height: 150px;
 }
 @media only screen and (min-width: 768px) {
-  .screenContainer{
+  .screen-container{
       flex-direction: row;
   
   }
-  .screenContainer > :first-child {
+  .screen-container > :first-child {
     margin-right: 2em
   }
-  .routerContainer {
+  .router-container {
     transition: 0.5s;
   }
  
-  .profileBtn {
+  .profile-btn {
     display: flex;
     flex: 1;
     justify-content: flex-end;

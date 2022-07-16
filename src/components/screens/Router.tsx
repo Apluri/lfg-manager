@@ -16,7 +16,7 @@ export function Router({ marginLeft }: Props) {
   if (auth?.currentUser?.uid === undefined)
     return (
       <Box
-        className="routerContainer"
+        className="router-container"
         sx={{
           margin: "2em",
           marginTop: "1em",
@@ -28,7 +28,7 @@ export function Router({ marginLeft }: Props) {
     );
   return (
     <Box
-      className="routerContainer"
+      className="router-container"
       sx={{
         margin: "2em",
         marginTop: "1em",

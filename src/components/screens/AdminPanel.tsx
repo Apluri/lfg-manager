@@ -30,7 +30,7 @@ export function AdminPanel() {
 
   return (
     <Box
-      className="screenContainer"
+      className="screen-container"
       sx={{
         justifyContent: "center",
         alignItems: "center",
