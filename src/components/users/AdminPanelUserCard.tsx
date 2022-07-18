@@ -84,7 +84,10 @@ export function AdminPanelUserCard({ user, userId }: Props) {
 
       <Dialog
         open={confirmDialogOpen}
-        onClose={() => setConfirmDialogOpen(false)}
+        onClose={() => {
+          setConfirmText("");
+          setConfirmDialogOpen(false);
+        }}
       >
         <DialogTitle>
           {
@@ -101,7 +104,14 @@ export function AdminPanelUserCard({ user, userId }: Props) {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setConfirmDialogOpen(false)}>Cancel</Button>
+          <Button
+            onClick={() => {
+              setConfirmText("");
+              setConfirmDialogOpen(false);
+            }}
+          >
+            Cancel
+          </Button>
           <Button
             disabled={!isMatchingUsername()}
             onClick={() => handleDeleteAccount(userId)}
