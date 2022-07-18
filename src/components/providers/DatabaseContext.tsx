@@ -36,6 +36,7 @@ interface DatabaseContextInterface {
   joinLfg: (post: LfgPost, applicant: Applicant) => Promise<void>;
   leaveLfg: (post: LfgPost, applicant: Applicant) => void;
   editRole: (newRole: Roles, userId: string) => Promise<void>;
+  deleteUser: (targetUserId: string) => void;
 }
 
 export type Users = {
@@ -49,6 +50,9 @@ export type UserData = {
 
 function editUser(user: UserData, userId: string): Promise<void> {
   return set(ref(database, Paths.USERS + userId), user);
+}
+function editUsers(users: Users): Promise<void> {
+  return set(ref(database, Paths.USERS), users);
 }
 function editUserCustomDataAndPath(
   data: any,
@@ -264,6 +268,15 @@ export function DatabaseProvider({ children }: Props) {
       );
     }
   }
+  function deleteUser(targetUserId: string) {
+    if (!allUsers) return;
+
+    allUsers[targetUserId].characters?.forEach((char) =>
+      leaveFromLfgs(char.id)
+    );
+    delete allUsers[targetUserId];
+    editUsers(allUsers);
+  }
   function editUserName(newUserName: string, userId?: string) {
     function getUserId(): string | undefined {
       if (user?.role === Roles.ADMIN && userId) return userId;
@@ -433,6 +446,7 @@ export function DatabaseProvider({ children }: Props) {
     joinLfg,
     leaveLfg,
     editRole,
+    deleteUser,
   };
   return (
     <DbContext.Provider value={value}>

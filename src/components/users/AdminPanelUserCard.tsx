@@ -1,4 +1,5 @@
 import {
+  Button,
   FormControl,
   InputLabel,
   MenuItem,
@@ -60,7 +61,10 @@ export function AdminPanelUserCard({ user, userId }: Props) {
         </Select>
       </FormControl>
 
-      <Typography sx={styles.rowItem}>TODO: del user</Typography>
+      <Button sx={styles.rowItem} onClick={() => db?.deleteUser(userId)}>
+        Delete User
+      </Button>
+
       <EditUserName
         visible={editUserName}
         oldName={user.userName}
