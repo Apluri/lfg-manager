@@ -29,7 +29,7 @@ interface DatabaseContextInterface {
   addCharacter: (newChar: Character) => Promise<void>;
   editCharacter: (editChar: Character) => Promise<void>;
   deleteCharacter: (charToDelete: Character) => void;
-  editUserName: (newUserName: string) => void;
+  editUserName: (newUserName: string, targetUserId?: string) => void;
   addLfgPost: (post: LfgPost) => void;
   editLfgPost: (post: LfgPost) => Promise<void>;
   deleteLfgPost: (post: LfgPost) => Promise<void>;
@@ -264,15 +264,19 @@ export function DatabaseProvider({ children }: Props) {
       );
     }
   }
-  function editUserName(newUserName: string) {
-    if (auth?.currentUser?.uid) {
-      editUserCustomDataAndPath(
-        newUserName,
-        auth.currentUser.uid,
-        Paths.USERNAME
-      );
+  function editUserName(newUserName: string, userId?: string) {
+    function getUserId(): string | undefined {
+      if (user?.role === Roles.ADMIN && userId) return userId;
+      if (userId) return undefined;
+      return auth?.currentUser?.uid;
     }
+
+    const uid = getUserId();
+
+    if (!uid) return;
+    editUserCustomDataAndPath(newUserName, uid, Paths.USERNAME);
   }
+
   function addLfgPost(post: LfgPost) {
     if (lfgPosts) {
       const newPosts: LfgPost[] = [post, ...lfgPosts];

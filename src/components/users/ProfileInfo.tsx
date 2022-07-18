@@ -3,7 +3,7 @@ import { Avatar, Box, Button, Typography } from "@mui/material";
 import { useDatabase, UserData } from "../providers/DatabaseContext";
 
 type Props = {
-  onClick?: (event: any, user: UserData) => void;
+  onClick?: (event: any, user?: UserData) => void;
   user: UserData | null | undefined;
 };
 export function ProfileInfo({ onClick, user }: Props) {
@@ -13,6 +13,7 @@ export function ProfileInfo({ onClick, user }: Props) {
     <Box
       onClick={(e) => {
         if (onClick && user) onClick(e, user);
+        if (onClick) onClick(e);
       }}
       sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}
     >
