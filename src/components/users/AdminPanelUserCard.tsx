@@ -40,9 +40,8 @@ export function AdminPanelUserCard({ user, userId }: Props) {
   }
 
   function handleDeleteAccount(userId: string) {
-    console.log("now deleting user");
     setConfirmDialogOpen(false);
-    //db?.deleteUser(userId)
+    db?.deleteUser(userId);
   }
 
   function isMatchingUsername(): boolean {
