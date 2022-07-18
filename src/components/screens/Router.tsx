@@ -3,6 +3,7 @@ import { Route, Routes } from "react-router-dom";
 import { useAuth } from "../providers/AuthContext";
 import { Profile } from "../users/Profile";
 import { AdminPanel } from "./AdminPanel";
+import { CalendarScreen } from "./Calendar/CalendarScreen";
 import Home from "./Home";
 import { LfgScreen } from "./LfgScreen";
 import { Login } from "./Login/Login";
@@ -40,6 +41,7 @@ export function Router({ marginLeft }: Props) {
         <Route path="/admin" element={<AdminPanel />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/lfg" element={<LfgScreen />} />
+        <Route path="/calendar" element={<CalendarScreen />} />
       </Routes>
     </Box>
   );

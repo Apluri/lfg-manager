@@ -87,7 +87,6 @@ export function CharacterCard({
     if (allLfgPosts === undefined && allLfgPosts === null) return [];
 
     let joinedPostsInfo: PostInfo[] = [];
-    let joinedPostTitles: string[] = [];
     allLfgPosts?.forEach((post) => {
       post.applicants?.forEach((applicant) => {
         if (applicant.character.id === character.id)
