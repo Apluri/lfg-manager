@@ -21,6 +21,8 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { styled } from "@mui/material/styles";
 import { CreateCharacterModal } from "./CreateCharacterModal";
 import { useDatabase } from "../providers/DatabaseContext";
+import { Raid } from "../../utils/RaidUtils";
+import { DateTime } from "luxon";
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
@@ -70,19 +72,33 @@ export function CharacterCard({
     handleClose();
   }
 
-  function getJoinedPostsInfo(): string[] {
+  function getWeekDay(date: Date): string {
+    const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    const dayOfWeek = date.getDay();
+    return days[dayOfWeek];
+  }
+  type PostInfo = {
+    title: string;
+    startTime: Date;
+    raid: Raid;
+  };
+  function getJoinedPostsInfo(): PostInfo[] {
     const allLfgPosts = db?.lfgPosts;
     if (allLfgPosts === undefined && allLfgPosts === null) return [];
 
-    let joinedPostTitles: string[] = [];
+    let joinedPostsInfo: PostInfo[] = [];
     allLfgPosts?.forEach((post) => {
       post.applicants?.forEach((applicant) => {
         if (applicant.character.id === character.id)
-          joinedPostTitles.push(post.title);
+          joinedPostsInfo.push({
+            title: post.title,
+            startTime: new Date(post.startTime),
+            raid: post.raid,
+          });
       });
     });
 
-    return joinedPostTitles;
+    return joinedPostsInfo;
   }
   return (
     <Card sx={containerStyles}>
@@ -114,9 +130,13 @@ export function CharacterCard({
         <CardContent>
           <Box>
             <Typography>Currently applied to</Typography>
-            {getJoinedPostsInfo().map((title, index) => (
+            {getJoinedPostsInfo().map((info, index) => (
               <Typography key={index} variant="body2" color="text.secondary">
-                {title}
+                {`${getWeekDay(info.startTime)}
+                  ${DateTime.fromISO(info.startTime.toJSON()).toLocaleString(
+                    DateTime.TIME_24_SIMPLE
+                  )}
+                ${info.raid.name} ${info.title}`}
               </Typography>
             ))}
           </Box>

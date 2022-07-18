@@ -29,13 +29,14 @@ interface DatabaseContextInterface {
   addCharacter: (newChar: Character) => Promise<void>;
   editCharacter: (editChar: Character) => Promise<void>;
   deleteCharacter: (charToDelete: Character) => void;
-  editUserName: (newUserName: string) => void;
+  editUserName: (newUserName: string, targetUserId?: string) => void;
   addLfgPost: (post: LfgPost) => void;
   editLfgPost: (post: LfgPost) => Promise<void>;
   deleteLfgPost: (post: LfgPost) => Promise<void>;
   joinLfg: (post: LfgPost, applicant: Applicant) => Promise<void>;
   leaveLfg: (post: LfgPost, applicant: Applicant) => void;
   editRole: (newRole: Roles, userId: string) => Promise<void>;
+  deleteUser: (targetUserId: string) => void;
 }
 
 export type Users = {
@@ -49,6 +50,9 @@ export type UserData = {
 
 function editUser(user: UserData, userId: string): Promise<void> {
   return set(ref(database, Paths.USERS + userId), user);
+}
+function editUsers(users: Users): Promise<void> {
+  return set(ref(database, Paths.USERS), users);
 }
 function editUserCustomDataAndPath(
   data: any,
@@ -264,15 +268,28 @@ export function DatabaseProvider({ children }: Props) {
       );
     }
   }
-  function editUserName(newUserName: string) {
-    if (auth?.currentUser?.uid) {
-      editUserCustomDataAndPath(
-        newUserName,
-        auth.currentUser.uid,
-        Paths.USERNAME
-      );
-    }
+  function deleteUser(targetUserId: string) {
+    if (!allUsers) return;
+
+    allUsers[targetUserId].characters?.forEach((char) =>
+      leaveFromLfgs(char.id)
+    );
+    delete allUsers[targetUserId];
+    editUsers(allUsers);
   }
+  function editUserName(newUserName: string, userId?: string) {
+    function getUserId(): string | undefined {
+      if (user?.role === Roles.ADMIN && userId) return userId;
+      if (userId) return undefined;
+      return auth?.currentUser?.uid;
+    }
+
+    const uid = getUserId();
+
+    if (!uid) return;
+    editUserCustomDataAndPath(newUserName, uid, Paths.USERNAME);
+  }
+
   function addLfgPost(post: LfgPost) {
     if (lfgPosts) {
       const newPosts: LfgPost[] = [post, ...lfgPosts];
@@ -429,6 +446,7 @@ export function DatabaseProvider({ children }: Props) {
     joinLfg,
     leaveLfg,
     editRole,
+    deleteUser,
   };
   return (
     <DbContext.Provider value={value}>

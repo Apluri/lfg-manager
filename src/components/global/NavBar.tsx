@@ -13,6 +13,7 @@ import { ProfileInfo } from "../users/ProfileInfo";
 import cuteLogo from "../../assets/images/cute-logo.jpg";
 import { useNavigate } from "react-router-dom";
 import { Sidebar } from "./Sidebar";
+import { useDatabase } from "../providers/DatabaseContext";
 
 const desktopBreakPoint = 768;
 const DESKTOP_SIDEBAR_WIDTH = 250;
@@ -22,6 +23,7 @@ type Props = {
 };
 export default function NavBar({ setSideBarMargin }: Props) {
   const auth = useAuth();
+  const db = useDatabase();
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -105,7 +107,7 @@ export default function NavBar({ setSideBarMargin }: Props) {
                     Anonymous user
                   </Typography>
                 ) : (
-                  <ProfileInfo onClick={handleClick} />
+                  <ProfileInfo onClick={handleClick} user={db?.user} />
                 )}
                 <IconButton onClick={handleClick}>
                   <ArrowDropDownIcon />

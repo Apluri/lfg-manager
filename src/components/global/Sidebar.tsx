@@ -48,6 +48,7 @@ export function Sidebar({ width, setWidth, setSideBarMargin }: Props) {
 
           <CustomNavLink to="/" label="Dashboard" />
           <CustomNavLink to="profile" label="Profile" />
+          <CustomNavLink to="calendar" label="My Calendar" />
           <CustomNavLink to="lfg" label="LFG" />
           {db?.user?.role === Roles.ADMIN && (
             <CustomNavLink to="admin" label="Admin" />

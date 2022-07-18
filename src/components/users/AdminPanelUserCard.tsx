@@ -1,4 +1,10 @@
 import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   FormControl,
   InputLabel,
   MenuItem,
@@ -8,8 +14,10 @@ import {
   Typography,
 } from "@mui/material";
 import { Box } from "@mui/system";
-import React from "react";
+import React, { useState } from "react";
 import { Roles, useDatabase, UserData } from "../providers/DatabaseContext";
+import { EditUserName } from "./EditUserName";
+import { ProfileInfo } from "./ProfileInfo";
 
 type Props = {
   user: UserData;
@@ -17,11 +25,27 @@ type Props = {
 };
 export function AdminPanelUserCard({ user, userId }: Props) {
   const db = useDatabase();
+  const [editUserName, setEditUserName] = useState<boolean>(false);
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState<boolean>(false);
+  const [confirmText, setConfirmText] = useState<string>("");
   function getRolesList(): Roles[] {
     return [Roles.ADMIN, Roles.MEMBER, Roles.QUEST];
   }
   function handleChangeRole(newRole: Roles) {
     db?.editRole(newRole, userId).catch((e) => console.log(e));
+  }
+
+  function handleEditUserName(newUserName: string) {
+    db?.editUserName(newUserName, userId);
+  }
+
+  function handleDeleteAccount(userId: string) {
+    setConfirmDialogOpen(false);
+    db?.deleteUser(userId);
+  }
+
+  function isMatchingUsername(): boolean {
+    return user.userName === confirmText;
   }
   return (
     <Paper
@@ -32,7 +56,9 @@ export function AdminPanelUserCard({ user, userId }: Props) {
         padding: "10px",
       }}
     >
-      <Typography sx={styles.rowItem}>Username: {user.userName}</Typography>
+      <Box sx={styles.rowItem}>
+        <ProfileInfo user={user} onClick={() => setEditUserName(true)} />
+      </Box>
 
       <FormControl>
         <InputLabel id="demo-simple-select-label">Role</InputLabel>
@@ -51,7 +77,56 @@ export function AdminPanelUserCard({ user, userId }: Props) {
         </Select>
       </FormControl>
 
-      <Typography sx={styles.rowItem}>TODO: del user</Typography>
+      <Button sx={styles.rowItem} onClick={() => setConfirmDialogOpen(true)}>
+        Delete User
+      </Button>
+
+      <Dialog
+        open={confirmDialogOpen}
+        onClose={() => {
+          setConfirmText("");
+          setConfirmDialogOpen(false);
+        }}
+      >
+        <DialogTitle>
+          {
+            "CAUTION, this is destructive function and deletes account permanently"
+          }
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Type {user.userName} to confirm deletion
+          </DialogContentText>
+          <TextField
+            value={confirmText}
+            onChange={(value) => setConfirmText(value.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => {
+              setConfirmText("");
+              setConfirmDialogOpen(false);
+            }}
+          >
+            Cancel
+          </Button>
+          <Button
+            disabled={!isMatchingUsername()}
+            onClick={() => handleDeleteAccount(userId)}
+          >
+            Confirm
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <EditUserName
+        visible={editUserName}
+        oldName={user.userName}
+        onClose={(newUserName) => handleEditUserName(newUserName)}
+        onCancel={() => {
+          setEditUserName(false);
+        }}
+      />
     </Paper>
   );
 }
