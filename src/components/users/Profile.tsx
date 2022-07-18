@@ -85,7 +85,7 @@ export function Profile({ style, stackMinWidth }: Props) {
           />
           <Typography variant="h6">PROFILE</Typography>
 
-          <ProfileInfo onClick={() => setEditUserName(true)} user={db?.user} />
+          <ProfileInfo user={db?.user} />
           <Button onClick={openModal}>Add character</Button>
         </Box>
         {auth?.currentUser?.isAnonymous && (
