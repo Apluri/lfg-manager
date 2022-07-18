@@ -1,5 +1,10 @@
 import {
   Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   FormControl,
   InputLabel,
   MenuItem,
@@ -21,6 +26,8 @@ type Props = {
 export function AdminPanelUserCard({ user, userId }: Props) {
   const db = useDatabase();
   const [editUserName, setEditUserName] = useState<boolean>(false);
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState<boolean>(false);
+  const [confirmText, setConfirmText] = useState<string>("");
   function getRolesList(): Roles[] {
     return [Roles.ADMIN, Roles.MEMBER, Roles.QUEST];
   }
@@ -30,6 +37,16 @@ export function AdminPanelUserCard({ user, userId }: Props) {
 
   function handleEditUserName(newUserName: string) {
     db?.editUserName(newUserName, userId);
+  }
+
+  function handleDeleteAccount(userId: string) {
+    console.log("now deleting user");
+    setConfirmDialogOpen(false);
+    //db?.deleteUser(userId)
+  }
+
+  function isMatchingUsername(): boolean {
+    return user.userName === confirmText;
   }
   return (
     <Paper
@@ -61,10 +78,38 @@ export function AdminPanelUserCard({ user, userId }: Props) {
         </Select>
       </FormControl>
 
-      <Button sx={styles.rowItem} onClick={() => db?.deleteUser(userId)}>
+      <Button sx={styles.rowItem} onClick={() => setConfirmDialogOpen(true)}>
         Delete User
       </Button>
 
+      <Dialog
+        open={confirmDialogOpen}
+        onClose={() => setConfirmDialogOpen(false)}
+      >
+        <DialogTitle>
+          {
+            "CAUTION, this is destructive function and deletes account permanently"
+          }
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Type {user.userName} to confirm deletion
+          </DialogContentText>
+          <TextField
+            value={confirmText}
+            onChange={(value) => setConfirmText(value.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setConfirmDialogOpen(false)}>Cancel</Button>
+          <Button
+            disabled={!isMatchingUsername()}
+            onClick={() => handleDeleteAccount(userId)}
+          >
+            Confirm
+          </Button>
+        </DialogActions>
+      </Dialog>
       <EditUserName
         visible={editUserName}
         oldName={user.userName}
