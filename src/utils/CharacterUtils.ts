@@ -1,4 +1,5 @@
 import artillerist from "../assets/images/classIcons/artillerist.png";
+import arcanist from "../assets/images/classIcons/arcanist.png";
 import bard from "../assets/images/classIcons/bard.png";
 import berserker from "../assets/images/classIcons/berserker.png";
 import deadeye from "../assets/images/classIcons/deadeye.png";
@@ -57,12 +58,14 @@ export enum ClassNames {
   DEATHBLADE = "Deathblade",
   REAPER = "Reaper",
   SCOUTER = "Scouter",
+  ARCANIST = "Arcanist",
   DEFAULT = "NoClassSelected",
 }
 
 export function getClassNameList() {
   return [
     ClassNames.DEFAULT,
+    ClassNames.ARCANIST,
     ClassNames.ARTILLERIST,
     ClassNames.BARD,
     ClassNames.BERSERKER,
@@ -86,6 +89,7 @@ export function getClassNameList() {
 }
 
 export const classIcons: Record<ClassNames, string> = {
+  [ClassNames.ARCANIST]: arcanist,
   [ClassNames.ARTILLERIST]: artillerist,
   [ClassNames.BARD]: bard,
   [ClassNames.BERSERKER]: berserker,
