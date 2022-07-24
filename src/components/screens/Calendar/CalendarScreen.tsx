@@ -55,6 +55,16 @@ export function CalendarScreen() {
           DateTime.fromISO(b.startTime).valueOf()
         ) {
           return 1;
+        } else if (
+          DateTime.fromISO(a.startTime).valueOf() ===
+          DateTime.fromISO(b.startTime).valueOf()
+        ) {
+          if (
+            DateTime.fromISO(a.creationTime).valueOf() >
+            DateTime.fromISO(b.creationTime).valueOf()
+          ) {
+            return 1;
+          } else return -1;
         } else return -1;
       });
   }
@@ -78,40 +88,58 @@ export function CalendarScreen() {
       (applicant) => applicant.uid === auth?.currentUser?.uid
     )?.character;
   }
+
+  type Props = {
+    highlight: boolean;
+    children: JSX.Element;
+  };
+  function DayWrapper({ children, highlight }: Props) {
+    if (highlight)
+      return (
+        <Paper
+          sx={{
+            padding: "1em",
+          }}
+        >
+          {children}
+        </Paper>
+      );
+
+    return (
+      <Box
+        sx={{
+          padding: "1em",
+        }}
+      >
+        {children}
+      </Box>
+    );
+  }
   return (
     <Box>
       <Typography variant="h2">Week Calendar</Typography>
 
-      <Paper sx={{ padding: "1em" }}>
-        <Typography variant="h4">Today</Typography>
-        {getPostsByDay(getWeekDay(new Date())).map((post) => (
-          <Typography key={post.lfgId} variant="body2" color="text.secondary">
-            {`
-               ${DateTime.fromISO(post.startTime).toLocaleString(
-                 DateTime.TIME_24_SIMPLE
-               )}
-             ${post.raid.name} ${post.title}
-             ${getMyCharacter(post.applicants)?.charName}
-             `}
-          </Typography>
-        ))}
-      </Paper>
-
       {days.map((day) => (
-        <Box sx={{ padding: "1em" }} key={day}>
-          <Typography variant="h4">{day}</Typography>
-          {getPostsByDay(day).map((post) => (
-            <Typography key={post.lfgId} variant="body2" color="text.secondary">
-              {`
+        <DayWrapper highlight={getWeekDay(new Date()) === day}>
+          <Box>
+            <Typography variant="h4">{day}</Typography>
+            {getPostsByDay(day).map((post) => (
+              <Typography
+                key={post.lfgId}
+                variant="body2"
+                color="text.secondary"
+              >
+                {`
                ${DateTime.fromISO(post.startTime).toLocaleString(
                  DateTime.TIME_24_SIMPLE
                )}
              ${post.raid.name} ${post.title}
              ${getMyCharacter(post.applicants)?.charName}
              `}
-            </Typography>
-          ))}
-        </Box>
+              </Typography>
+            ))}
+          </Box>
+        </DayWrapper>
       ))}
     </Box>
   );
