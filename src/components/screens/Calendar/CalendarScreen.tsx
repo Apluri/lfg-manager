@@ -55,6 +55,16 @@ export function CalendarScreen() {
           DateTime.fromISO(b.startTime).valueOf()
         ) {
           return 1;
+        } else if (
+          DateTime.fromISO(a.startTime).valueOf() ===
+          DateTime.fromISO(b.startTime).valueOf()
+        ) {
+          if (
+            DateTime.fromISO(a.creationTime).valueOf() >
+            DateTime.fromISO(b.creationTime).valueOf()
+          ) {
+            return 1;
+          } else return -1;
         } else return -1;
       });
   }
